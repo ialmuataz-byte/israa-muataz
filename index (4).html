@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إسراء ومُعتَز · مذكرات سفر</title>
+<meta name="description" content="مذكّرات سفر — إسراء ومُعتَز">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400;500;600;700&family=Tajawal:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   BASE & VARIABLES
+   ========================================================= */
+:root {
+  --cream: #F5EFE5;
+  --cream-2: #EFE8DA;
+  --cream-3: #FAF5EC;
+  --ink: #1F1A14;
+  --ink-soft: #4A413A;
+  --ink-mute: #847B70;
+  --terracotta: #B85C43;
+  --terracotta-dark: #8E3F2C;
+  --gold: #E8C547;
+  --tan: #D4C8B5;
+  --tan-2: #E2D8C5;
+  --line: rgba(31,26,20,0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--cream); }
+body { font-family: 'Tajawal', system-ui, sans-serif; color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+button { background: none; border: none; cursor: pointer; font-family: inherit; color: inherit; font-size: inherit; padding: 0; text-align: inherit; }
+input, textarea { font-family: inherit; }
+a { color: inherit; text-decoration: none; cursor: pointer; }
+img, svg { display: block; max-width: 100%; }
+
+.display { font-family: 'Markazi Text', 'Amiri', serif; line-height: 1.15; letter-spacing: -0.005em; }
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+.container { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+@media (min-width: 640px) { .container { padding: 0 2rem; } }
+
+/* =========================================================
+   TOP NAV
+   ========================================================= */
+.nav { position: sticky; top: 0; z-index: 30; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(245,239,229,0.85); border-bottom: 1px solid var(--line); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; }
+.nav-logo { display: flex; align-items: center; gap: 0.5rem; }
+.nav-logo .name { font-size: 1.5rem; font-weight: 600; color: var(--ink); }
+@media (min-width: 640px) { .nav-logo .name { font-size: 1.875rem; } }
+.nav-logo-orn { font-size: 0.875rem; color: var(--terracotta); letter-spacing: 0.4em; }
+.nav-links { display: flex; align-items: center; gap: 1.25rem; font-size: 0.9375rem; color: var(--ink-soft); }
+@media (min-width: 640px) { .nav-links { gap: 1.75rem; } }
+.nav-link { position: relative; transition: color 0.2s ease; }
+.nav-link::after { content: ''; position: absolute; right: 0; left: 0; bottom: -6px; height: 2px; background: var(--terracotta); transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
+.nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
+.nav-link:hover, .nav-link.active { color: var(--ink); }
+.hidden-sm { display: none; }
+@media (min-width: 640px) { .hidden-sm { display: inline-block; } }
+.hidden-md { display: none; }
+@media (min-width: 768px) { .hidden-md { display: inline-block; } }
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 9999px; font-size: 0.9375rem; font-weight: 500; transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease; cursor: pointer; }
+.btn-primary { background: var(--ink); color: var(--cream-3); }
+.btn-primary:hover { background: var(--terracotta); }
+.btn-primary:active { transform: translateY(1px); }
+.btn-ghost { color: var(--ink); transition: color 0.2s ease; }
+.btn-ghost:hover { color: var(--terracotta); }
+.btn-sm { padding: 0.625rem 1.25rem; font-size: 0.875rem; }
+.btn-flex { flex: 1; }
+.btn-cancel { padding: 0.75rem 1.25rem; border-radius: 9999px; font-size: 0.875rem; background: var(--cream-2); color: var(--ink); cursor: pointer; border: none; font-family: inherit; transition: background 0.2s ease; }
+.btn-cancel:hover { background: var(--tan-2); }
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+.input-field { background: var(--cream-3); border: 1px solid var(--line); color: var(--ink); padding: 10px 14px; border-radius: 6px; width: 100%; transition: border-color 0.2s ease, box-shadow 0.2s ease; font-size: 0.9375rem; line-height: 1.5; resize: vertical; }
+.input-field:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(31,26,20,0.08); }
+.field-label { font-size: 0.875rem; display: block; margin-bottom: 0.25rem; color: var(--ink-soft); }
+.field-group { display: flex; flex-direction: column; gap: 0.25rem; }
+
+/* =========================================================
+   AVATAR & BYLINE
+   ========================================================= */
+.avatar { width: 2.25rem; height: 2.25rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-family: 'Markazi Text', serif; font-size: 0.875rem; font-weight: 600; flex-shrink: 0; border: 2px solid var(--cream); }
+.avatar-stack { display: flex; }
+.avatar-stack > *:not(:first-child) { margin-inline-start: -0.5rem; }
+.byline { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.byline-text { font-size: 0.9375rem; color: var(--ink-soft); }
+.highlight-name { background-image: linear-gradient(180deg, transparent 55%, var(--gold) 55%, var(--gold) 92%, transparent 92%); padding: 0 4px; font-family: 'Markazi Text', serif; font-size: 1.125rem; font-weight: 600; color: var(--ink); }
+.byline-sep { margin: 0 0.5rem; color: var(--ink-mute); }
+.byline-date { color: var(--ink-mute); }
+
+/* =========================================================
+   ORNAMENTS & SECTION LABELS
+   ========================================================= */
+.ornament { color: var(--terracotta); letter-spacing: 0.4em; }
+.section-label { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--terracotta); }
+.section-label-text { letter-spacing: 0.3em; }
+.section-label-line { flex: 1; height: 1px; background: var(--line); }
+
+/* =========================================================
+   COVERS (gradient + SVG motif)
+   ========================================================= */
+.cover { position: relative; overflow: hidden; }
+.cover .grain { position: absolute; inset: 0; background-image: radial-gradient(circle at 20% 25%, rgba(255,255,255,0.35) 0%, transparent 50%), radial-gradient(circle at 80% 75%, rgba(0,0,0,0.22) 0%, transparent 55%); pointer-events: none; }
+.cover svg { position: absolute; }
+.cover-featured { aspect-ratio: 16/10; border-radius: 1rem; }
+@media (min-width: 640px) { .cover-featured { aspect-ratio: 16/8; } }
+.cover-card { aspect-ratio: 4/3; border-radius: 0.75rem; }
+.cover-detail { aspect-ratio: 16/9; }
+@media (min-width: 640px) { .cover-detail { aspect-ratio: 16/7; } }
+.cover-moment { aspect-ratio: 16/9; border-radius: 0.75rem; margin-bottom: 1.25rem; }
+.cover-preview { aspect-ratio: 16/7; border-radius: 0.5rem; }
+
+/* =========================================================
+   FEATURED HERO
+   ========================================================= */
+.featured-section { padding: 2.5rem 0 4rem; }
+.featured-cover-btn { width: 100%; display: block; padding: 0; border-radius: 1rem; overflow: hidden; }
+.featured-meta { text-align: center; max-width: 48rem; margin: 2.5rem auto 0; }
+.featured-location { margin-bottom: 1.25rem; font-size: 1rem; }
+.featured-title { font-size: 3rem; font-weight: 600; line-height: 1.05; margin-bottom: 1.25rem; color: var(--ink); }
+@media (min-width: 640px) { .featured-title { font-size: 3.75rem; } }
+@media (min-width: 768px) { .featured-title { font-size: 4.5rem; } }
+@media (max-width: 640px) { .featured-title { font-size: 2.5rem; } }
+.featured-title-inner { display: inline-flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+.featured-emoji { font-size: 1.875rem; }
+@media (min-width: 640px) { .featured-emoji { font-size: 2.25rem; } }
+.featured-subtitle { font-size: 1.125rem; line-height: 1.6; margin-bottom: 1.75rem; color: var(--ink-soft); }
+@media (min-width: 640px) { .featured-subtitle { font-size: 1.25rem; } }
+.featured-byline-wrap { display: flex; justify-content: center; margin-bottom: 1.75rem; }
+.featured-cta { display: flex; justify-content: center; }
+
+/* =========================================================
+   CARDS & GRID
+   ========================================================= */
+.card-hover { transition: transform 0.35s cubic-bezier(.2,.7,.2,1), box-shadow 0.35s ease; }
+.card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -20px rgba(31,26,20,0.25); }
+.trips-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; row-gap: 3.5rem; }
+@media (min-width: 640px) { .trips-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) { .trips-grid { grid-template-columns: 1fr 1fr 1fr; } }
+.trip-card { cursor: pointer; display: block; text-align: right; width: 100%; padding: 0; }
+.trip-card .cover { margin-bottom: 1rem; }
+.trip-card-body { padding: 0 0.25rem; }
+.trip-card-location { font-size: 0.75rem; margin-bottom: 0.5rem; }
+.trip-card-title { font-size: 1.5rem; font-weight: 600; line-height: 1.2; margin-bottom: 0.5rem; color: var(--ink); }
+@media (min-width: 640px) { .trip-card-title { font-size: 1.7rem; } }
+.trip-card-title-inner { display: inline-flex; align-items: baseline; gap: 0.5rem; }
+.trip-card-emoji { font-size: 1rem; }
+.trip-card-subtitle { font-size: 0.9375rem; line-height: 1.6; margin-bottom: 0.75rem; color: var(--ink-soft); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.trip-card-meta { font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; color: var(--ink-mute); }
+
+.grid-section { padding-bottom: 5rem; }
+.grid-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+.grid-title-label { font-size: 0.75rem; margin-bottom: 0.5rem; }
+.grid-title { font-size: 2.25rem; font-weight: 600; color: var(--ink); }
+@media (min-width: 640px) { .grid-title { font-size: 3rem; } }
+.empty-state { text-align: center; padding: 4rem 0; color: var(--ink-mute); }
+.empty-state-small { text-align: center; padding: 2.5rem 0; color: var(--ink-mute); }
+
+/* =========================================================
+   TRIP DETAIL
+   ========================================================= */
+.trip-detail-card { max-width: 48rem; margin: -3rem auto 0; padding: 0 1.25rem; position: relative; }
+@media (min-width: 640px) { .trip-detail-card { margin-top: -4rem; padding: 0 2rem; } }
+.trip-detail-inner { border-radius: 1rem; padding: 1.75rem; background: var(--cream-3); box-shadow: 0 18px 50px -25px rgba(31,26,20,0.25); }
+@media (min-width: 640px) { .trip-detail-inner { padding: 2.5rem; } }
+.trip-detail-back { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; margin-bottom: 1.5rem; color: var(--ink); transition: color 0.2s ease; }
+.trip-detail-back:hover { color: var(--terracotta); }
+.trip-detail-loc { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; margin-bottom: 1rem; color: var(--terracotta); letter-spacing: 0.05em; }
+.trip-detail-title { font-size: 2.25rem; font-weight: 600; line-height: 1.1; margin-bottom: 1.25rem; color: var(--ink); }
+@media (min-width: 640px) { .trip-detail-title { font-size: 3rem; } }
+@media (min-width: 768px) { .trip-detail-title { font-size: 3.75rem; } }
+.trip-detail-title-inner { display: inline-flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+.trip-detail-emoji { font-size: 1.5rem; }
+@media (min-width: 640px) { .trip-detail-emoji { font-size: 1.875rem; } }
+.trip-detail-subtitle { font-size: 1.125rem; line-height: 1.6; margin-bottom: 1.5rem; color: var(--ink-soft); }
+.trip-detail-byline { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding-bottom: 1.5rem; margin-bottom: 1.75rem; border-bottom: 1px solid var(--line); }
+.delete-btn { font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.375rem; opacity: 0.5; transition: opacity 0.2s ease; color: var(--ink-mute); }
+.delete-btn:hover { opacity: 1; }
+.trip-detail-intro { font-family: 'Markazi Text', serif; font-size: 1.25rem; line-height: 1.6; color: var(--ink); }
+@media (min-width: 640px) { .trip-detail-intro { font-size: 1.5rem; } }
+
+/* =========================================================
+   TIMELINE
+   ========================================================= */
+.timeline-section { max-width: 48rem; margin: 4rem auto 0; padding: 0 1.25rem 3rem; }
+@media (min-width: 640px) { .timeline-section { padding: 0 2rem 3rem; } }
+.timeline { position: relative; }
+.timeline-line { position: absolute; top: 0.5rem; bottom: 0.5rem; right: 0.75rem; width: 2px; border-radius: 9999px; background: linear-gradient(180deg, var(--terracotta) 0%, var(--gold) 50%, var(--tan) 100%); }
+.timeline-entry { position: relative; margin-bottom: 3.5rem; padding-right: 2.5rem; }
+.timeline-entry:last-child { margin-bottom: 0; }
+.timeline-dot { position: absolute; right: 4px; top: 0.5rem; width: 1rem; height: 1rem; border-radius: 9999px; border: 3px solid var(--cream); }
+.timeline-date { font-size: 0.75rem; margin-bottom: 0.5rem; }
+.timeline-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; line-height: 1.2; color: var(--ink); }
+@media (min-width: 640px) { .timeline-title { font-size: 1.875rem; } }
+.timeline-body { font-size: 1.0625rem; line-height: 1.9; color: var(--ink-soft); }
+.timeline-delete { margin-top: 0.75rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.25rem; opacity: 0.4; transition: opacity 0.2s ease; color: var(--ink-mute); }
+.timeline-delete:hover { opacity: 1; }
+
+.add-moment-wrap { display: flex; justify-content: center; margin-top: 2.5rem; }
+.end-ornament { text-align: center; padding-bottom: 5rem; color: var(--terracotta); letter-spacing: 0.6em; }
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.footer { padding: 3rem 0; text-align: center; font-size: 0.875rem; border-top: 1px solid var(--line); color: var(--ink-mute); }
+.footer-name { font-family: 'Markazi Text', serif; font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--ink); }
+.footer-ornament { margin-top: 1rem; color: var(--terracotta); }
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+.modal-overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(31,26,20,0.55); animation: fadeIn 0.25s ease both; }
+.modal { position: relative; width: 100%; max-width: 32rem; border-radius: 1rem; padding: 1.75rem; max-height: 90vh; overflow-y: auto; background: var(--cream-3); animation: modalIn 0.3s cubic-bezier(.2,.7,.2,1) both; }
+.modal-close { position: absolute; top: 1rem; left: 1rem; color: var(--ink); transition: color 0.2s ease; }
+.modal-close:hover { color: var(--terracotta); }
+.modal-title { font-family: 'Markazi Text', serif; font-size: 1.875rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--ink); }
+.modal-form { display: flex; flex-direction: column; gap: 1rem; }
+.modal-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+@media (max-width: 480px) { .modal-form-row { grid-template-columns: 1fr; } }
+.modal-form-actions { display: flex; gap: 0.75rem; padding-top: 1rem; }
+
+/* =========================================================
+   PALETTE & MOTIF SELECT
+   ========================================================= */
+.palette-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
+.palette-swatch { aspect-ratio: 1; border-radius: 9999px; transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; border: none; padding: 0; }
+.palette-swatch.active { transform: scale(1.15); box-shadow: 0 0 0 2px var(--ink); }
+.motif-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
+.motif-btn { border-radius: 0.5rem; padding: 0.5rem; font-size: 0.75rem; transition: background 0.2s ease, color 0.2s ease; background: var(--cream-2); color: var(--ink); cursor: pointer; border: none; font-family: inherit; }
+.motif-btn.active { background: var(--ink); color: var(--cream-3); }
+.motif-btn:hover { background: var(--tan-2); }
+.motif-btn.active:hover { background: var(--ink); }
+
+/* =========================================================
+   LOADING & ANIMATIONS
+   ========================================================= */
+.loader { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.spinner { width: 1.5rem; height: 1.5rem; color: var(--terracotta); animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.fade-in { animation: fadeIn 0.5s ease both; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: none; } }
+
+/* Selection */
+::selection { background: var(--gold); color: var(--ink); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+'use strict';
+
+/* =========================================================
+   CONSTANTS
+   ========================================================= */
+const STORAGE_KEY = 'all_trips_v1';
+
+const PALETTES = {
+  warm:   { from: '#E8C547', to: '#B85C43', motif: '#3A1F10', text: '#1F1A14' },
+  dusk:   { from: '#4A2C4A', to: '#B85C43', motif: '#F5EFE5', text: '#FAF5EC' },
+  ocean:  { from: '#2C5F6F', to: '#83B0C2', motif: '#F5EFE5', text: '#FAF5EC' },
+  rose:   { from: '#E8B4B4', to: '#8B4F58', motif: '#3A1F25', text: '#FAF5EC' },
+  forest: { from: '#3F5F3F', to: '#9BB78A', motif: '#1A2A1A', text: '#FAF5EC' },
+  sand:   { from: '#E5CDA8', to: '#9A7B4F', motif: '#3A2810', text: '#1F1A14' },
+  night:  { from: '#1A2847', to: '#4A5F8E', motif: '#F5EFE5', text: '#FAF5EC' },
+  spice:  { from: '#D85A2E', to: '#F0A858', motif: '#3A1810', text: '#1F1A14' },
+  mist:   { from: '#A8B5B0', to: '#5C7068', motif: '#1A2520', text: '#FAF5EC' },
+};
+
+const MOTIF_LABELS = {
+  mosque: 'مسجد', temple: 'معبد', torii: 'بوابة', mountain: 'جبل',
+  pyramid: 'هرم',  tree: 'شجرة',  ship: 'سفينة',  cup: 'فنجان',
+  lantern: 'فانوس', dune: 'كثبان',
+};
+const MOTIFS_LIST = Object.keys(MOTIF_LABELS);
+
+const ICONS = {
+  plus: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  x: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  arrowLeft: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+  arrowRight: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+  mapPin: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  calendar: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  trash: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  spinner: '<svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>',
+};
+
+/* =========================================================
+   SAMPLE DATA
+   ========================================================= */
+const SAMPLE_TRIPS = [
+  {
+    id: 'istanbul_2026',
+    title: 'أزقّة إسطنبول لا تَشيخ',
+    subtitle: 'بين البوسفور والأذان، رحلةٌ في قلب المدينة التي تجمع قارّتين في نَفَسٍ واحد.',
+    location: 'إسطنبول، تركيا',
+    date: '15 مارس 2026',
+    palette: 'spice',
+    motif: 'mosque',
+    featured: true,
+    emoji: '🕌',
+    accent: '✦',
+    intro: 'حين تطأ قدمُك إسطنبول لأول مرة، تشعر أن المدينة تستقبلك بكل قرونها دفعةً واحدة؛ صوت الأذان من مئذنةٍ بعيدة، ورائحة الكستناء المشوية في الشتاء، ونوارس البوسفور التي تطير على مستوى نظرك. لم ندخل المدينة، بل تَسلَّلنا إليها.',
+    timeline: [
+      { id: 'ist_1', date: 'اليوم الأول · 15 مارس', title: 'أذان المغرب فوق السلطان أحمد', text: 'وقفنا في الميدان حين بدأ الأذان من جامع السلطان أحمد، ثم تَلاهُ أذانُ آيا صوفيا، فأذانٌ آخر من بعيد، حتى تحوّلت المدينة كلها إلى نداءٍ واحدٍ مُتعدِّد الأصوات. جلسنا على درجات الحجر، ولم نقُلْ شيئاً.', palette: 'dusk', motif: 'mosque' },
+      { id: 'ist_2', date: 'اليوم الثاني · 16 مارس', title: 'قهوةٌ تركيةٌ في مقهى عتيق', text: 'في مقهى صغيرٍ في حيّ بَلَط، جلسنا أمام فناجين بنّيّة اللون، نشرب ببُطء، ونراقب القطط التي تسير في الأزقة كأنها صاحبةُ المكان. كان النادل يكلّمنا بالتركية ونردّ بالعربية، ومع ذلك فهمنا بعضنا.', palette: 'warm', motif: 'cup' },
+      { id: 'ist_3', date: 'اليوم الثالث · 17 مارس', title: 'عبور البوسفور إلى آسيا', text: 'ركبنا العَبّارة من أوروبا إلى آسيا. الرحلة لا تستغرق أكثر من عشرين دقيقة، لكن الإحساس بأنك تعبر قارّتين بهذه السهولة يجعلك تبتسم في صمت. كان البحر متعَباً ذلك اليوم، والريحُ تَقصُّ علينا حكاياتٍ لا نَفهمها.', palette: 'ocean', motif: 'ship' },
+    ],
+  },
+  {
+    id: 'petra_2025',
+    title: 'البَتراء: مدينةٌ ورديّة',
+    subtitle: 'حين نَحَتَ الأنباطُ الجبلَ ليُصبح مدينة، نَحَتوا معه الزمن.',
+    location: 'البتراء، الأردن',
+    date: '8 نوفمبر 2025',
+    palette: 'rose',
+    motif: 'temple',
+    emoji: '🌹',
+    accent: '◆',
+    intro: 'مشينا في السِّيق ساعةً كاملةً بين جدران الصخر العالية، ثم انفتحت الفجوة فجأةً على واجهة الخزنة، وكأن المدينة كانت تختبرُ صبرنا قبل أن تكشف نفسها.',
+    timeline: [
+      { id: 'pet_1', date: 'اليوم الأول · فجراً', title: 'دخول السّيق قبل الشروق', text: 'بدأنا المشي قبل شروق الشمس، الجوّ بارد، والصخورُ تَكتُمُ أصواتَ خطواتنا. الصمتُ في السّيق له وزن. حين خرجنا إلى الخزنة، كانت الشمس قد بدأت تَلمسها للتو، فبدا الحجر مشتعلاً بهدوء.', palette: 'sand', motif: 'mountain' },
+      { id: 'pet_2', date: 'اليوم الثاني', title: 'صعود الدَّير', text: 'ثمانمائة درجةٍ حتى الوصول إلى الدير. حين وصلنا أخيراً، جلسنا أمام الواجهة الضخمة دون كلام، نَدَعُهُ يقول كلَّ شيء. كان البَدويُّ الذي يبيع الشاي يضحك من تعبِنا، فضحكنا معه.', palette: 'rose', motif: 'temple' },
+    ],
+  },
+  {
+    id: 'kyoto_2025',
+    title: 'كيوتو حين تتفتَّحُ السّاكورا',
+    subtitle: 'أسبوعٌ واحدٌ بين المعابد وأزهار الكرز، يكفي لتعرف لماذا يكتبون عنها الشعر.',
+    location: 'كيوتو، اليابان',
+    date: '2 أبريل 2025',
+    palette: 'rose',
+    motif: 'torii',
+    emoji: '🌸',
+    accent: '✿',
+    intro: 'وصلنا إلى كيوتو في توقيتٍ مثالي. الساكورا في كل مكان، حتى في الأماكن التي لم نتوقّعها: على جانب الترام، فوق بِركةِ معبد صغير، في فناء بيتٍ تقليدي رأيناه صدفةً.',
+    timeline: [
+      { id: 'kyo_1', date: 'اليوم الأول', title: 'حديقة ماروياما', text: 'جلسنا تحت شجرة كرزٍ عملاقة مع أهل المدينة، نأكل وجبة الهانامي ونراقب البَتلات الورديّة تتساقط ببُطء. شعرنا أن الزمن نفسه يتساقط معها.', palette: 'rose', motif: 'tree' },
+      { id: 'kyo_2', date: 'اليوم الثالث · فجراً', title: 'فوشيمي إيناري', text: 'مشينا في النفق الذي لا ينتهي من بوّابات التُّوري الحمراء. كنا وحدنا تقريباً عند الفجر. كل بوابةٍ تخفي البوابة التي بعدها، فظَنَّ كلٌّ منا أنه يمشي وحده، ثم نلتقي.', palette: 'spice', motif: 'torii' },
+      { id: 'kyo_3', date: 'الليلة الأخيرة', title: 'فوانيس جيون', text: 'الحيّ القديم بعد المغرب، الفوانيس مُضاءة، والأزقّةُ خاويةٌ تقريباً. سمعنا صوت شامِيسِن من نافذةٍ مفتوحة، ووقفنا نُنصِت دون أن يدرينا أحد.', palette: 'night', motif: 'lantern' },
+    ],
+  },
+  {
+    id: 'salalah_2025',
+    title: 'خَريفُ صَلالة',
+    subtitle: 'حين يصبح الجنوبُ أخضر، ويُحوِّل الجبلَ إلى بحرٍ من الضباب.',
+    location: 'صلالة، عُمان',
+    date: '20 أغسطس 2025',
+    palette: 'forest',
+    motif: 'mountain',
+    emoji: '🌿',
+    accent: '❋',
+    intro: 'الخريف في ظفار ليس فصلاً، إنه حالةٌ مزاجيّة للأرض كلها. القرى تختفي خلف الغيوم، والجبال تتنفّس، والنّاسُ يجلسون على الطرقات يَشربون الشاي وكأنهم في انتظار شيءٍ لا يأتي.',
+    timeline: [
+      { id: 'sal_1', date: 'اليوم الأول', title: 'جبل صَمحان في الضباب', text: 'صعدنا الجبل وقت الظهيرة، لكن الضبابَ كان كثيفاً حتى أننا فقدنا قدرتنا على رؤية السيارة أمامنا. توقّفنا على جانب الطريق، نَزَلنا، ومشينا قليلاً في غيمةٍ نازلة.', palette: 'mist', motif: 'mountain' },
+      { id: 'sal_2', date: 'اليوم الثاني', title: 'عين رزات', text: 'الماء يَنبُع من الصخر ببساطةٍ مذهلة، يتجمّع في بِركةٍ صافية، ثم يجري إلى الوادي. الناس يأتون من كل مكان، يَملؤون قواريرَهم، ويذهبون.', palette: 'forest', motif: 'tree' },
+    ],
+  },
+  {
+    id: 'cairo_2024',
+    title: 'صباحاتٌ في خان الخليلي',
+    subtitle: 'القاهرة قبل أن تستيقظ، حين تكون لك وحدك.',
+    location: 'القاهرة، مصر',
+    date: '12 ديسمبر 2024',
+    palette: 'sand',
+    motif: 'pyramid',
+    emoji: '☕',
+    accent: '✧',
+    intro: 'يقولون إنّ القاهرة لا تنام. لكنها تَخفُتُ في الفجر، تأخذ نَفَساً واحداً قبل صَخَب اليوم، وفي تلك اللحظة بالذات، إذا كنتَ مستيقظاً، تستطيع أن تسمعها تَهمس.',
+    timeline: [
+      { id: 'cai_1', date: 'الفجر · اليوم الأول', title: 'فطورٌ في فِشاوي', text: 'دخلنا مقهى الفِشاوي قبل أن يفتح بتمامه. النادل القديم يَعرف الزبائنَ من أصواتهم. شربنا الشاي بالنعناع، وقرأنا جريدةً قديمةً تُركَتْ على الطاولة المجاورة.', palette: 'warm', motif: 'cup' },
+    ],
+  },
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const initialAddTripForm = () => ({
+  title: '', subtitle: '', location: '', date: '', intro: '',
+  palette: 'warm', motif: 'mountain', emoji: '✈️', accent: '✦',
+});
+const initialAddMomentForm = () => ({
+  date: '', title: '', text: '', palette: 'sand', motif: 'mountain',
+});
+
+let state = {
+  trips: [],
+  view: 'home',
+  currentTripId: null,
+  showAddTrip: false,
+  showAddMoment: false,
+  pendingMomentTripId: null,
+  addTripForm: initialAddTripForm(),
+  addMomentForm: initialAddMomentForm(),
+};
+
+/* =========================================================
+   STORAGE
+   ========================================================= */
+function loadTrips() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch (e) { /* ignore */ }
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_TRIPS)); } catch (e) {}
+  return JSON.parse(JSON.stringify(SAMPLE_TRIPS));
+}
+
+function persistTrips() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.trips)); }
+  catch (e) { console.warn('Could not persist trips:', e); }
+}
+
+/* =========================================================
+   UTILS
+   ========================================================= */
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function newId() {
+  return 't_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+}
+
+/* =========================================================
+   MOTIFS (gradient cover SVG illustrations)
+   ========================================================= */
+function motifSvg(name, color) {
+  const fill = 'fill="' + color + '" opacity="0.9"';
+  switch (name) {
+    case 'mosque': return '<g ' + fill + '>' +
+      '<rect x="14" y="38" width="3" height="55" />' +
+      '<circle cx="15.5" cy="36" r="3" />' +
+      '<path d="M14 30 L15.5 24 L17 30 Z" />' +
+      '<rect x="83" y="38" width="3" height="55" />' +
+      '<circle cx="84.5" cy="36" r="3" />' +
+      '<path d="M83 30 L84.5 24 L86 30 Z" />' +
+      '<path d="M28 93 L28 62 Q28 42 50 42 Q72 42 72 62 L72 93 Z" />' +
+      '<rect x="46" y="32" width="8" height="10" />' +
+      '<path d="M48 32 L50 26 L52 32 Z" />' +
+      '<rect x="8" y="91" width="84" height="3" />' +
+    '</g>';
+    case 'temple': return '<g ' + fill + '>' +
+      '<rect x="18" y="42" width="64" height="52" />' +
+      '<polygon points="14,42 50,18 86,42" />' +
+      '<rect x="46" y="20" width="8" height="22" opacity="0.5" fill="' + color + '" />' +
+      '<rect x="28" y="55" width="6" height="39" opacity="0.4" />' +
+      '<rect x="40" y="55" width="6" height="39" opacity="0.4" />' +
+      '<rect x="54" y="55" width="6" height="39" opacity="0.4" />' +
+      '<rect x="66" y="55" width="6" height="39" opacity="0.4" />' +
+      '<rect x="44" y="68" width="12" height="26" opacity="0.55" />' +
+    '</g>';
+    case 'torii': return '<g ' + fill + '>' +
+      '<rect x="14" y="30" width="72" height="6" />' +
+      '<rect x="18" y="36" width="64" height="3" />' +
+      '<rect x="22" y="39" width="6" height="58" />' +
+      '<rect x="72" y="39" width="6" height="58" />' +
+      '<rect x="40" y="50" width="20" height="4" />' +
+    '</g>';
+    case 'mountain': return '<g ' + fill + '>' +
+      '<polygon points="2,95 28,38 48,68 70,28 98,95" />' +
+      '<polygon points="36,95 56,58 78,82 95,95" opacity="0.55" />' +
+      '<circle cx="72" cy="22" r="6" opacity="0.7" />' +
+    '</g>';
+    case 'pyramid': return '<g ' + fill + '>' +
+      '<circle cx="76" cy="24" r="7" opacity="0.85" />' +
+      '<polygon points="50,18 5,92 95,92" />' +
+      '<polygon points="50,22 22,92 78,92" opacity="0.5" />' +
+      '<rect x="0" y="92" width="100" height="3" />' +
+    '</g>';
+    case 'tree': return '<g ' + fill + '>' +
+      '<rect x="46" y="58" width="8" height="35" />' +
+      '<circle cx="50" cy="42" r="24" />' +
+      '<circle cx="34" cy="50" r="14" opacity="0.85" />' +
+      '<circle cx="66" cy="50" r="14" opacity="0.85" />' +
+      '<circle cx="50" cy="28" r="10" opacity="0.7" />' +
+      '<rect x="0" y="92" width="100" height="2" />' +
+    '</g>';
+    case 'ship': return '<g ' + fill + '>' +
+      '<path d="M8 72 L92 72 L82 88 L18 88 Z" />' +
+      '<rect x="48" y="32" width="3" height="40" />' +
+      '<polygon points="51,34 78,55 51,55" />' +
+      '<polygon points="48,58 24,70 48,70" />' +
+      '<path d="M0 88 Q15 84 30 88 T60 88 T100 88 L100 95 L0 95 Z" opacity="0.4" />' +
+    '</g>';
+    case 'cup': return '<g ' + fill + '>' +
+      '<path d="M28 52 Q28 82 50 82 Q72 82 72 52 Z" />' +
+      '<ellipse cx="50" cy="52" rx="22" ry="3" />' +
+      '<path d="M72 58 Q86 58 86 68 Q86 78 72 78" fill="none" stroke="' + color + '" stroke-width="3" />' +
+      '<path d="M40 38 Q40 30 46 28 M50 38 Q50 30 56 28 M60 38 Q60 30 66 28" fill="none" stroke="' + color + '" stroke-width="2" opacity="0.55" stroke-linecap="round" />' +
+      '<rect x="20" y="84" width="60" height="3" />' +
+    '</g>';
+    case 'lantern': return '<g ' + fill + '>' +
+      '<rect x="48" y="8" width="4" height="14" />' +
+      '<ellipse cx="50" cy="50" rx="20" ry="28" />' +
+      '<rect x="28" y="22" width="44" height="3" />' +
+      '<rect x="28" y="78" width="44" height="3" />' +
+      '<path d="M50 30 L50 70" stroke="' + color + '" stroke-width="1" opacity="0.4" fill="none" />' +
+    '</g>';
+    case 'dune': return '<g ' + fill + '>' +
+      '<path d="M0 78 Q25 60 50 72 T100 70 L100 100 L0 100 Z" />' +
+      '<path d="M0 88 Q30 75 60 85 T100 82 L100 100 L0 100 Z" opacity="0.55" />' +
+      '<circle cx="78" cy="28" r="9" opacity="0.85" />' +
+    '</g>';
+    default: return '<circle cx="50" cy="50" r="22" ' + fill + ' />';
+  }
+}
+
+function coverHtml(palette, motif, sizeClass, motifSize) {
+  motifSize = motifSize || 0.55;
+  const p = PALETTES[palette] || PALETTES.warm;
+  const inset = ((1 - motifSize) / 2) * 100;
+  const svgStyle = 'top:' + inset + '%;right:' + inset + '%;width:' + (motifSize * 100) + '%;height:' + (motifSize * 100) + '%;';
+  return '<div class="cover ' + sizeClass + '" style="background: linear-gradient(135deg, ' + p.from + ' 0%, ' + p.to + ' 100%);">' +
+    '<div class="grain"></div>' +
+    '<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style="' + svgStyle + '">' +
+      motifSvg(motif, p.motif) +
+    '</svg>' +
+  '</div>';
+}
+
+/* =========================================================
+   RENDER — COMPONENTS
+   ========================================================= */
+function renderTopNav() {
+  return '' +
+  '<header class="nav">' +
+    '<div class="container nav-inner">' +
+      '<button class="nav-logo" data-action="go-home">' +
+        '<span class="display name">إسراء ومُعتَز</span>' +
+        '<span class="nav-logo-orn hidden-sm">✦</span>' +
+      '</button>' +
+      '<nav class="nav-links">' +
+        '<button class="nav-link hidden-sm ' + (state.view === 'home' ? 'active' : '') + '" data-action="go-home">الرئيسية</button>' +
+        '<button class="nav-link hidden-md" data-action="go-home">الرحلات</button>' +
+        '<a class="nav-link hidden-md">الوجهات</a>' +
+        '<a class="nav-link hidden-md">عنّا</a>' +
+      '</nav>' +
+    '</div>' +
+  '</header>';
+}
+
+function renderAvatar(letter, palette) {
+  const p = PALETTES[palette];
+  return '<div class="avatar" style="background: linear-gradient(135deg, ' + p.from + ', ' + p.to + '); color: ' + p.text + ';">' + esc(letter) + '</div>';
+}
+
+function renderByline(date) {
+  return '' +
+  '<div class="byline">' +
+    '<div class="avatar-stack">' +
+      renderAvatar('إ', 'warm') +
+      renderAvatar('م', 'ocean') +
+    '</div>' +
+    '<div class="byline-text">' +
+      '<span class="highlight-name">إسراء ومُعتَز</span>' +
+      '<span class="byline-sep">·</span>' +
+      '<span class="byline-date">' + esc(date) + '</span>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderFeaturedHero(trip) {
+  return '' +
+  '<section class="featured-section container fade-in">' +
+    '<div class="section-label">' +
+      '<span class="section-label-text">الرحلة المُختارة</span>' +
+      '<span class="section-label-line"></span>' +
+    '</div>' +
+    '<button class="featured-cover-btn card-hover" data-action="open-trip" data-id="' + esc(trip.id) + '" aria-label="فتح الرحلة">' +
+      coverHtml(trip.palette, trip.motif, 'cover-featured', 0.45) +
+    '</button>' +
+    '<div class="featured-meta">' +
+      '<div class="ornament featured-location">' + esc(trip.accent || '✦') + ' &nbsp; ' + esc(trip.location) + ' &nbsp; ' + esc(trip.accent || '✦') + '</div>' +
+      '<h1 class="display featured-title">' +
+        '<span class="featured-title-inner">' +
+          '<span class="featured-emoji">' + esc(trip.emoji) + '</span>' +
+          '<span>' + esc(trip.title) + '</span>' +
+        '</span>' +
+      '</h1>' +
+      '<p class="featured-subtitle">' + esc(trip.subtitle) + '</p>' +
+      '<div class="featured-byline-wrap">' + renderByline(trip.date) + '</div>' +
+      '<div class="featured-cta">' +
+        '<button class="btn btn-primary" data-action="open-trip" data-id="' + esc(trip.id) + '">' +
+          '<span>اقرأ الرحلة</span>' + ICONS.arrowLeft +
+        '</button>' +
+      '</div>' +
+    '</div>' +
+  '</section>';
+}
+
+function renderTripCard(trip) {
+  return '' +
+  '<div class="trip-card card-hover" data-action="open-trip" data-id="' + esc(trip.id) + '" role="button" tabindex="0">' +
+    coverHtml(trip.palette, trip.motif, 'cover-card', 0.55) +
+    '<div class="trip-card-body">' +
+      '<div class="ornament trip-card-location">' + esc(trip.location) + '</div>' +
+      '<h3 class="display trip-card-title">' +
+        '<span class="trip-card-title-inner">' +
+          '<span class="trip-card-emoji">' + esc(trip.emoji) + '</span>' +
+          '<span>' + esc(trip.title) + '</span>' +
+        '</span>' +
+      '</h3>' +
+      '<p class="trip-card-subtitle">' + esc(trip.subtitle) + '</p>' +
+      '<div class="trip-card-meta">' + ICONS.calendar + '<span>' + esc(trip.date) + '</span></div>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderTripsGrid(trips) {
+  let body;
+  if (trips.length === 0) {
+    body = '<div class="empty-state">لا توجد رحلات بعد. ابدأ بإضافة واحدة.</div>';
+  } else {
+    body = '<div class="trips-grid">' + trips.map(renderTripCard).join('') + '</div>';
+  }
+  return '' +
+  '<section class="container grid-section">' +
+    '<div class="grid-header">' +
+      '<div>' +
+        '<div class="ornament grid-title-label">دفتر الأسفار</div>' +
+        '<h2 class="display grid-title">كلُّ الرحلات</h2>' +
+      '</div>' +
+      '<button class="btn btn-primary btn-sm" data-action="show-add-trip">' +
+        ICONS.plus + '<span>رحلة جديدة</span>' +
+      '</button>' +
+    '</div>' +
+    body +
+  '</section>';
+}
+
+function renderTimelineEntry(trip, m) {
+  const p = PALETTES[m.palette] || PALETTES.warm;
+  return '' +
+  '<div class="timeline-entry fade-in">' +
+    '<div class="timeline-dot" style="background: ' + p.from + ';"></div>' +
+    '<div class="ornament timeline-date">' + esc(m.date) + '</div>' +
+    '<h3 class="display timeline-title">' + esc(m.title) + '</h3>' +
+    coverHtml(m.palette, m.motif, 'cover-moment', 0.5) +
+    '<p class="timeline-body">' + esc(m.text) + '</p>' +
+    '<button class="timeline-delete" data-action="delete-moment" data-trip-id="' + esc(trip.id) + '" data-id="' + esc(m.id) + '">' +
+      ICONS.trash + '<span>حذف</span>' +
+    '</button>' +
+  '</div>';
+}
+
+function renderTripDetail(trip) {
+  let timelineBody;
+  if (trip.timeline.length === 0) {
+    timelineBody = '<div class="empty-state-small">لا توجد لحظات بعد في هذه الرحلة.</div>';
+  } else {
+    timelineBody = '<div class="timeline"><div class="timeline-line"></div>' +
+      trip.timeline.map(function(m){ return renderTimelineEntry(trip, m); }).join('') +
+    '</div>';
+  }
+
+  return '' +
+  '<article class="fade-in">' +
+    coverHtml(trip.palette, trip.motif, 'cover-detail', 0.32) +
+    '<div class="trip-detail-card">' +
+      '<div class="trip-detail-inner">' +
+        '<button class="trip-detail-back" data-action="go-home">' +
+          ICONS.arrowRight + '<span>عودة إلى الرحلات</span>' +
+        '</button>' +
+        '<div class="trip-detail-loc">' + ICONS.mapPin + '<span>' + esc(trip.location) + '</span></div>' +
+        '<h1 class="display trip-detail-title">' +
+          '<span class="trip-detail-title-inner">' +
+            '<span class="trip-detail-emoji">' + esc(trip.emoji) + '</span>' +
+            '<span>' + esc(trip.title) + '</span>' +
+          '</span>' +
+        '</h1>' +
+        '<p class="trip-detail-subtitle">' + esc(trip.subtitle) + '</p>' +
+        '<div class="trip-detail-byline">' +
+          renderByline(trip.date) +
+          '<button class="delete-btn" data-action="delete-trip" data-id="' + esc(trip.id) + '">' +
+            ICONS.trash + '<span>حذف الرحلة</span>' +
+          '</button>' +
+        '</div>' +
+        (trip.intro ? '<p class="trip-detail-intro">' + esc(trip.intro) + '</p>' : '') +
+      '</div>' +
+    '</div>' +
+    '<div class="timeline-section">' +
+      '<div class="section-label" style="margin-bottom: 2.5rem;">' +
+        '<span class="section-label-text">الخط الزمني</span>' +
+        '<span class="section-label-line"></span>' +
+      '</div>' +
+      timelineBody +
+      '<div class="add-moment-wrap">' +
+        '<button class="btn btn-primary btn-sm" data-action="show-add-moment" data-id="' + esc(trip.id) + '">' +
+          ICONS.plus + '<span>أضف لحظة</span>' +
+        '</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="end-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>' +
+  '</article>';
+}
+
+function renderFooter() {
+  return '' +
+  '<footer class="footer">' +
+    '<div class="footer-name">إسراء ومُعتَز</div>' +
+    '<div>مذكّرات سفر · صُنِعَ بحُبٍّ على الطريق</div>' +
+    '<div class="footer-ornament ornament">✦</div>' +
+  '</footer>';
+}
+
+function renderPaletteSelect(target, value) {
+  return '<div class="palette-grid">' +
+    Object.keys(PALETTES).map(function(key){
+      const p = PALETTES[key];
+      return '<button class="palette-swatch ' + (value === key ? 'active' : '') + '"' +
+        ' style="background: linear-gradient(135deg, ' + p.from + ', ' + p.to + ');"' +
+        ' data-action="select-palette" data-target="' + target + '" data-value="' + key + '" aria-label="' + key + '"></button>';
+    }).join('') +
+  '</div>';
+}
+
+function renderMotifSelect(target, value) {
+  return '<div class="motif-grid">' +
+    MOTIFS_LIST.map(function(m){
+      return '<button class="motif-btn ' + (value === m ? 'active' : '') + '" data-action="select-motif" data-target="' + target + '" data-value="' + m + '">' +
+        esc(MOTIF_LABELS[m]) +
+      '</button>';
+    }).join('') +
+  '</div>';
+}
+
+function renderAddTripModal() {
+  const f = state.addTripForm;
+  return '' +
+  '<div class="modal-overlay" data-modal="overlay">' +
+    '<div class="modal">' +
+      '<button class="modal-close" data-action="close-modal" aria-label="إغلاق">' + ICONS.x + '</button>' +
+      '<h3 class="modal-title">رحلة جديدة</h3>' +
+      '<div class="modal-form">' +
+        coverHtml(f.palette, f.motif, 'cover-preview', 0.5) +
+        '<div class="field-group">' +
+          '<label class="field-label">العنوان</label>' +
+          '<input class="input-field" data-form="addTripForm" data-field="title" value="' + esc(f.title) + '" placeholder="مثلاً: ليالٍ في مَراكش">' +
+        '</div>' +
+        '<div class="modal-form-row">' +
+          '<div class="field-group">' +
+            '<label class="field-label">الوجهة</label>' +
+            '<input class="input-field" data-form="addTripForm" data-field="location" value="' + esc(f.location) + '" placeholder="المدينة، البلد">' +
+          '</div>' +
+          '<div class="field-group">' +
+            '<label class="field-label">التاريخ</label>' +
+            '<input class="input-field" data-form="addTripForm" data-field="date" value="' + esc(f.date) + '" placeholder="مثلاً: مايو 2026">' +
+          '</div>' +
+        '</div>' +
+        '<div class="field-group">' +
+          '<label class="field-label">الوصف</label>' +
+          '<textarea class="input-field" data-form="addTripForm" data-field="subtitle" rows="2" placeholder="سطرٌ يلخّص روح الرحلة">' + esc(f.subtitle) + '</textarea>' +
+        '</div>' +
+        '<div class="field-group">' +
+          '<label class="field-label">المقدمة (اختياري)</label>' +
+          '<textarea class="input-field" data-form="addTripForm" data-field="intro" rows="3" placeholder="الفقرة الأولى من الرحلة">' + esc(f.intro) + '</textarea>' +
+        '</div>' +
+        '<div class="modal-form-row">' +
+          '<div class="field-group">' +
+            '<label class="field-label">الرمز التعبيري</label>' +
+            '<input class="input-field" data-form="addTripForm" data-field="emoji" value="' + esc(f.emoji) + '" maxlength="3">' +
+          '</div>' +
+          '<div class="field-group">' +
+            '<label class="field-label">زخرفة</label>' +
+            '<input class="input-field" data-form="addTripForm" data-field="accent" value="' + esc(f.accent) + '" maxlength="2">' +
+          '</div>' +
+        '</div>' +
+        '<div class="field-group">' +
+          '<label class="field-label">لون الغلاف</label>' +
+          renderPaletteSelect('trip', f.palette) +
+        '</div>' +
+        '<div class="field-group">' +
+          '<label class="field-label">رمز الغلاف</label>' +
+          renderMotifSelect('trip', f.motif) +
+        '</div>' +
+        '<div class="modal-form-actions">' +
+          '<button class="btn btn-primary btn-flex" data-action="save-trip">حفظ الرحلة</button>' +
+          '<button class="btn-cancel" data-action="close-modal">إلغاء</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderAddMomentModal() {
+  const f = state.addMomentForm;
+  return '' +
+  '<div class="modal-overlay" data-modal="overlay">' +
+    '<div class="modal">' +
+      '<button class="modal-close" data-action="close-modal" aria-label="إغلاق">' + ICONS.x + '</button>' +
+      '<h3 class="modal-title">لحظة جديدة</h3>' +
+      '<div class="modal-form">' +
+        coverHtml(f.palette, f.motif, 'cover-preview', 0.5) +
+        '<div class="field-group">' +
+          '<label class="field-label">التاريخ / المرحلة</label>' +
+          '<input class="input-field" data-form="addMomentForm" data-field="date" value="' + esc(f.date) + '" placeholder="مثلاً: اليوم الثاني · 16 مارس">' +
+        '</div>' +
+        '<div class="field-group">' +
+          '<label class="field-label">عنوان اللحظة</label>' +
+          '<input class="input-field" data-form="addMomentForm" data-field="title" value="' + esc(f.title) + '" placeholder="مثلاً: صباحٌ في السوق القديم">' +
+        '</div>' +
+        '<div class="field-group">' +
+          '<label class="field-label">النص</label>' +
+          '<textarea class="input-field" data-form="addMomentForm" data-field="text" rows="5" placeholder="احكِ ما حدث، ما رأيت، وما شعرتَ به">' + esc(f.text) + '</textarea>' +
+        '</div>' +
+        '<div class="field-group">' +
+          '<label class="field-label">لون الغلاف</label>' +
+          renderPaletteSelect('moment', f.palette) +
+        '</div>' +
+        '<div class="field-group">' +
+          '<label class="field-label">رمز الغلاف</label>' +
+          renderMotifSelect('moment', f.motif) +
+        '</div>' +
+        '<div class="modal-form-actions">' +
+          '<button class="btn btn-primary btn-flex" data-action="save-moment">أضف اللحظة</button>' +
+          '<button class="btn-cancel" data-action="close-modal">إلغاء</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderApp() {
+  const featured = state.trips.find(function(t){ return t.featured; }) || state.trips[0];
+  const rest = featured ? state.trips.filter(function(t){ return t.id !== featured.id; }) : state.trips;
+  const currentTrip = state.trips.find(function(t){ return t.id === state.currentTripId; });
+
+  let main = '';
+  if (state.view === 'home') {
+    main = (featured ? renderFeaturedHero(featured) : '') + renderTripsGrid(rest);
+  } else if (state.view === 'detail' && currentTrip) {
+    main = renderTripDetail(currentTrip);
+  } else {
+    // fallback
+    main = renderTripsGrid(state.trips);
+  }
+
+  return renderTopNav() + '<main>' + main + '</main>' + renderFooter() +
+    (state.showAddTrip ? renderAddTripModal() : '') +
+    (state.showAddMoment ? renderAddMomentModal() : '');
+}
+
+function render() {
+  document.getElementById('app').innerHTML = renderApp();
+  document.body.style.overflow = (state.showAddTrip || state.showAddMoment) ? 'hidden' : '';
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+function openTrip(id) {
+  state.currentTripId = id;
+  state.view = 'detail';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goHome() {
+  state.view = 'home';
+  state.currentTripId = null;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showAddTrip() {
+  state.showAddTrip = true;
+  state.addTripForm = initialAddTripForm();
+  render();
+}
+
+function showAddMoment(tripId) {
+  state.showAddMoment = true;
+  state.pendingMomentTripId = tripId;
+  state.addMomentForm = initialAddMomentForm();
+  render();
+}
+
+function closeModal() {
+  state.showAddTrip = false;
+  state.showAddMoment = false;
+  state.pendingMomentTripId = null;
+  render();
+}
+
+function saveTrip() {
+  const f = state.addTripForm;
+  if (!f.title.trim() || !f.location.trim()) {
+    alert('من فضلك أدخل العنوان والوجهة');
+    return;
+  }
+  const trip = {
+    id: newId(),
+    title: f.title, subtitle: f.subtitle, location: f.location,
+    date: f.date, intro: f.intro,
+    palette: f.palette, motif: f.motif,
+    emoji: f.emoji || '✈️', accent: f.accent || '✦',
+    featured: false, timeline: [],
+  };
+  state.trips = [trip].concat(state.trips);
+  state.showAddTrip = false;
+  state.currentTripId = trip.id;
+  state.view = 'detail';
+  persistTrips();
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function saveMoment() {
+  const f = state.addMomentForm;
+  if (!f.title.trim()) {
+    alert('من فضلك أدخل عنوان اللحظة');
+    return;
+  }
+  const moment = {
+    id: newId(),
+    date: f.date, title: f.title, text: f.text,
+    palette: f.palette, motif: f.motif,
+  };
+  const targetId = state.pendingMomentTripId;
+  state.trips = state.trips.map(function(t){
+    return t.id === targetId ? Object.assign({}, t, { timeline: t.timeline.concat([moment]) }) : t;
+  });
+  state.showAddMoment = false;
+  state.pendingMomentTripId = null;
+  persistTrips();
+  render();
+}
+
+function deleteTrip(id) {
+  state.trips = state.trips.filter(function(t){ return t.id !== id; });
+  state.view = 'home';
+  state.currentTripId = null;
+  persistTrips();
+  render();
+}
+
+function deleteMoment(tripId, momentId) {
+  state.trips = state.trips.map(function(t){
+    return t.id === tripId
+      ? Object.assign({}, t, { timeline: t.timeline.filter(function(m){ return m.id !== momentId; }) })
+      : t;
+  });
+  persistTrips();
+  render();
+}
+
+function selectPalette(target, value) {
+  if (target === 'trip') state.addTripForm.palette = value;
+  else state.addMomentForm.palette = value;
+  render();
+}
+
+function selectMotif(target, value) {
+  if (target === 'trip') state.addTripForm.motif = value;
+  else state.addMomentForm.motif = value;
+  render();
+}
+
+/* =========================================================
+   EVENT DELEGATION
+   ========================================================= */
+function handleClick(e) {
+  // Click on modal overlay (outside the modal content) closes modal
+  if (e.target.dataset && e.target.dataset.modal === 'overlay') {
+    closeModal();
+    return;
+  }
+
+  const target = e.target.closest('[data-action]');
+  if (!target) return;
+
+  const action = target.dataset.action;
+  const id = target.dataset.id;
+  const tripId = target.dataset.tripId;
+  const value = target.dataset.value;
+  const ttype = target.dataset.target;
+
+  switch (action) {
+    case 'go-home': goHome(); break;
+    case 'open-trip': openTrip(id); break;
+    case 'show-add-trip': showAddTrip(); break;
+    case 'show-add-moment': showAddMoment(id); break;
+    case 'close-modal': closeModal(); break;
+    case 'delete-trip':
+      if (confirm('هل تريد حذف هذه الرحلة؟ لا يمكن التراجع.')) deleteTrip(id);
+      break;
+    case 'delete-moment':
+      if (confirm('هل تريد حذف هذه اللحظة؟')) deleteMoment(tripId, id);
+      break;
+    case 'save-trip': saveTrip(); break;
+    case 'save-moment': saveMoment(); break;
+    case 'select-palette': selectPalette(ttype, value); break;
+    case 'select-motif': selectMotif(ttype, value); break;
+  }
+}
+
+function handleInput(e) {
+  const form = e.target.dataset.form;
+  const field = e.target.dataset.field;
+  if (form && field && state[form]) {
+    // Silent update — no re-render so the input keeps focus while typing
+    state[form][field] = e.target.value;
+  }
+}
+
+function handleKeydown(e) {
+  if (e.key === 'Escape' && (state.showAddTrip || state.showAddMoment)) {
+    closeModal();
+  }
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+function init() {
+  state.trips = loadTrips();
+  document.getElementById('app').addEventListener('click', handleClick);
+  document.getElementById('app').addEventListener('input', handleInput);
+  document.addEventListener('keydown', handleKeydown);
+  render();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
