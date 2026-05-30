@@ -2,256 +2,1131 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>إسراء ومُعتَز · مذكرات سفر</title>
-<meta name="description" content="مذكّرات سفر — إسراء ومُعتَز">
+<meta name="description" content="مذكّرات سفر — رحلات إسراء ومُعتَز حول العالم">
+<meta name="theme-color" content="#F5EFE5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400;500;600;700&family=Tajawal:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@400;600;700&family=Markazi+Text:wght@400;500;600;700&family=Tajawal:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   BASE & VARIABLES
+   1. BASE & DESIGN TOKENS
    ========================================================= */
 :root {
-  --cream: #F5EFE5;
-  --cream-2: #EFE8DA;
-  --cream-3: #FAF5EC;
-  --ink: #1F1A14;
-  --ink-soft: #4A413A;
-  --ink-mute: #847B70;
-  --terracotta: #B85C43;
-  --terracotta-dark: #8E3F2C;
-  --gold: #E8C547;
-  --tan: #D4C8B5;
-  --tan-2: #E2D8C5;
-  --line: rgba(31,26,20,0.12);
+  /* Warm beige & sand palette per spec */
+  --cream:        #F5EFE5;
+  --cream-warm:   #EFE5D2;
+  --cream-soft:   #FAF6EE;
+  --cream-deep:   #E8DCC4;
+  --sand:         #DCC9A8;
+  --paper:        #FBF7EF;
+
+  --ink:          #2A1F15;
+  --ink-soft:     #4A3B2C;
+  --ink-mute:     #8A7A65;
+  --ink-light:    #B8A88E;
+
+  --gold:         #C9A961;
+  --gold-deep:    #A8893D;
+  --terracotta:   #B85C43;
+  --rust:         #8E3F2C;
+  --moss:         #6B7A4E;
+  --slate-blue:   #7B96A8;
+
+  --line:         rgba(42,31,21,0.10);
+  --line-strong:  rgba(42,31,21,0.20);
+
+  --shadow-sm:    0 2px 8px rgba(42,31,21,0.06);
+  --shadow-md:    0 8px 24px rgba(42,31,21,0.10);
+  --shadow-lg:    0 20px 48px rgba(42,31,21,0.14);
+  --shadow-photo: 0 6px 20px rgba(42,31,21,0.18), 0 2px 4px rgba(42,31,21,0.08);
+
+  --radius-sm:    8px;
+  --radius-md:    14px;
+  --radius-lg:    20px;
+  --radius-xl:    28px;
+
+  --ease:         cubic-bezier(.2,.7,.2,1);
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { background: var(--cream); }
-body { font-family: 'Tajawal', system-ui, sans-serif; color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+html, body { background: var(--cream); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body {
+  font-family: 'Tajawal', system-ui, sans-serif;
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+  /* Subtle paper texture overlay across whole site */
+  background-image:
+    radial-gradient(at 20% 10%, rgba(201,169,97,0.05) 0%, transparent 50%),
+    radial-gradient(at 80% 90%, rgba(184,92,67,0.04) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
 button { background: none; border: none; cursor: pointer; font-family: inherit; color: inherit; font-size: inherit; padding: 0; text-align: inherit; }
-input, textarea { font-family: inherit; }
+input, textarea, select { font-family: inherit; }
 a { color: inherit; text-decoration: none; cursor: pointer; }
 img, svg { display: block; max-width: 100%; }
+img { height: auto; }
 
-.display { font-family: 'Markazi Text', 'Amiri', serif; line-height: 1.15; letter-spacing: -0.005em; }
+/* Typography utility classes */
+.display      { font-family: 'Markazi Text', 'Amiri', serif; line-height: 1.15; }
+.display-en   { font-family: 'Playfair Display', Georgia, serif; }
+.script-en    { font-family: 'Caveat', cursive; }
+.serif-en     { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+/* Selection */
+::selection { background: var(--gold); color: var(--ink); }
+
+/* Focus */
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
 
 /* =========================================================
-   LAYOUT
+   2. LAYOUT
    ========================================================= */
-.container { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+.container { max-width: 78rem; margin: 0 auto; padding: 0 1.25rem; }
 @media (min-width: 640px) { .container { padding: 0 2rem; } }
+@media (min-width: 1024px) { .container { padding: 0 3rem; } }
+
+.container-narrow { max-width: 56rem; margin: 0 auto; padding: 0 1.25rem; }
+@media (min-width: 640px) { .container-narrow { padding: 0 2rem; } }
 
 /* =========================================================
-   TOP NAV
+   3. NAVIGATION
    ========================================================= */
-.nav { position: sticky; top: 0; z-index: 30; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgba(245,239,229,0.85); border-bottom: 1px solid var(--line); }
-.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; }
-.nav-logo { display: flex; align-items: center; gap: 0.5rem; }
-.nav-logo .name { font-size: 1.5rem; font-weight: 600; color: var(--ink); }
-@media (min-width: 640px) { .nav-logo .name { font-size: 1.875rem; } }
-.nav-logo-orn { font-size: 0.875rem; color: var(--terracotta); letter-spacing: 0.4em; }
-.nav-links { display: flex; align-items: center; gap: 1.25rem; font-size: 0.9375rem; color: var(--ink-soft); }
-@media (min-width: 640px) { .nav-links { gap: 1.75rem; } }
-.nav-link { position: relative; transition: color 0.2s ease; }
-.nav-link::after { content: ''; position: absolute; right: 0; left: 0; bottom: -6px; height: 2px; background: var(--terracotta); transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
+.nav {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(245,239,229,0.88);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid var(--line);
+}
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.875rem 0; }
+.nav-logo { display: flex; align-items: center; gap: 0.625rem; }
+.nav-logo-name { font-family: 'Markazi Text', serif; font-size: 1.5rem; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+@media (min-width: 640px) { .nav-logo-name { font-size: 1.75rem; } }
+.nav-logo-en { font-family: 'Caveat', cursive; font-size: 1.125rem; color: var(--gold-deep); margin-bottom: -0.25rem; display: none; }
+@media (min-width: 768px) { .nav-logo-en { display: inline; } }
+
+.nav-links { display: flex; align-items: center; gap: 1.25rem; font-size: 0.875rem; color: var(--ink-soft); }
+@media (min-width: 640px) { .nav-links { gap: 1.5rem; font-size: 0.9375rem; } }
+.nav-link { position: relative; transition: color 0.2s ease; padding-bottom: 4px; }
+.nav-link::after { content: ''; position: absolute; right: 0; left: 0; bottom: -2px; height: 1px; background: var(--terracotta); transform: scaleX(0); transform-origin: right; transition: transform 0.3s var(--ease); }
 .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
 .nav-link:hover, .nav-link.active { color: var(--ink); }
-.hidden-sm { display: none; }
-@media (min-width: 640px) { .hidden-sm { display: inline-block; } }
+.nav-add-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 0.875rem; border-radius: 9999px;
+  background: var(--ink); color: var(--cream-soft); font-size: 0.8125rem; font-weight: 500;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.nav-add-btn:hover { background: var(--terracotta); }
+.nav-add-btn:active { transform: translateY(1px); }
 .hidden-md { display: none; }
 @media (min-width: 768px) { .hidden-md { display: inline-block; } }
 
 /* =========================================================
-   BUTTONS
+   4. HERO — large image-masked letters "Israa & Muataz"
    ========================================================= */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 9999px; font-size: 0.9375rem; font-weight: 500; transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease; cursor: pointer; }
-.btn-primary { background: var(--ink); color: var(--cream-3); }
+.hero {
+  position: relative;
+  padding: 3.5rem 1.25rem 5rem;
+  text-align: center;
+  overflow: hidden;
+}
+@media (min-width: 640px) { .hero { padding: 5rem 2rem 6rem; } }
+@media (min-width: 1024px) { .hero { padding: 6rem 3rem 7rem; } }
+
+.hero-supertitle {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  color: var(--gold-deep);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
+}
+@media (min-width: 640px) { .hero-supertitle { font-size: 1.875rem; } }
+
+.hero-arabic-intro {
+  font-family: 'Markazi Text', serif;
+  font-size: 1.125rem;
+  color: var(--ink-soft);
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.02em;
+}
+@media (min-width: 640px) { .hero-arabic-intro { font-size: 1.375rem; margin-bottom: 3rem; } }
+
+/* The masked-letters title */
+.hero-title {
+  font-family: 'Anton', 'Archivo Black', sans-serif;
+  font-weight: 400;
+  line-height: 0.88;
+  letter-spacing: 0.01em;
+  /* Fallback color for browsers that don't support background-clip:text */
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05em;
+  margin-bottom: 2.25rem;
+  /* dir-ltr because letters read left-to-right inside an RTL page */
+}
+
+.hero-title-line {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(4.5rem, 18vw, 11rem);
+  /* Reserve generous height for tall letters */
+}
+
+.hero-title-line-amp {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.75rem, 10vw, 6rem);
+  color: var(--gold-deep);
+  line-height: 1;
+}
+
+.letter {
+  display: inline-block;
+  /* Image-masked text — falls back to color if unsupported */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  transition: transform 0.4s var(--ease), filter 0.4s ease;
+  padding: 0 0.005em;
+}
+.letter:hover { transform: translateY(-4px); filter: brightness(1.1) saturate(1.15); }
+
+/* Fallback for browsers without background-clip text */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .letter { color: var(--terracotta); -webkit-text-fill-color: var(--terracotta); background: none !important; }
+}
+
+.hero-subtitle {
+  font-family: 'Markazi Text', serif;
+  font-size: 1.25rem;
+  color: var(--ink-soft);
+  max-width: 36rem;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+@media (min-width: 640px) { .hero-subtitle { font-size: 1.5rem; } }
+
+.hero-decoration {
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+  margin: 1.75rem auto 0;
+  color: var(--gold-deep);
+}
+.hero-decoration-line { width: 3rem; height: 1px; background: var(--gold); opacity: 0.5; }
+.hero-decoration-dot { width: 4px; height: 4px; border-radius: 9999px; background: var(--gold-deep); }
+
+/* =========================================================
+   5. DESTINATIONS GRID
+   ========================================================= */
+.destinations-section { padding: 2rem 0 6rem; position: relative; }
+
+.section-heading {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  margin-bottom: 3rem;
+  gap: 0.5rem;
+}
+.section-heading-en {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  color: var(--gold-deep);
+}
+.section-heading-ar {
+  font-family: 'Markazi Text', serif;
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.1;
+}
+@media (min-width: 640px) { .section-heading-ar { font-size: 3rem; } }
+.section-heading-sub {
+  font-size: 0.9375rem;
+  color: var(--ink-mute);
+  margin-top: 0.25rem;
+  max-width: 30rem;
+}
+.section-heading-deco {
+  display: flex; align-items: center; gap: 0.625rem;
+  margin-top: 0.75rem; color: var(--gold-deep);
+}
+.section-heading-deco-line { width: 2.5rem; height: 1px; background: currentColor; opacity: 0.4; }
+
+.destinations-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem 1.75rem;
+}
+@media (min-width: 640px) { .destinations-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .destinations-grid { grid-template-columns: repeat(3, 1fr); gap: 3rem 2rem; } }
+
+/* Destination card — clean polaroid-inspired but modern */
+.dest-card {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  padding: 0.875rem 0.875rem 1.25rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-photo);
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+  text-align: right;
+  width: 100%;
+}
+@media (min-width: 640px) {
+  /* Subtle alternating tilt for visual rhythm */
+  .destinations-grid > .dest-card:nth-child(3n+1) { transform: rotate(-0.4deg); }
+  .destinations-grid > .dest-card:nth-child(3n+2) { transform: rotate(0.3deg); }
+  .destinations-grid > .dest-card:nth-child(3n+3) { transform: rotate(-0.2deg); }
+}
+.dest-card:hover { transform: translateY(-8px) rotate(0deg); box-shadow: var(--shadow-lg); }
+.dest-card:focus-visible { transform: translateY(-8px) rotate(0deg); }
+
+/* Washi tape decoration on top of card */
+.dest-card-tape {
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 3.5rem; height: 18px;
+  background: rgba(201,169,97,0.5);
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(42,31,21,0.1);
+  pointer-events: none;
+}
+.dest-card:nth-child(2n) .dest-card-tape { background: rgba(184,92,67,0.45); transform: translateX(-50%) rotate(2deg); }
+.dest-card:nth-child(3n) .dest-card-tape { background: rgba(123,150,168,0.45); }
+
+.dest-card-photo {
+  position: relative;
+  aspect-ratio: 4/5;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background: var(--cream-deep);
+}
+.dest-card-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease);
+}
+.dest-card:hover .dest-card-img { transform: scale(1.05); }
+.dest-card-fallback {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+}
+.dest-card-photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(42,31,21,0.45) 100%);
+  pointer-events: none;
+}
+.dest-card-overlay-content {
+  position: absolute; bottom: 0.875rem; right: 1rem; left: 1rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+  color: var(--cream-soft);
+}
+.dest-card-overlay-num {
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+  opacity: 0.85;
+}
+.dest-card-overlay-emoji { font-size: 1.5rem; }
+
+.dest-card-body { padding: 0 0.25rem; }
+.dest-card-loc-en {
+  font-family: 'Caveat', cursive;
+  color: var(--gold-deep);
+  font-size: 1rem;
+  margin-bottom: 0.125rem;
+  letter-spacing: 0.02em;
+}
+.dest-card-title {
+  font-family: 'Markazi Text', serif;
+  font-weight: 600;
+  font-size: 1.875rem;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 0.625rem;
+}
+.dest-card-meta {
+  display: flex; align-items: center; gap: 0.5rem;
+  color: var(--ink-mute);
+  font-size: 0.875rem;
+}
+.dest-card-meta svg { flex-shrink: 0; opacity: 0.7; }
+.dest-card-dates {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.dest-card-divider {
+  height: 1px;
+  background: linear-gradient(to left, transparent, var(--line-strong), transparent);
+  margin: 0.75rem 0;
+}
+.dest-card-cta {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 0.625rem;
+  font-size: 0.8125rem;
+  color: var(--terracotta);
+  font-weight: 500;
+}
+.dest-card-cta-arrow { transition: transform 0.3s var(--ease); }
+.dest-card:hover .dest-card-cta-arrow { transform: translateX(-4px); }
+
+/* =========================================================
+   6. STICKY NOTES (home wall)
+   ========================================================= */
+.notes-section {
+  padding: 4rem 0 6rem;
+  background: linear-gradient(180deg, transparent, rgba(232,220,196,0.4) 30%, rgba(232,220,196,0.4) 70%, transparent);
+}
+.notes-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+@media (min-width: 640px) { .notes-wall { gap: 2rem; } }
+
+.note {
+  position: relative;
+  padding: 1.5rem 1.25rem 1.25rem;
+  min-height: 160px;
+  border-radius: 4px;
+  box-shadow: var(--shadow-photo);
+  font-family: 'Caveat', 'Tajawal', cursive;
+  font-size: 1.375rem;
+  line-height: 1.4;
+  color: var(--ink);
+  display: flex; flex-direction: column;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  cursor: default;
+}
+.note:hover { transform: translateY(-4px) rotate(0deg) !important; box-shadow: var(--shadow-lg); z-index: 2; }
+
+.note-yellow  { background: #F5E5A8; }
+.note-pink    { background: #F2D5D0; }
+.note-blue    { background: #D4DDE5; }
+.note-mint    { background: #D5DDC8; }
+.note-cream   { background: #EFE5D2; }
+
+.notes-wall .note:nth-child(5n+1) { transform: rotate(-1.5deg); }
+.notes-wall .note:nth-child(5n+2) { transform: rotate(1deg); }
+.notes-wall .note:nth-child(5n+3) { transform: rotate(-0.5deg); }
+.notes-wall .note:nth-child(5n+4) { transform: rotate(1.8deg); }
+.notes-wall .note:nth-child(5n+5) { transform: rotate(-1deg); }
+
+.note-tape {
+  position: absolute;
+  top: -8px; left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 3rem; height: 16px;
+  background: rgba(255,255,255,0.45);
+  border-left: 1px dashed rgba(42,31,21,0.08);
+  border-right: 1px dashed rgba(42,31,21,0.08);
+}
+.note-text { flex: 1; word-break: break-word; }
+.note-meta {
+  margin-top: 0.5rem;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.75rem;
+  color: var(--ink-mute);
+  opacity: 0.6;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.note-delete {
+  opacity: 0; transition: opacity 0.2s ease;
+  font-family: 'Tajawal', sans-serif; font-size: 0.75rem;
+  color: var(--ink-mute);
+}
+.note:hover .note-delete { opacity: 1; }
+
+.note-add {
+  background: transparent;
+  border: 2px dashed var(--line-strong);
+  color: var(--ink-mute);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
+  box-shadow: none;
+  transform: rotate(0deg) !important;
+}
+.note-add:hover { border-color: var(--terracotta); color: var(--terracotta); background: rgba(184,92,67,0.04); }
+.note-add svg { opacity: 0.6; }
+
+/* =========================================================
+   7. TRIP DETAIL PAGE
+   ========================================================= */
+.detail-hero {
+  position: relative;
+  height: 60vh;
+  min-height: 28rem;
+  max-height: 36rem;
+  overflow: hidden;
+  background: var(--cream-deep);
+}
+.detail-hero-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.detail-hero-fallback { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.detail-hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(42,31,21,0.25) 0%, rgba(42,31,21,0.15) 30%, rgba(42,31,21,0.55) 100%);
+}
+.detail-hero-content {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+  padding: 3rem 1.5rem 4rem;
+  text-align: center;
+  color: var(--cream-soft);
+}
+.detail-hero-back {
+  position: absolute; top: 1.25rem; right: 1.25rem;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 0.875rem;
+  background: rgba(245,239,229,0.92);
+  color: var(--ink);
+  border-radius: 9999px;
+  font-size: 0.8125rem; font-weight: 500;
+  backdrop-filter: blur(10px);
+  transition: background 0.2s ease;
+}
+.detail-hero-back:hover { background: var(--cream-soft); }
+.detail-hero-supertitle {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #F5E5A8;
+  letter-spacing: 0.02em;
+}
+@media (min-width: 640px) { .detail-hero-supertitle { font-size: 2rem; } }
+.detail-hero-title {
+  font-family: 'Markazi Text', serif;
+  font-weight: 600;
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: 0.875rem;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+@media (min-width: 640px) { .detail-hero-title { font-size: 4.5rem; } }
+@media (min-width: 1024px) { .detail-hero-title { font-size: 5.5rem; } }
+.detail-hero-dates {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.125rem;
+  color: rgba(250,246,238,0.92);
+  letter-spacing: 0.05em;
+}
+@media (min-width: 640px) { .detail-hero-dates { font-size: 1.375rem; } }
+.detail-hero-deco {
+  margin-top: 1.5rem;
+  display: flex; gap: 0.625rem; align-items: center;
+  color: rgba(245,229,168,0.85);
+  font-size: 0.875rem; letter-spacing: 0.5em;
+}
+
+/* Intro section */
+.detail-intro {
+  position: relative;
+  margin-top: -3rem;
+  z-index: 5;
+  padding-bottom: 3rem;
+}
+.intro-card {
+  background: var(--cream-soft);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.75rem;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  margin: 0 auto;
+  max-width: 44rem;
+}
+@media (min-width: 640px) { .intro-card { padding: 2.75rem 2.5rem; } }
+.intro-card-emoji { font-size: 2rem; margin-bottom: 0.75rem; }
+.intro-card-text {
+  font-family: 'Markazi Text', serif;
+  font-size: 1.375rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+@media (min-width: 640px) { .intro-card-text { font-size: 1.625rem; line-height: 1.6; } }
+
+/* Summary chips */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  max-width: 44rem;
+  margin: 2rem auto 0;
+}
+@media (min-width: 640px) { .summary-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; } }
+.summary-item {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 1.125rem 0.75rem;
+  background: var(--paper);
+  border-radius: var(--radius-md);
+  text-align: center;
+  border: 1px solid var(--line);
+}
+.summary-icon { color: var(--gold-deep); margin-bottom: 0.4rem; }
+.summary-label {
+  font-size: 0.6875rem;
+  color: var(--ink-mute);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  font-family: 'Tajawal', sans-serif;
+}
+.summary-value {
+  font-family: 'Markazi Text', serif;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* Table of Contents card */
+.toc-section { padding: 2rem 0 4rem; }
+.toc-card {
+  max-width: 30rem;
+  margin: 0 auto;
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 1.5rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--line);
+  position: relative;
+}
+.toc-card::before {
+  content: '';
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 4rem; height: 16px;
+  background: rgba(201,169,97,0.4);
+  border-radius: 2px;
+}
+.toc-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 0.25rem;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+.toc-title-ar {
+  text-align: center;
+  font-family: 'Caveat', cursive;
+  font-size: 1.125rem;
+  color: var(--gold-deep);
+  margin-bottom: 1.25rem;
+}
+.toc-list { display: flex; flex-direction: column; gap: 0.25rem; }
+.toc-item {
+  display: flex; align-items: center; gap: 0.875rem;
+  padding: 0.75rem 0.875rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  color: var(--ink);
+  transition: background 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+  text-align: right;
+}
+.toc-item:hover { background: var(--cream-warm); color: var(--terracotta); }
+.toc-item-icon {
+  width: 2rem; height: 2rem; border-radius: 9999px;
+  background: var(--cream-warm); color: var(--gold-deep);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.toc-item:hover .toc-item-icon { background: var(--terracotta); color: var(--cream-soft); }
+.toc-item-text { font-family: 'Markazi Text', serif; font-size: 1.125rem; font-weight: 500; }
+.toc-item-count {
+  margin-inline-start: auto;
+  font-size: 0.75rem; color: var(--ink-light);
+  font-family: 'Tajawal', sans-serif;
+}
+
+/* =========================================================
+   8. CONTENT SECTIONS (memories, places, stays, etc.)
+   ========================================================= */
+.content-section { padding: 3rem 0; scroll-margin-top: 5rem; }
+.content-section:nth-child(even) { background: rgba(232,220,196,0.25); }
+
+.section-label-row {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 2rem;
+  max-width: 56rem;
+  margin-inline: auto;
+  padding: 0 1.25rem;
+}
+.section-label-icon {
+  width: 2.75rem; height: 2.75rem;
+  border-radius: 9999px;
+  background: var(--cream-warm);
+  color: var(--gold-deep);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+}
+.section-label-text { flex: 1; }
+.section-label-en {
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+  color: var(--gold-deep);
+  line-height: 1;
+  margin-bottom: 0.125rem;
+}
+.section-label-ar {
+  font-family: 'Markazi Text', serif;
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.section-label-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(to left, var(--line-strong), transparent);
+  min-width: 2rem;
+}
+
+/* Memories — featured + grid layout */
+.memories-layout {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+@media (min-width: 768px) {
+  .memories-layout { grid-template-columns: 1.4fr 1fr; gap: 2rem; }
+}
+.memory-featured {
+  position: relative;
+  background: var(--paper);
+  padding: 0.75rem 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-photo);
+}
+.memory-featured-photo {
+  aspect-ratio: 4/3;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 0.875rem;
+  background: var(--cream-deep);
+  position: relative;
+}
+.memory-featured-photo img { width: 100%; height: 100%; object-fit: cover; }
+.memory-featured-caption {
+  font-family: 'Caveat', cursive;
+  font-size: 1.375rem;
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 0 0.5rem;
+}
+.memory-featured-story {
+  margin-top: 0.875rem;
+  font-family: 'Markazi Text', serif;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--ink);
+  padding: 0 0.5rem;
+}
+
+.memory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.memory-small {
+  position: relative;
+  background: var(--paper);
+  padding: 0.5rem 0.5rem 0.875rem;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-photo);
+  transition: transform 0.3s var(--ease);
+}
+.memory-small:hover { transform: translateY(-3px); }
+.memory-small:nth-child(odd) { transform: rotate(-1deg); }
+.memory-small:nth-child(even) { transform: rotate(0.8deg); }
+.memory-small:nth-child(odd):hover { transform: translateY(-3px) rotate(-1deg); }
+.memory-small:nth-child(even):hover { transform: translateY(-3px) rotate(0.8deg); }
+.memory-small-photo {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  background: var(--cream-deep);
+}
+.memory-small-photo img { width: 100%; height: 100%; object-fit: cover; }
+.memory-small-caption {
+  font-family: 'Caveat', cursive;
+  font-size: 1.0625rem;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+/* Places list — clean numbered list with icons */
+.places-list, .activities-list, .tips-list {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex; flex-direction: column;
+  gap: 0.75rem;
+}
+.places-item, .activities-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--paper);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  font-family: 'Markazi Text', serif;
+  font-size: 1.25rem;
+  color: var(--ink);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.places-item:hover, .activities-item:hover { transform: translateX(-4px); border-color: var(--gold); }
+.places-item-num {
+  width: 2rem; height: 2rem;
+  border-radius: 9999px;
+  background: var(--terracotta);
+  color: var(--cream-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.875rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.places-item-text { flex: 1; }
+
+/* Tips — sticky-note style */
+.tips-list { display: grid; grid-template-columns: 1fr; gap: 1rem; max-width: 52rem; }
+@media (min-width: 640px) { .tips-list { grid-template-columns: repeat(2, 1fr); } }
+.tip-item {
+  position: relative;
+  padding: 1.25rem 1.125rem;
+  background: #F5E5A8;
+  border-radius: 4px;
+  box-shadow: var(--shadow-photo);
+  font-family: 'Markazi Text', serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.tips-list .tip-item:nth-child(4n+1) { background: #F5E5A8; transform: rotate(-0.8deg); }
+.tips-list .tip-item:nth-child(4n+2) { background: #F2D5D0; transform: rotate(0.6deg); }
+.tips-list .tip-item:nth-child(4n+3) { background: #D4DDE5; transform: rotate(-0.4deg); }
+.tips-list .tip-item:nth-child(4n+4) { background: #D5DDC8; transform: rotate(0.9deg); }
+.tip-item::before {
+  content: '✦';
+  display: inline-block;
+  margin-inline-end: 0.5rem;
+  color: var(--gold-deep);
+  font-size: 0.875rem;
+}
+
+/* Stays / Food — card list */
+.stays-list, .food-list {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .stays-list, .food-list { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+}
+.stay-card, .food-card {
+  background: var(--paper);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.375rem;
+  border: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 0.375rem;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.stay-card:hover, .food-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.stay-card-name, .food-card-name {
+  font-family: 'Markazi Text', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.stay-card-type, .food-card-type {
+  font-family: 'Caveat', cursive;
+  font-size: 1.0625rem;
+  color: var(--gold-deep);
+}
+.stay-card-note, .food-card-note {
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-top: 0.25rem;
+}
+
+/* Feelings — long quote */
+.feelings-block {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  position: relative;
+  text-align: center;
+}
+.feelings-quote-mark {
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--gold);
+  opacity: 0.5;
+  margin-bottom: -1rem;
+}
+.feelings-text {
+  font-family: 'Markazi Text', serif;
+  font-size: 1.5rem;
+  line-height: 1.7;
+  color: var(--ink);
+  font-weight: 500;
+}
+@media (min-width: 640px) { .feelings-text { font-size: 1.75rem; } }
+.feelings-attribution {
+  margin-top: 1.5rem;
+  font-family: 'Caveat', cursive;
+  font-size: 1.25rem;
+  color: var(--ink-mute);
+}
+
+/* Gallery section — large featured + grid */
+.gallery-section { padding: 4rem 0 6rem; }
+.gallery-layout {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+.gallery-featured {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  aspect-ratio: 16/9;
+  box-shadow: var(--shadow-lg);
+}
+.gallery-featured img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-featured-caption {
+  position: absolute; bottom: 1.5rem; right: 1.5rem; left: 1.5rem;
+  font-family: 'Caveat', cursive;
+  font-size: 1.75rem;
+  color: var(--cream-soft);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  text-align: center;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+@media (min-width: 768px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
+.gallery-item {
+  position: relative;
+  background: var(--paper);
+  padding: 0.5rem 0.5rem 0.875rem;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-photo);
+  transition: transform 0.4s var(--ease);
+}
+.gallery-item:nth-child(3n+1) { transform: rotate(-1deg); }
+.gallery-item:nth-child(3n+2) { transform: rotate(0.8deg); }
+.gallery-item:nth-child(3n+3) { transform: rotate(-0.5deg); }
+.gallery-item:hover { transform: scale(1.04) rotate(0deg); z-index: 2; }
+.gallery-item-photo {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  background: var(--cream-deep);
+}
+.gallery-item-photo img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-item-caption {
+  font-family: 'Caveat', cursive;
+  font-size: 1.0625rem;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+/* =========================================================
+   9. FOOTER
+   ========================================================= */
+.footer {
+  padding: 4rem 1.25rem 3rem;
+  text-align: center;
+  border-top: 1px solid var(--line);
+  background: var(--cream-warm);
+  margin-top: 2rem;
+}
+.footer-mark {
+  font-family: 'Caveat', cursive;
+  font-size: 2.25rem;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.footer-mark-amp { color: var(--gold-deep); font-style: italic; }
+.footer-tagline {
+  font-family: 'Markazi Text', serif;
+  font-size: 1.125rem;
+  color: var(--ink-soft);
+  margin-bottom: 1rem;
+}
+.footer-meta {
+  font-size: 0.8125rem;
+  color: var(--ink-mute);
+}
+.footer-deco {
+  margin-top: 1.25rem;
+  color: var(--gold-deep);
+  letter-spacing: 0.5em;
+  font-size: 0.875rem;
+}
+
+/* =========================================================
+   10. BUTTONS, INPUTS, MODAL
+   ========================================================= */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.75rem 1.5rem; border-radius: 9999px;
+  font-size: 0.9375rem; font-weight: 500;
+  transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-primary { background: var(--ink); color: var(--cream-soft); }
 .btn-primary:hover { background: var(--terracotta); }
 .btn-primary:active { transform: translateY(1px); }
-.btn-ghost { color: var(--ink); transition: color 0.2s ease; }
+.btn-ghost { color: var(--ink); }
 .btn-ghost:hover { color: var(--terracotta); }
-.btn-sm { padding: 0.625rem 1.25rem; font-size: 0.875rem; }
+.btn-sm { padding: 0.5rem 1.125rem; font-size: 0.8125rem; }
+.btn-cancel {
+  padding: 0.75rem 1.25rem; border-radius: 9999px;
+  font-size: 0.875rem; background: var(--cream-warm); color: var(--ink);
+  cursor: pointer; transition: background 0.2s ease; font-family: inherit;
+}
+.btn-cancel:hover { background: var(--cream-deep); }
 .btn-flex { flex: 1; }
-.btn-cancel { padding: 0.75rem 1.25rem; border-radius: 9999px; font-size: 0.875rem; background: var(--cream-2); color: var(--ink); cursor: pointer; border: none; font-family: inherit; transition: background 0.2s ease; }
-.btn-cancel:hover { background: var(--tan-2); }
 
-/* =========================================================
-   INPUTS
-   ========================================================= */
-.input-field { background: var(--cream-3); border: 1px solid var(--line); color: var(--ink); padding: 10px 14px; border-radius: 6px; width: 100%; transition: border-color 0.2s ease, box-shadow 0.2s ease; font-size: 0.9375rem; line-height: 1.5; resize: vertical; }
-.input-field:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(31,26,20,0.08); }
-.field-label { font-size: 0.875rem; display: block; margin-bottom: 0.25rem; color: var(--ink-soft); }
-.field-group { display: flex; flex-direction: column; gap: 0.25rem; }
+.input-field {
+  background: var(--cream-soft);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  width: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+.input-field:focus { outline: none; border-color: var(--gold-deep); box-shadow: 0 0 0 3px rgba(201,169,97,0.15); }
+.field-label { font-size: 0.8125rem; display: block; margin-bottom: 0.375rem; color: var(--ink-soft); font-weight: 500; }
+.field-group { display: flex; flex-direction: column; }
 
-/* =========================================================
-   AVATAR & BYLINE
-   ========================================================= */
-.avatar { width: 2.25rem; height: 2.25rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-family: 'Markazi Text', serif; font-size: 0.875rem; font-weight: 600; flex-shrink: 0; border: 2px solid var(--cream); }
-.avatar-stack { display: flex; }
-.avatar-stack > *:not(:first-child) { margin-inline-start: -0.5rem; }
-.byline { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-.byline-text { font-size: 0.9375rem; color: var(--ink-soft); }
-.highlight-name { background-image: linear-gradient(180deg, transparent 55%, var(--gold) 55%, var(--gold) 92%, transparent 92%); padding: 0 4px; font-family: 'Markazi Text', serif; font-size: 1.125rem; font-weight: 600; color: var(--ink); }
-.byline-sep { margin: 0 0.5rem; color: var(--ink-mute); }
-.byline-date { color: var(--ink-mute); }
-
-/* =========================================================
-   ORNAMENTS & SECTION LABELS
-   ========================================================= */
-.ornament { color: var(--terracotta); letter-spacing: 0.4em; }
-.section-label { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--terracotta); }
-.section-label-text { letter-spacing: 0.3em; }
-.section-label-line { flex: 1; height: 1px; background: var(--line); }
-
-/* =========================================================
-   COVERS (gradient + SVG motif)
-   ========================================================= */
-.cover { position: relative; overflow: hidden; }
-.cover .grain { position: absolute; inset: 0; background-image: radial-gradient(circle at 20% 25%, rgba(255,255,255,0.35) 0%, transparent 50%), radial-gradient(circle at 80% 75%, rgba(0,0,0,0.22) 0%, transparent 55%); pointer-events: none; }
-.cover svg { position: absolute; }
-.cover-featured { aspect-ratio: 16/10; border-radius: 1rem; }
-@media (min-width: 640px) { .cover-featured { aspect-ratio: 16/8; } }
-.cover-card { aspect-ratio: 4/3; border-radius: 0.75rem; }
-.cover-detail { aspect-ratio: 16/9; }
-@media (min-width: 640px) { .cover-detail { aspect-ratio: 16/7; } }
-.cover-moment { aspect-ratio: 16/9; border-radius: 0.75rem; margin-bottom: 1.25rem; }
-.cover-preview { aspect-ratio: 16/7; border-radius: 0.5rem; }
-
-/* =========================================================
-   FEATURED HERO
-   ========================================================= */
-.featured-section { padding: 2.5rem 0 4rem; }
-.featured-cover-btn { width: 100%; display: block; padding: 0; border-radius: 1rem; overflow: hidden; }
-.featured-meta { text-align: center; max-width: 48rem; margin: 2.5rem auto 0; }
-.featured-location { margin-bottom: 1.25rem; font-size: 1rem; }
-.featured-title { font-size: 3rem; font-weight: 600; line-height: 1.05; margin-bottom: 1.25rem; color: var(--ink); }
-@media (min-width: 640px) { .featured-title { font-size: 3.75rem; } }
-@media (min-width: 768px) { .featured-title { font-size: 4.5rem; } }
-@media (max-width: 640px) { .featured-title { font-size: 2.5rem; } }
-.featured-title-inner { display: inline-flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
-.featured-emoji { font-size: 1.875rem; }
-@media (min-width: 640px) { .featured-emoji { font-size: 2.25rem; } }
-.featured-subtitle { font-size: 1.125rem; line-height: 1.6; margin-bottom: 1.75rem; color: var(--ink-soft); }
-@media (min-width: 640px) { .featured-subtitle { font-size: 1.25rem; } }
-.featured-byline-wrap { display: flex; justify-content: center; margin-bottom: 1.75rem; }
-.featured-cta { display: flex; justify-content: center; }
-
-/* =========================================================
-   CARDS & GRID
-   ========================================================= */
-.card-hover { transition: transform 0.35s cubic-bezier(.2,.7,.2,1), box-shadow 0.35s ease; }
-.card-hover:hover { transform: translateY(-4px); box-shadow: 0 18px 40px -20px rgba(31,26,20,0.25); }
-.trips-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; row-gap: 3.5rem; }
-@media (min-width: 640px) { .trips-grid { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1024px) { .trips-grid { grid-template-columns: 1fr 1fr 1fr; } }
-.trip-card { cursor: pointer; display: block; text-align: right; width: 100%; padding: 0; }
-.trip-card .cover { margin-bottom: 1rem; }
-.trip-card-body { padding: 0 0.25rem; }
-.trip-card-location { font-size: 0.75rem; margin-bottom: 0.5rem; }
-.trip-card-title { font-size: 1.5rem; font-weight: 600; line-height: 1.2; margin-bottom: 0.5rem; color: var(--ink); }
-@media (min-width: 640px) { .trip-card-title { font-size: 1.7rem; } }
-.trip-card-title-inner { display: inline-flex; align-items: baseline; gap: 0.5rem; }
-.trip-card-emoji { font-size: 1rem; }
-.trip-card-subtitle { font-size: 0.9375rem; line-height: 1.6; margin-bottom: 0.75rem; color: var(--ink-soft); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.trip-card-meta { font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; color: var(--ink-mute); }
-
-.grid-section { padding-bottom: 5rem; }
-.grid-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
-.grid-title-label { font-size: 0.75rem; margin-bottom: 0.5rem; }
-.grid-title { font-size: 2.25rem; font-weight: 600; color: var(--ink); }
-@media (min-width: 640px) { .grid-title { font-size: 3rem; } }
-.empty-state { text-align: center; padding: 4rem 0; color: var(--ink-mute); }
-.empty-state-small { text-align: center; padding: 2.5rem 0; color: var(--ink-mute); }
-
-/* =========================================================
-   TRIP DETAIL
-   ========================================================= */
-.trip-detail-card { max-width: 48rem; margin: -3rem auto 0; padding: 0 1.25rem; position: relative; }
-@media (min-width: 640px) { .trip-detail-card { margin-top: -4rem; padding: 0 2rem; } }
-.trip-detail-inner { border-radius: 1rem; padding: 1.75rem; background: var(--cream-3); box-shadow: 0 18px 50px -25px rgba(31,26,20,0.25); }
-@media (min-width: 640px) { .trip-detail-inner { padding: 2.5rem; } }
-.trip-detail-back { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; margin-bottom: 1.5rem; color: var(--ink); transition: color 0.2s ease; }
-.trip-detail-back:hover { color: var(--terracotta); }
-.trip-detail-loc { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; margin-bottom: 1rem; color: var(--terracotta); letter-spacing: 0.05em; }
-.trip-detail-title { font-size: 2.25rem; font-weight: 600; line-height: 1.1; margin-bottom: 1.25rem; color: var(--ink); }
-@media (min-width: 640px) { .trip-detail-title { font-size: 3rem; } }
-@media (min-width: 768px) { .trip-detail-title { font-size: 3.75rem; } }
-.trip-detail-title-inner { display: inline-flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
-.trip-detail-emoji { font-size: 1.5rem; }
-@media (min-width: 640px) { .trip-detail-emoji { font-size: 1.875rem; } }
-.trip-detail-subtitle { font-size: 1.125rem; line-height: 1.6; margin-bottom: 1.5rem; color: var(--ink-soft); }
-.trip-detail-byline { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding-bottom: 1.5rem; margin-bottom: 1.75rem; border-bottom: 1px solid var(--line); }
-.delete-btn { font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.375rem; opacity: 0.5; transition: opacity 0.2s ease; color: var(--ink-mute); }
-.delete-btn:hover { opacity: 1; }
-.trip-detail-intro { font-family: 'Markazi Text', serif; font-size: 1.25rem; line-height: 1.6; color: var(--ink); }
-@media (min-width: 640px) { .trip-detail-intro { font-size: 1.5rem; } }
-
-/* =========================================================
-   TIMELINE
-   ========================================================= */
-.timeline-section { max-width: 48rem; margin: 4rem auto 0; padding: 0 1.25rem 3rem; }
-@media (min-width: 640px) { .timeline-section { padding: 0 2rem 3rem; } }
-.timeline { position: relative; }
-.timeline-line { position: absolute; top: 0.5rem; bottom: 0.5rem; right: 0.75rem; width: 2px; border-radius: 9999px; background: linear-gradient(180deg, var(--terracotta) 0%, var(--gold) 50%, var(--tan) 100%); }
-.timeline-entry { position: relative; margin-bottom: 3.5rem; padding-right: 2.5rem; }
-.timeline-entry:last-child { margin-bottom: 0; }
-.timeline-dot { position: absolute; right: 4px; top: 0.5rem; width: 1rem; height: 1rem; border-radius: 9999px; border: 3px solid var(--cream); }
-.timeline-date { font-size: 0.75rem; margin-bottom: 0.5rem; }
-.timeline-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; line-height: 1.2; color: var(--ink); }
-@media (min-width: 640px) { .timeline-title { font-size: 1.875rem; } }
-.timeline-body { font-size: 1.0625rem; line-height: 1.9; color: var(--ink-soft); }
-.timeline-delete { margin-top: 0.75rem; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 0.25rem; opacity: 0.4; transition: opacity 0.2s ease; color: var(--ink-mute); }
-.timeline-delete:hover { opacity: 1; }
-
-.add-moment-wrap { display: flex; justify-content: center; margin-top: 2.5rem; }
-.end-ornament { text-align: center; padding-bottom: 5rem; color: var(--terracotta); letter-spacing: 0.6em; }
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-.footer { padding: 3rem 0; text-align: center; font-size: 0.875rem; border-top: 1px solid var(--line); color: var(--ink-mute); }
-.footer-name { font-family: 'Markazi Text', serif; font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--ink); }
-.footer-ornament { margin-top: 1rem; color: var(--terracotta); }
-
-/* =========================================================
-   MODAL
-   ========================================================= */
-.modal-overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(31,26,20,0.55); animation: fadeIn 0.25s ease both; }
-.modal { position: relative; width: 100%; max-width: 32rem; border-radius: 1rem; padding: 1.75rem; max-height: 90vh; overflow-y: auto; background: var(--cream-3); animation: modalIn 0.3s cubic-bezier(.2,.7,.2,1) both; }
-.modal-close { position: absolute; top: 1rem; left: 1rem; color: var(--ink); transition: color 0.2s ease; }
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  background: rgba(42,31,21,0.55);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.25s ease both;
+}
+.modal {
+  position: relative; width: 100%; max-width: 32rem;
+  border-radius: var(--radius-lg); padding: 1.75rem;
+  max-height: 90vh; overflow-y: auto;
+  background: var(--cream-soft);
+  animation: modalIn 0.3s var(--ease) both;
+  box-shadow: var(--shadow-lg);
+}
+.modal-close {
+  position: absolute; top: 1rem; left: 1rem;
+  color: var(--ink-mute); transition: color 0.2s ease;
+}
 .modal-close:hover { color: var(--terracotta); }
-.modal-title { font-family: 'Markazi Text', serif; font-size: 1.875rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--ink); }
+.modal-title {
+  font-family: 'Markazi Text', serif;
+  font-size: 1.75rem; font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: var(--ink);
+}
 .modal-form { display: flex; flex-direction: column; gap: 1rem; }
 .modal-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 @media (max-width: 480px) { .modal-form-row { grid-template-columns: 1fr; } }
-.modal-form-actions { display: flex; gap: 0.75rem; padding-top: 1rem; }
+.modal-form-actions { display: flex; gap: 0.75rem; padding-top: 0.75rem; }
+
+/* Note color picker */
+.color-picker { display: flex; gap: 0.5rem; margin-top: 0.375rem; flex-wrap: wrap; }
+.color-swatch {
+  width: 2rem; height: 2rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.color-swatch:hover { transform: scale(1.1); }
+.color-swatch.active { border-color: var(--ink); }
 
 /* =========================================================
-   PALETTE & MOTIF SELECT
+   11. ANIMATIONS & UTILITIES
    ========================================================= */
-.palette-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
-.palette-swatch { aspect-ratio: 1; border-radius: 9999px; transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; border: none; padding: 0; }
-.palette-swatch.active { transform: scale(1.15); box-shadow: 0 0 0 2px var(--ink); }
-.motif-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
-.motif-btn { border-radius: 0.5rem; padding: 0.5rem; font-size: 0.75rem; transition: background 0.2s ease, color 0.2s ease; background: var(--cream-2); color: var(--ink); cursor: pointer; border: none; font-family: inherit; }
-.motif-btn.active { background: var(--ink); color: var(--cream-3); }
-.motif-btn:hover { background: var(--tan-2); }
-.motif-btn.active:hover { background: var(--ink); }
-
-/* =========================================================
-   LOADING & ANIMATIONS
-   ========================================================= */
-.loader { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-.spinner { width: 1.5rem; height: 1.5rem; color: var(--terracotta); animation: spin 1s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
 .fade-in { animation: fadeIn 0.5s ease both; }
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-/* Selection */
-::selection { background: var(--gold); color: var(--ink); }
+.spinner { width: 1.75rem; height: 1.75rem; color: var(--gold-deep); animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loader { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--ink-mute);
+  font-family: 'Markazi Text', serif;
+  font-size: 1.25rem;
+}
+.empty-state-add {
+  margin-top: 1.25rem;
+}
+
+/* =========================================================
+   12. RESPONSIVE TWEAKS
+   ========================================================= */
+@media (max-width: 480px) {
+  .hero { padding: 2.5rem 1rem 4rem; }
+  .hero-title-line { font-size: clamp(3.5rem, 22vw, 6rem); }
+  .nav-add-btn span { display: none; }
+  .detail-hero-back span { display: none; }
+}
 </style>
 </head>
 <body>
@@ -263,163 +1138,445 @@ img, svg { display: block; max-width: 100%; }
 /* =========================================================
    CONSTANTS
    ========================================================= */
-const STORAGE_KEY = 'all_trips_v1';
+const STORAGE_KEY_TRIPS = 'travel_blog_v2_trips';
+const STORAGE_KEY_NOTES = 'travel_blog_v2_notes';
 
-const PALETTES = {
-  warm:   { from: '#E8C547', to: '#B85C43', motif: '#3A1F10', text: '#1F1A14' },
-  dusk:   { from: '#4A2C4A', to: '#B85C43', motif: '#F5EFE5', text: '#FAF5EC' },
-  ocean:  { from: '#2C5F6F', to: '#83B0C2', motif: '#F5EFE5', text: '#FAF5EC' },
-  rose:   { from: '#E8B4B4', to: '#8B4F58', motif: '#3A1F25', text: '#FAF5EC' },
-  forest: { from: '#3F5F3F', to: '#9BB78A', motif: '#1A2A1A', text: '#FAF5EC' },
-  sand:   { from: '#E5CDA8', to: '#9A7B4F', motif: '#3A2810', text: '#1F1A14' },
-  night:  { from: '#1A2847', to: '#4A5F8E', motif: '#F5EFE5', text: '#FAF5EC' },
-  spice:  { from: '#D85A2E', to: '#F0A858', motif: '#3A1810', text: '#1F1A14' },
-  mist:   { from: '#A8B5B0', to: '#5C7068', motif: '#1A2520', text: '#FAF5EC' },
+// Photos sourced from Unsplash (https://unsplash.com) — free to use.
+// Replace these URLs with your own photos when ready.
+// Format: https://images.unsplash.com/photo-{id}?w={width}&q={quality}&auto=format
+const IMG = (id, w) => 'https://images.unsplash.com/photo-' + id + '?w=' + (w || 1200) + '&q=80&auto=format&fit=crop';
+
+// Curated Unsplash IDs for each destination
+const PHOTOS = {
+  // Dubai
+  dubai_burj:     '1512453979798-5ea266f8880c', // Burj Khalifa skyline
+  dubai_desert:   '1582672060674-bc2bd808a8ce', // Dubai desert dunes
+  dubai_marina:   '1518684079-3c830dcef090',    // Dubai marina at sunset
+  dubai_old:      '1546412414-e1885259563a',    // Old Dubai souk
+  // Turkey
+  turkey_hagia:   '1541432901042-2d8bd64b4a9b', // Hagia Sophia
+  turkey_capp:    '1570939274717-7eda259b50ed', // Cappadocia hot air balloons
+  turkey_uzungol: '1623874228601-f4193c7b1818', // Uzungöl
+  turkey_galata:  '1524231757912-21f4fe3a7200', // Galata
+  turkey_bosph:   '1605101100278-5d1deb2b6498', // Bosphorus
+  // Abu Dhabi / Doha
+  ad_mosque:      '1583062812980-15c1f2c5a8d0', // Sheikh Zayed Mosque
+  ad_louvre:      '1584132905271-512c958d674a', // Louvre Abu Dhabi
+  doha_skyline:   '1582554316960-0c4e95f7d9f6', // Doha
+  doha_souq:      '1568797629192-90eb3573c5c2', // Souq Waqif
+  // Poland
+  poland_krakow:  '1607427293702-036933bbf746', // Krakow main square
+  poland_warsaw:  '1565024676308-e3e2ba8a7a93', // Warsaw old town
+  poland_wawel:   '1601581875309-fafbf2d3ed3a', // Wawel castle
+  poland_gdansk:  '1606992894456-d44a40c91e0d', // Gdansk
+  // Phuket
+  phuket_phi:     '1537956965359-7573183d1f57', // Phi Phi Islands
+  phuket_beach:   '1552465011-b4e21bf6e79a',    // Long-tail boat
+  phuket_buddha:  '1528181304800-259b08848526', // Big Buddha
+  phuket_temple:  '1563492065191-2c0ee45f5ae5', // Thai temple
+  // Lebanon
+  lebanon_beirut: '1572637003895-1c3aa6587e3a', // Beirut
+  lebanon_byblos: '1599661046827-9d1be24cfd24', // Byblos
+  lebanon_cedars: '1620735692151-26a7e0748429', // Cedars
+  lebanon_jeita:  '1576487248805-cf45f6bcc67f', // Jeita
+  // Egypt
+  egypt_pyramids: '1539650116574-75c0c6d73c3e', // Pyramids
+  egypt_khan:     '1572252009286-268acec5ca0a', // Khan el-Khalili
+  egypt_nile:     '1568322445389-f64ac2515020', // Nile
+  egypt_luxor:    '1539768942893-daf53e448371', // Luxor
 };
 
-const MOTIF_LABELS = {
-  mosque: 'مسجد', temple: 'معبد', torii: 'بوابة', mountain: 'جبل',
-  pyramid: 'هرم',  tree: 'شجرة',  ship: 'سفينة',  cup: 'فنجان',
-  lantern: 'فانوس', dune: 'كثبان',
-};
-const MOTIFS_LIST = Object.keys(MOTIF_LABELS);
+// 12 letters of "Israa & Muataz" each get a destination photo
+// (cycling through the 7 destinations, picked for visual contrast)
+const HERO_LETTER_PHOTOS = [
+  PHOTOS.dubai_burj,      // I
+  PHOTOS.turkey_capp,     // s
+  PHOTOS.poland_krakow,   // r
+  PHOTOS.egypt_pyramids,  // a
+  PHOTOS.phuket_phi,      // a
+  // &
+  PHOTOS.ad_mosque,       // M
+  PHOTOS.doha_skyline,    // u
+  PHOTOS.lebanon_cedars,  // a
+  PHOTOS.turkey_hagia,    // t
+  PHOTOS.egypt_nile,      // a
+  PHOTOS.phuket_beach,    // z
+];
 
 const ICONS = {
   plus: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+  plusLarge: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
   x: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
-  arrowLeft: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
-  arrowRight: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
-  mapPin: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  arrowLeft: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+  arrowRight: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+  arrowRightSm: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
   calendar: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  mapPin: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
   trash: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
-  spinner: '<svg class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>',
+  // Section icons (used in TOC and section labels)
+  camera: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
+  pin: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 2-2V3H6v1a2 2 0 0 0 2 2h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>',
+  bed: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M22 4v16"/><path d="M2 8h20"/><path d="M2 16h20"/><path d="M2 12h20"/></svg>',
+  utensils: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>',
+  compass: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',
+  heart: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+  lightbulb: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>',
+  globe: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+  sun: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>',
+  clock: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
 };
 
+const SECTIONS = [
+  { key: 'memories',   ar: 'الذكريات',          en: 'Memories',    icon: ICONS.camera },
+  { key: 'places',     ar: 'الأماكن',           en: 'Places',      icon: ICONS.pin },
+  { key: 'stays',      ar: 'الإقامة',           en: 'Stays',       icon: ICONS.bed },
+  { key: 'food',       ar: 'المطاعم والمقاهي',  en: 'Food',        icon: ICONS.utensils },
+  { key: 'activities', ar: 'الأنشطة',           en: 'Activities',  icon: ICONS.compass },
+  { key: 'feelings',   ar: 'الملاحظات والمشاعر', en: 'Notes & Feelings', icon: ICONS.heart },
+  { key: 'tips',       ar: 'نصائح السفر',       en: 'Travel Tips', icon: ICONS.lightbulb },
+];
+
+const NOTE_COLORS = ['yellow', 'pink', 'blue', 'mint', 'cream'];
+
 /* =========================================================
-   SAMPLE DATA
+   SAMPLE DATA — 7 destinations
    ========================================================= */
 const SAMPLE_TRIPS = [
+  // ============ DUBAI ============
   {
-    id: 'istanbul_2026',
-    title: 'أزقّة إسطنبول لا تَشيخ',
-    subtitle: 'بين البوسفور والأذان، رحلةٌ في قلب المدينة التي تجمع قارّتين في نَفَسٍ واحد.',
-    location: 'إسطنبول، تركيا',
-    date: '15 مارس 2026',
-    palette: 'spice',
-    motif: 'mosque',
-    featured: true,
+    id: 'dubai_2024',
+    titleAr: 'دبي',
+    titleEn: 'Dubai',
+    location: 'الإمارات العربية المتحدة',
+    dateStart: '١ مايو ٢٠٢٤',
+    dateEnd: '٣ مايو ٢٠٢٤',
+    dateRange: 'مايو ٢٠٢٤',
+    durationDays: 3,
+    emoji: '🌇',
+    coverImage: IMG(PHOTOS.dubai_burj, 1600),
+    thumbImage: IMG(PHOTOS.dubai_burj, 800),
+    intro: 'ثلاثة أيام في مدينةٍ لا تنام، حيث تتعانق ناطحات السحاب مع ذكريات الصحراء، وحيث كل زاوية تروي قصةً عن طموحٍ لا يعرف الحدود.',
+    summary: { cities: 'دبي', weather: 'حار جاف', bestFor: 'مدن', duration: '٣ أيام' },
+    memories: [
+      { image: IMG(PHOTOS.dubai_burj, 1200), caption: 'فوق العالم', story: 'وقفنا في الطابق ١٢٤ من برج خليفة وقت الغروب. المدينة تحتنا تتلألأ كصندوق مجوهرات، والصمت في الأعلى مختلف، أشبه بصمت السماء.' },
+      { image: IMG(PHOTOS.dubai_marina, 800), caption: 'مساءٌ في المارينا' },
+      { image: IMG(PHOTOS.dubai_old, 800), caption: 'في السوق القديم' },
+      { image: IMG(PHOTOS.dubai_desert, 800), caption: 'صحراء عند الغروب' },
+    ],
+    places: ['برج خليفة', 'دبي مول والنافورة', 'مدينة جميرا والقناة', 'السوق القديم في ديرة', 'شاطئ الجميرا', 'نخلة جميرا', 'دبي فريم'],
+    stays: [
+      { name: 'فندق وسط المدينة', type: 'فندق ٥ نجوم', note: 'إطلالة على برج خليفة، قريب من المترو، إفطار متنوع وراقي.' },
+    ],
+    food: [
+      { name: 'مطعم عربي تقليدي', type: 'مطبخ خليجي', note: 'المجبوس واللقيمات بنكهة بيتية، أجواء عائلية دافئة.' },
+      { name: 'مقهى في برج خليفة', type: 'قهوة وحلويات', note: 'إطلالة لا تُنسى مع قهوة عربية ممتازة.' },
+      { name: 'شاورما الشيخ', type: 'وجبات سريعة محلية', note: 'مفضّل السكان، البصل المشوي والثوم يصنعان الفرق.' },
+    ],
+    activities: ['زيارة قمة برج خليفة عند الغروب', 'عرض نافورة دبي ليلاً', 'رحلة سفاري في الصحراء', 'جولة العَبرة التقليدية في الخور', 'تسوّق في دبي مول', 'مشي على كورنيش الجميرا'],
+    feelings: 'دبي مدينةٌ تُذهلك في البداية بحجمها وضوئها وسرعتها، ثم تكتشف ببطء أن خلف الزجاج والمعدن هناك قلبٌ عربي ما زال ينبض. التناقض بين البرج العالي والسوق العتيق، بين الصحراء والمدينة، يجعلها مكاناً واحداً ومتعدداً في الوقت نفسه.',
+    tips: [
+      'احجزوا تذاكر برج خليفة قبل السفر بأسبوع، السعر أرخص والوقت أفضل.',
+      'استخدموا المترو، نظيف وسريع وغير مكلف.',
+      'الصيف حار جداً، أفضل وقت للزيارة من نوفمبر إلى مارس.',
+      'تطبيق Careem أوسع من Uber في الخليج.',
+      'الكاش غير ضروري، كل شيء يقبل البطاقة.',
+    ],
+  },
+  // ============ TURKEY ============
+  {
+    id: 'turkey_2024',
+    titleAr: 'تركيا',
+    titleEn: 'Turkey',
+    location: 'طرابزون · إسطنبول',
+    dateStart: '٣١ أغسطس ٢٠٢٤',
+    dateEnd: '١٠ سبتمبر ٢٠٢٤',
+    dateRange: 'سبتمبر ٢٠٢٤',
+    durationDays: 11,
     emoji: '🕌',
-    accent: '✦',
-    intro: 'حين تطأ قدمُك إسطنبول لأول مرة، تشعر أن المدينة تستقبلك بكل قرونها دفعةً واحدة؛ صوت الأذان من مئذنةٍ بعيدة، ورائحة الكستناء المشوية في الشتاء، ونوارس البوسفور التي تطير على مستوى نظرك. لم ندخل المدينة، بل تَسلَّلنا إليها.',
-    timeline: [
-      { id: 'ist_1', date: 'اليوم الأول · 15 مارس', title: 'أذان المغرب فوق السلطان أحمد', text: 'وقفنا في الميدان حين بدأ الأذان من جامع السلطان أحمد، ثم تَلاهُ أذانُ آيا صوفيا، فأذانٌ آخر من بعيد، حتى تحوّلت المدينة كلها إلى نداءٍ واحدٍ مُتعدِّد الأصوات. جلسنا على درجات الحجر، ولم نقُلْ شيئاً.', palette: 'dusk', motif: 'mosque' },
-      { id: 'ist_2', date: 'اليوم الثاني · 16 مارس', title: 'قهوةٌ تركيةٌ في مقهى عتيق', text: 'في مقهى صغيرٍ في حيّ بَلَط، جلسنا أمام فناجين بنّيّة اللون، نشرب ببُطء، ونراقب القطط التي تسير في الأزقة كأنها صاحبةُ المكان. كان النادل يكلّمنا بالتركية ونردّ بالعربية، ومع ذلك فهمنا بعضنا.', palette: 'warm', motif: 'cup' },
-      { id: 'ist_3', date: 'اليوم الثالث · 17 مارس', title: 'عبور البوسفور إلى آسيا', text: 'ركبنا العَبّارة من أوروبا إلى آسيا. الرحلة لا تستغرق أكثر من عشرين دقيقة، لكن الإحساس بأنك تعبر قارّتين بهذه السهولة يجعلك تبتسم في صمت. كان البحر متعَباً ذلك اليوم، والريحُ تَقصُّ علينا حكاياتٍ لا نَفهمها.', palette: 'ocean', motif: 'ship' },
+    coverImage: IMG(PHOTOS.turkey_hagia, 1600),
+    thumbImage: IMG(PHOTOS.turkey_capp, 800),
+    intro: 'إحدى عشرة ليلةً بين خضرة الجبال وأذان المآذن، من ضباب طرابزون الصباحي إلى بحرٍ من القباب يعانق البوسفور.',
+    summary: { cities: 'طرابزون، إسطنبول', weather: 'معتدل', bestFor: 'طبيعة وتاريخ', duration: '١١ يوماً' },
+    memories: [
+      { image: IMG(PHOTOS.turkey_uzungol, 1200), caption: 'بحيرة أوزنغول', story: 'استيقظنا قبل الفجر للوصول إلى البحيرة، والضباب كان يلامس الماء كأنه نَفَسٌ ساكن. شربنا الشاي على ضفافها، وفي تلك اللحظة فهمنا لماذا يُسمّونها قطعةً من الجنة.' },
+      { image: IMG(PHOTOS.turkey_hagia, 800), caption: 'آيا صوفيا' },
+      { image: IMG(PHOTOS.turkey_galata, 800), caption: 'برج غلطة' },
+      { image: IMG(PHOTOS.turkey_bosph, 800), caption: 'البوسفور عند المغرب' },
+    ],
+    places: ['دير سوميلا (طرابزون)', 'بحيرة أوزنغول', 'هضبة آيدر', 'جامع آيا صوفيا الكبير', 'جامع السلطان أحمد (الأزرق)', 'قصر توبكابي', 'البازار الكبير والمسقوف', 'مضيق البوسفور وحي أورتاكوي', 'برج غلطة'],
+    stays: [
+      { name: 'فندق بإطلالة جبلية في أوزنغول', type: 'نُزل جبلي', note: 'النافذة تفتح على البحيرة مباشرة، صباحات لا تُنسى.' },
+      { name: 'فندق بوتيك في السلطان أحمد', type: 'فندق تراثي', note: 'على بُعد خطوات من آيا صوفيا، السقف يطلّ على القباب.' },
+    ],
+    food: [
+      { name: 'حمدي', type: 'كباب وأطباق تركية', note: 'كباب بسطح يطلّ على البوسفور، البقلاوة بالفستق ممتازة.' },
+      { name: 'مطعم سمك في طرابزون', type: 'مأكولات بحرية', note: 'سمك الهامسي الطازج، الخبز الجبلي، البحر أمامك.' },
+      { name: 'كارابوبا', type: 'حلويات تركية', note: 'الكنافة بالقشطة هنا تستحق الانتظار.' },
+      { name: 'مقهى محمود الأول', type: 'قهوة تركية', note: 'فنجان في فناءٍ قديم، القطط تستضيفك.' },
+    ],
+    activities: ['رحلة جبلية بسيارة دفع رباعي إلى الهضاب', 'عبور البوسفور بالعبّارة من أوروبا إلى آسيا', 'جولة في البازار الكبير', 'حمام تركي تقليدي', 'صلاة الفجر في آيا صوفيا', 'تناول الشاي على ضفاف أوزنغول'],
+    feelings: 'تركيا أرضٌ تجعلك تشعر بالقرب والبُعد في آنٍ واحد. إسطنبول تحتضنك بأذانها، وطرابزون تذكّرك بأن العالم لا يزال أخضر. اللغة كانت حاجزاً صغيراً، لكن الكرم لا يحتاج إلى ترجمة.',
+    tips: [
+      'استخرجوا الإسطنبول كارت من أول يوم، تعمل في كل وسائل النقل.',
+      'الجمع بين طرابزون وإسطنبول يحتاج ١٠ أيام على الأقل.',
+      'طرابزون أبرد من إسطنبول، خذوا جاكيت خفيف حتى في الصيف.',
+      'صلاة الجمعة في آيا صوفيا تجربة مؤثرة، احضروا مبكراً.',
+      'احذروا من سيارات الأجرة في إسطنبول، استخدموا تطبيق BiTaksi.',
     ],
   },
+  // ============ ABU DHABI & DOHA ============
   {
-    id: 'petra_2025',
-    title: 'البَتراء: مدينةٌ ورديّة',
-    subtitle: 'حين نَحَتَ الأنباطُ الجبلَ ليُصبح مدينة، نَحَتوا معه الزمن.',
-    location: 'البتراء، الأردن',
-    date: '8 نوفمبر 2025',
-    palette: 'rose',
-    motif: 'temple',
-    emoji: '🌹',
-    accent: '◆',
-    intro: 'مشينا في السِّيق ساعةً كاملةً بين جدران الصخر العالية، ثم انفتحت الفجوة فجأةً على واجهة الخزنة، وكأن المدينة كانت تختبرُ صبرنا قبل أن تكشف نفسها.',
-    timeline: [
-      { id: 'pet_1', date: 'اليوم الأول · فجراً', title: 'دخول السّيق قبل الشروق', text: 'بدأنا المشي قبل شروق الشمس، الجوّ بارد، والصخورُ تَكتُمُ أصواتَ خطواتنا. الصمتُ في السّيق له وزن. حين خرجنا إلى الخزنة، كانت الشمس قد بدأت تَلمسها للتو، فبدا الحجر مشتعلاً بهدوء.', palette: 'sand', motif: 'mountain' },
-      { id: 'pet_2', date: 'اليوم الثاني', title: 'صعود الدَّير', text: 'ثمانمائة درجةٍ حتى الوصول إلى الدير. حين وصلنا أخيراً، جلسنا أمام الواجهة الضخمة دون كلام، نَدَعُهُ يقول كلَّ شيء. كان البَدويُّ الذي يبيع الشاي يضحك من تعبِنا، فضحكنا معه.', palette: 'rose', motif: 'temple' },
+    id: 'gulf_2025',
+    titleAr: 'جولة أبوظبي - الدوحة',
+    titleEn: 'Abu Dhabi & Doha',
+    location: 'الإمارات · قطر',
+    dateStart: '١٧ يناير ٢٠٢٥',
+    dateEnd: '٢٢ يناير ٢٠٢٥',
+    dateRange: 'يناير ٢٠٢٥',
+    durationDays: 6,
+    emoji: '🕌',
+    coverImage: IMG(PHOTOS.ad_mosque, 1600),
+    thumbImage: IMG(PHOTOS.ad_mosque, 800),
+    intro: 'ستّةُ أيامٍ بين عاصمتين خليجيتين تتنافسان في الجمال والهدوء، من بياض جامع الشيخ زايد إلى لآلئ سوق واقف.',
+    summary: { cities: 'أبوظبي، الدوحة', weather: 'لطيف', bestFor: 'فن وثقافة', duration: '٦ أيام' },
+    memories: [
+      { image: IMG(PHOTOS.ad_mosque, 1200), caption: 'جامع الشيخ زايد', story: 'دخلنا الجامع ساعة العصر، الرخام الأبيض يعكس الذهب، والثُريّا الكبرى تتدلّى كنجمة. لم نتكلّم كثيراً، اكتفينا بالنظر والشعور بأنّ المكان أكبر من أي وصف.' },
+      { image: IMG(PHOTOS.ad_louvre, 800), caption: 'لوفر أبوظبي' },
+      { image: IMG(PHOTOS.doha_skyline, 800), caption: 'كورنيش الدوحة' },
+      { image: IMG(PHOTOS.doha_souq, 800), caption: 'سوق واقف' },
+    ],
+    places: ['جامع الشيخ زايد الكبير', 'لوفر أبوظبي', 'قصر الوطن', 'كورنيش أبوظبي', 'متحف الفن الإسلامي - الدوحة', 'سوق واقف', 'كتارا - الحي الثقافي', 'اللؤلؤة قطر'],
+    stays: [
+      { name: 'فندق على الكورنيش - أبوظبي', type: 'فندق ٥ نجوم', note: 'إطلالة على البحر، إفطار خليجي تقليدي.' },
+      { name: 'فندق تراثي في الدوحة', type: 'فندق بوتيك', note: 'قريب من سوق واقف، عمارة قطرية أصيلة.' },
+    ],
+    food: [
+      { name: 'مطعم تراثي - سوق واقف', type: 'مطبخ قطري', note: 'المجبوس بالربيان، الهريس، الكنافة بالعسل القطري.' },
+      { name: 'مقهى في كتارا', type: 'قهوة عربية', note: 'القهوة بالهيل، التمر، إطلالة على الخليج.' },
+      { name: 'مأكولات بحرية - الكورنيش', type: 'مطبخ بحري', note: 'الهامور المشوي، خبز الرقاق، تجربة تستحق.' },
+    ],
+    activities: ['زيارة جامع الشيخ زايد عند الغروب', 'جولة في لوفر أبوظبي ساعتين على الأقل', 'مشي على كورنيش الدوحة عند المساء', 'تسوّق التحف في سوق واقف', 'فعالية فنية في كتارا', 'ركوب الدّو القطري التقليدي'],
+    feelings: 'الخليج هنا يقدّم نفسه بثوبين: واحدٌ متحفي راقٍ، وآخر شعبي دافئ. لوفر أبوظبي يجعلك تفكّر في معنى أن يكون الفن جسراً، وسوق واقف يُذكّرك بأن الحرف القديمة لم تَمُت بعد.',
+    tips: [
+      'لباس محتشم ضروري لزيارة الجامع، نساء يمكن استعارة العباية مجاناً.',
+      'يومان لكل مدينة كافيان لمن يخطط جيداً.',
+      'الانتقال من أبوظبي إلى الدوحة برحلة قصيرة (ساعة).',
+      'لوفر أبوظبي مغلق يوم الإثنين.',
+      'أسعار سوق واقف قابلة للمساومة، خاصة على التحف.',
     ],
   },
+  // ============ POLAND ============
   {
-    id: 'kyoto_2025',
-    title: 'كيوتو حين تتفتَّحُ السّاكورا',
-    subtitle: 'أسبوعٌ واحدٌ بين المعابد وأزهار الكرز، يكفي لتعرف لماذا يكتبون عنها الشعر.',
-    location: 'كيوتو، اليابان',
-    date: '2 أبريل 2025',
-    palette: 'rose',
-    motif: 'torii',
-    emoji: '🌸',
-    accent: '✿',
-    intro: 'وصلنا إلى كيوتو في توقيتٍ مثالي. الساكورا في كل مكان، حتى في الأماكن التي لم نتوقّعها: على جانب الترام، فوق بِركةِ معبد صغير، في فناء بيتٍ تقليدي رأيناه صدفةً.',
-    timeline: [
-      { id: 'kyo_1', date: 'اليوم الأول', title: 'حديقة ماروياما', text: 'جلسنا تحت شجرة كرزٍ عملاقة مع أهل المدينة، نأكل وجبة الهانامي ونراقب البَتلات الورديّة تتساقط ببُطء. شعرنا أن الزمن نفسه يتساقط معها.', palette: 'rose', motif: 'tree' },
-      { id: 'kyo_2', date: 'اليوم الثالث · فجراً', title: 'فوشيمي إيناري', text: 'مشينا في النفق الذي لا ينتهي من بوّابات التُّوري الحمراء. كنا وحدنا تقريباً عند الفجر. كل بوابةٍ تخفي البوابة التي بعدها، فظَنَّ كلٌّ منا أنه يمشي وحده، ثم نلتقي.', palette: 'spice', motif: 'torii' },
-      { id: 'kyo_3', date: 'الليلة الأخيرة', title: 'فوانيس جيون', text: 'الحيّ القديم بعد المغرب، الفوانيس مُضاءة، والأزقّةُ خاويةٌ تقريباً. سمعنا صوت شامِيسِن من نافذةٍ مفتوحة، ووقفنا نُنصِت دون أن يدرينا أحد.', palette: 'night', motif: 'lantern' },
+    id: 'poland_2025',
+    titleAr: 'بولندا',
+    titleEn: 'Poland',
+    location: 'كراكوف · وارسو · غدانسك',
+    dateStart: '٢٩ مايو ٢٠٢٥',
+    dateEnd: '٥ يوليو ٢٠٢٥',
+    dateRange: 'مايو – يوليو ٢٠٢٥',
+    durationDays: 38,
+    emoji: '🏰',
+    coverImage: IMG(PHOTOS.poland_krakow, 1600),
+    thumbImage: IMG(PHOTOS.poland_warsaw, 800),
+    intro: 'شهرٌ وأكثر في بلدٍ يحمل ذاكرةً ثقيلة وقلباً دافئاً، بين قلاع وارسو القديمة وميادين كراكوف، ومناجم الملح التي تحتها بستان من التماثيل.',
+    summary: { cities: 'كراكوف، وارسو، غدانسك', weather: 'صيف معتدل', bestFor: 'تاريخ وعمارة', duration: '٣٨ يوماً' },
+    memories: [
+      { image: IMG(PHOTOS.poland_krakow, 1200), caption: 'ميدان كراكوف الرئيسي', story: 'جلسنا في الميدان عند المساء، والشمس تختفي خلف برج كنيسة سانت ماري، والكمان يعزف من زاويةٍ بعيدة. هذه اللحظة وحدها تستحق رحلةً كاملة.' },
+      { image: IMG(PHOTOS.poland_warsaw, 800), caption: 'وارسو القديمة' },
+      { image: IMG(PHOTOS.poland_wawel, 800), caption: 'قلعة فافل' },
+      { image: IMG(PHOTOS.poland_gdansk, 800), caption: 'غدانسك على البحر' },
+    ],
+    places: ['ميدان كراكوف الرئيسي (ريِنيك غووفني)', 'قلعة فافل', 'منجم ملح فيليتشكا', 'متحف أوشفيتز-بيركيناو', 'مدينة وارسو القديمة', 'حمام الملك في وارسو', 'غدانسك القديمة', 'فروتسواف وأقزامها', 'حي كازيميَش اليهودي - كراكوف'],
+    stays: [
+      { name: 'شقة في ميدان كراكوف', type: 'إقامة شعبية', note: 'في قلب المدينة القديمة، شرفة تطلّ على الميدان.' },
+      { name: 'فندق بوتيك في وارسو', type: 'فندق ٤ نجوم', note: 'قريب من المدينة القديمة، تصميم أنيق.' },
+      { name: 'بيت ضيافة في غدانسك', type: 'بيت تقليدي', note: 'بناء قديم على البحر، إفطار منزلي.' },
+    ],
+    food: [
+      { name: 'مطعم بييروغي تقليدي - كراكوف', type: 'مطبخ بولندي', note: 'البييروغي بحشوات متنوّعة، الحساء (جوريك) لذيذ.' },
+      { name: 'مقهى قديم - وارسو', type: 'قهوة وكعك', note: 'كعكة بافلوفا الأصلية، أجواء أوروبية كلاسيكية.' },
+      { name: 'مطعم بولندي عصري - فروتسواف', type: 'مطبخ معاصر', note: 'تقديم حديث لأطباق تقليدية، تجربة لطيفة.' },
+      { name: 'سوق المنتجات الطازجة - غدانسك', type: 'سوق محلي', note: 'فاكهة، خبز، أجبان محلية، تجربة شعبية.' },
+    ],
+    activities: ['جولة سيرٍ في كراكوف القديمة', 'النزول إلى مناجم فيليتشكا', 'زيارة أوشفيتز يوماً كاملاً (تجربة ثقيلة لكن ضرورية)', 'حضور حفل بيانو في وارسو (شوبان)', 'مشي على البلطيق في غدانسك', 'زيارة قلعة فافل', 'تجوّل في حي كازيميَش اليهودي'],
+    feelings: 'بولندا لم تكن وجهةً سياحيةً عاديّة، كانت رحلةً في الذاكرة. أوشفيتز يترك أثراً لا يُمحى، لكن المدن القديمة بميادينها وموسيقاها تعيد إليك الإيمان بالجمال. اللطف البولندي مفاجئ، والكرم أيضاً.',
+    tips: [
+      'العملة الزلوتي البولندي، الصرف من البنوك أفضل.',
+      'القطارات بين المدن سريعة ونظيفة، احجزوا قبلها.',
+      'أوشفيتز يحتاج يوماً كاملاً، احجزوا التذاكر قبل أسابيع.',
+      'الإنترنت ممتاز في كل مكان.',
+      'الطعام البولندي ثقيل، تنوّعوا في الوجبات.',
+      'العاصمة وارسو تحتاج ٣ أيام على الأقل.',
     ],
   },
+  // ============ PHUKET ============
   {
-    id: 'salalah_2025',
-    title: 'خَريفُ صَلالة',
-    subtitle: 'حين يصبح الجنوبُ أخضر، ويُحوِّل الجبلَ إلى بحرٍ من الضباب.',
-    location: 'صلالة، عُمان',
-    date: '20 أغسطس 2025',
-    palette: 'forest',
-    motif: 'mountain',
-    emoji: '🌿',
-    accent: '❋',
-    intro: 'الخريف في ظفار ليس فصلاً، إنه حالةٌ مزاجيّة للأرض كلها. القرى تختفي خلف الغيوم، والجبال تتنفّس، والنّاسُ يجلسون على الطرقات يَشربون الشاي وكأنهم في انتظار شيءٍ لا يأتي.',
-    timeline: [
-      { id: 'sal_1', date: 'اليوم الأول', title: 'جبل صَمحان في الضباب', text: 'صعدنا الجبل وقت الظهيرة، لكن الضبابَ كان كثيفاً حتى أننا فقدنا قدرتنا على رؤية السيارة أمامنا. توقّفنا على جانب الطريق، نَزَلنا، ومشينا قليلاً في غيمةٍ نازلة.', palette: 'mist', motif: 'mountain' },
-      { id: 'sal_2', date: 'اليوم الثاني', title: 'عين رزات', text: 'الماء يَنبُع من الصخر ببساطةٍ مذهلة، يتجمّع في بِركةٍ صافية، ثم يجري إلى الوادي. الناس يأتون من كل مكان، يَملؤون قواريرَهم، ويذهبون.', palette: 'forest', motif: 'tree' },
+    id: 'phuket_2025',
+    titleAr: 'بوكيت',
+    titleEn: 'Phuket',
+    location: 'تايلاند',
+    dateStart: '٢٣ أغسطس ٢٠٢٥',
+    dateEnd: '٣٠ أغسطس ٢٠٢٥',
+    dateRange: 'أغسطس ٢٠٢٥',
+    durationDays: 8,
+    emoji: '🌴',
+    coverImage: IMG(PHOTOS.phuket_phi, 1600),
+    thumbImage: IMG(PHOTOS.phuket_beach, 800),
+    intro: 'ثمانية أيام في جزيرةٍ كأنّها لوحة، حيث ينعكس الزمرّد على الرمال البيضاء، وحيث الابتسامة التايلندية تجعلك تنسى الزحام.',
+    summary: { cities: 'بوكيت، جزر فيفي', weather: 'استوائي', bestFor: 'شواطئ', duration: '٨ أيام' },
+    memories: [
+      { image: IMG(PHOTOS.phuket_phi, 1200), caption: 'جزر فيفي', story: 'وصلنا إلى مايا باي مبكراً، قبل القوارب السياحية. كان الماء صافياً لدرجة أنك ترى رمل القاع كأنه قريبٌ من يدك. وقفنا في الموج، ولم نُرد أن نغادر.' },
+      { image: IMG(PHOTOS.phuket_buddha, 800), caption: 'بوذا الكبير' },
+      { image: IMG(PHOTOS.phuket_beach, 800), caption: 'القوارب الطويلة' },
+      { image: IMG(PHOTOS.phuket_temple, 800), caption: 'معبد على التل' },
+    ],
+    places: ['جزر فيفي (Phi Phi)', 'بوذا الكبير', 'شاطئ كاتا نوي', 'شاطئ باتونغ', 'مدينة بوكيت القديمة', 'معبد تشالونغ', 'كهف فيكينغ', 'جزيرة جيمس بوند (خاو بينغ كان)'],
+    stays: [
+      { name: 'منتجع على شاطئ كاتا', type: 'منتجع عائلي', note: 'حمام سباحة على البحر، فطور آسيوي وغربي، هدوء.' },
+    ],
+    food: [
+      { name: 'مطعم محلي - كاتا', type: 'مطبخ تايلندي', note: 'باد تاي، كاري أخضر، البطّيخ الطازج. أسعار شعبية.' },
+      { name: 'سوق ليلي - بوكيت القديمة', type: 'طعام شارع', note: 'مأكولات بحرية مشوية، حلويات بجوز الهند، تجربة لا تُنسى.' },
+      { name: 'مطعم بحري - باتونغ', type: 'مأكولات بحرية', note: 'سرطان البحر، الجمبري المشوي، إطلالة على البحر.' },
+      { name: 'مقهى قديم - مدينة بوكيت', type: 'قهوة تايلندية', note: 'قهوة باردة بحليب جوز الهند، أجواء كولونيالية.' },
+    ],
+    activities: ['رحلة قارب طويل إلى جزر فيفي', 'غوص في خليج بانياو', 'تدليك تايلندي تقليدي', 'صعود إلى بوذا الكبير عند الغروب', 'جولة في مدينة بوكيت القديمة', 'تذوّق طعام الشارع في الأسواق الليلية'],
+    feelings: 'تايلاند تُعلّمك معنى البساطة. شاطئ، طعام طازج، ابتسامة، وانتهى. الناس هنا لا يتعبون من الكرم، والابتسامة عملةٌ متداولة لا تنفد. الطبيعة كريمة جداً، والبحر يستقبلك كأنه ينتظرك.',
+    tips: [
+      'استأجروا دراجة نارية لو كنتم مرتاحين، أفضل وسيلة تنقّل.',
+      'تجنّبوا فخاخ السياح في باتونغ، الأسعار مضاعفة.',
+      'الصرف في مكاتب SuperRich أفضل بكثير من الفنادق.',
+      'لباس محتشم عند زيارة المعابد.',
+      'جزر فيفي تكتظ بعد الساعة ١٠ صباحاً، اذهبوا مبكراً.',
+      'لا تشربوا ماء الصنبور.',
     ],
   },
+  // ============ LEBANON ============
   {
-    id: 'cairo_2024',
-    title: 'صباحاتٌ في خان الخليلي',
-    subtitle: 'القاهرة قبل أن تستيقظ، حين تكون لك وحدك.',
-    location: 'القاهرة، مصر',
-    date: '12 ديسمبر 2024',
-    palette: 'sand',
-    motif: 'pyramid',
-    emoji: '☕',
-    accent: '✧',
-    intro: 'يقولون إنّ القاهرة لا تنام. لكنها تَخفُتُ في الفجر، تأخذ نَفَساً واحداً قبل صَخَب اليوم، وفي تلك اللحظة بالذات، إذا كنتَ مستيقظاً، تستطيع أن تسمعها تَهمس.',
-    timeline: [
-      { id: 'cai_1', date: 'الفجر · اليوم الأول', title: 'فطورٌ في فِشاوي', text: 'دخلنا مقهى الفِشاوي قبل أن يفتح بتمامه. النادل القديم يَعرف الزبائنَ من أصواتهم. شربنا الشاي بالنعناع، وقرأنا جريدةً قديمةً تُركَتْ على الطاولة المجاورة.', palette: 'warm', motif: 'cup' },
+    id: 'lebanon_2025',
+    titleAr: 'لبنان',
+    titleEn: 'Lebanon',
+    location: 'بيروت · جبيل · أرز الرب',
+    dateStart: '٣ ديسمبر ٢٠٢٥',
+    dateEnd: '٩ ديسمبر ٢٠٢٥',
+    dateRange: 'ديسمبر ٢٠٢٥',
+    durationDays: 7,
+    emoji: '🌲',
+    coverImage: IMG(PHOTOS.lebanon_byblos, 1600),
+    thumbImage: IMG(PHOTOS.lebanon_cedars, 800),
+    intro: 'سبعة أيامٍ في بلدٍ صغيرٍ بحجم الراحة، كبيرٍ بحجم القلب. من البحر إلى الأرز، ومن الأكل إلى الموسيقى، لبنان هو وعدُ الكَرَم.',
+    summary: { cities: 'بيروت، جبيل، الأرز', weather: 'شتاء جبلي', bestFor: 'طعام وطبيعة', duration: '٧ أيام' },
+    memories: [
+      { image: IMG(PHOTOS.lebanon_cedars, 1200), caption: 'أرز الرب', story: 'وصلنا والثلج كان قد بدأ يتراكم. الأشجار العملاقة، بعضها يفوق الألف سنة، كأنها شيوخٌ يحرسون السماء. وقفنا تحتها وأحسسنا أن الزمن نفسه يَسكُن هذه الأرض.' },
+      { image: IMG(PHOTOS.lebanon_byblos, 800), caption: 'ميناء جبيل' },
+      { image: IMG(PHOTOS.lebanon_beirut, 800), caption: 'كورنيش بيروت' },
+      { image: IMG(PHOTOS.lebanon_jeita, 800), caption: 'مغارة جعيتا' },
+    ],
+    places: ['مغارة جعيتا', 'جبيل (بيبلوس) القديمة', 'أرز الرب في بشري', 'كورنيش بيروت والروشة', 'الحمرا', 'وسط بيروت', 'صيدا القديمة', 'وادي قاديشا'],
+    stays: [
+      { name: 'فندق في الحمرا - بيروت', type: 'فندق ٤ نجوم', note: 'في قلب الحياة البيروتية، قريب من المقاهي والمطاعم.' },
+      { name: 'بيت ضيافة في بشري', type: 'بيت جبلي', note: 'مدفأة حطب، إفطار قروي، الثلج خارج النافذة.' },
+    ],
+    food: [
+      { name: 'مطعم تقليدي - بيروت', type: 'مطبخ لبناني', note: 'التبولة، الحمص، الكبة النية، الكبيس، مقبّلات تكفي لعشاء كامل.' },
+      { name: 'فرن منقوشة - الصباح', type: 'فطور لبناني', note: 'منقوشة زعتر بزيت زيتون، شاي بالنعناع، صباح لا يُنسى.' },
+      { name: 'مطعم سمك في جبيل', type: 'مأكولات بحرية', note: 'سمك مقلي طازج، البحر أمامك، أجواء عائلية.' },
+      { name: 'مقهى الروضة', type: 'قهوة بيروتية', note: 'تاريخي على الكورنيش، نَرجيلة وقهوة بهيل، مكان أيقوني.' },
+    ],
+    activities: ['زيارة مغارة جعيتا (تجربة بصرية مذهلة)', 'مشي في جبيل القديمة عند الغروب', 'زيارة أرز الرب', 'سهرة موسيقية في الحمرا', 'تذوّق المطبخ اللبناني الكامل', 'جولة في وادي قاديشا'],
+    feelings: 'لبنان يفاجئك في كل زاوية. تصعد إلى الجبل فترى الثلج، تنزل إلى الساحل فترى البحر، تدخل مطعماً فتأكل لساعات، تجلس مع أحد فتسمع تاريخاً كاملاً. هذا البلد، رغم كل ما مرّ به، ما زال يبتسم ويُطعم ضيوفه.',
+    tips: [
+      'استئجار سيارة ضروري للتنقّل بين المدن.',
+      'الدولار مقبول في كل مكان، الليرة اللبنانية للتفاصيل الصغيرة.',
+      'الشتاء بارد جداً في الجبل، استعدّوا للثلج.',
+      'الأمان جيد عموماً، لكن تحقّقوا من المستجدات قبل السفر.',
+      'الحجز مسبقاً في المطاعم الشهيرة ضروري.',
+      'الكهرباء غير مستقرة، الفنادق الكبيرة لديها مولّدات.',
     ],
   },
+  // ============ EGYPT ============
+  {
+    id: 'egypt_2026',
+    titleAr: 'مصر',
+    titleEn: 'Egypt',
+    location: 'القاهرة · الأقصر · أسوان',
+    dateStart: '٢٤ فبراير ٢٠٢٦',
+    dateEnd: '٣ مارس ٢٠٢٦',
+    dateRange: 'فبراير – مارس ٢٠٢٦',
+    durationDays: 9,
+    emoji: '🐪',
+    coverImage: IMG(PHOTOS.egypt_pyramids, 1600),
+    thumbImage: IMG(PHOTOS.egypt_khan, 800),
+    intro: 'تسعةُ أيامٍ على ضفاف النيل، حيث يلتقي خمسةُ آلاف عام بساعة عصرٍ في خان الخليلي، وحيث تشعر بأن الزمن نهرٌ، لا خط.',
+    summary: { cities: 'القاهرة، الأقصر، أسوان', weather: 'شتاء لطيف', bestFor: 'حضارة وتاريخ', duration: '٩ أيام' },
+    memories: [
+      { image: IMG(PHOTOS.egypt_pyramids, 1200), caption: 'أهرامات الجيزة', story: 'وقفنا أمام هرم خوفو، والصمت الصحراوي يبلع كل شيء. اقتربنا حتى لمسنا الحجر، وفجأة أدركنا أن أيدينا تَلمس ما لمسه أناسٌ قبل خمسة آلاف سنة. هذه اللحظة وحدها تستحق المسافة.' },
+      { image: IMG(PHOTOS.egypt_khan, 800), caption: 'خان الخليلي' },
+      { image: IMG(PHOTOS.egypt_nile, 800), caption: 'النيل في المساء' },
+      { image: IMG(PHOTOS.egypt_luxor, 800), caption: 'معابد الأقصر' },
+    ],
+    places: ['أهرامات الجيزة وأبو الهول', 'المتحف المصري الكبير', 'خان الخليلي', 'قلعة صلاح الدين', 'جامع محمد علي', 'وادي الملوك - الأقصر', 'معبد الكرنك', 'معبد فيلة - أسوان', 'السد العالي', 'كورنيش النيل'],
+    stays: [
+      { name: 'فندق على النيل - القاهرة', type: 'فندق ٥ نجوم تراثي', note: 'إطلالة على النهر، إفطار راقٍ، أجواء كلاسيكية.' },
+      { name: 'باخرة نيلية', type: 'سفر بحري', note: 'من الأقصر إلى أسوان، ٤ ليالٍ، رومانسية وهادئة.' },
+    ],
+    food: [
+      { name: 'مطعم كشري شعبي', type: 'طعام مصري شعبي', note: 'الكشري الأصلي، الصلصة الحرّيفة، تجربة لا غنى عنها.' },
+      { name: 'مطعم فول وطعمية - الصباح', type: 'فطور مصري', note: 'فول مدمّس بالطحينة، طعمية ساخنة، عيش بلدي، شاي.' },
+      { name: 'مطعم سمك على النيل - أسوان', type: 'مأكولات نهرية', note: 'سمك بلطي مقلي، النيل أمامك، الفلوكة تَمرُّ.' },
+      { name: 'مقهى الفيشاوي - خان الخليلي', type: 'قهوة عربية', note: 'مكان نجيب محفوظ، قهوة وقصص، أكثر من قرن من العمر.' },
+    ],
+    activities: ['زيارة الأهرامات صباحاً قبل الزحام', 'رحلة فلوكة على النيل عند الغروب', 'جولة في خان الخليلي والأسواق', 'يوم كامل في المتحف المصري', 'رحلة الأقصر بالباخرة', 'زيارة وادي الملوك', 'صعود مقابر الأقصر بالحمار (تجربة محلية)'],
+    feelings: 'مصر بلدٌ يَشحَنُكَ بالحياة وبالتاريخ في آنٍ واحد. القاهرة فوضى منظّمة وحياة لا تتوقف، الأقصر هدوءٌ يصاحبه عمق، أسوان امتنانٌ للجمال البسيط. الناس يضحكون، يلاطفون، يطعمونك حتى لو لا يعرفونك. هذه البلاد قديمة جداً وحيّة جداً.',
+    tips: [
+      'احذروا الباعة المتجوّلين عند المعالم، الأسعار مُبالغ فيها.',
+      'الرحلة النيلية من الأقصر إلى أسوان من أجمل التجارب.',
+      'لباس محتشم عند زيارة المساجد.',
+      'تطبيق Uber/Careem يعمل في القاهرة.',
+      'احتفظوا بكاش صغير دائماً للإكراميات.',
+      'أفضل وقت للزيارة من نوفمبر إلى مارس.',
+      'مرشد سياحي معتمد يفتح المعالم بشكل أعمق.',
+    ],
+  },
+];
+
+// Sample sticky notes (home wall)
+const SAMPLE_NOTES = [
+  { id: 'n1', text: 'السفر يُعلّمك أن البيت ليس مكاناً، بل شعور.', color: 'yellow', createdAt: Date.now() - 1000000 },
+  { id: 'n2', text: 'كل رحلة تبدأ بخطوة... وكوب قهوة في المطار 🌍', color: 'pink', createdAt: Date.now() - 900000 },
+  { id: 'n3', text: 'أفضل صور لا تُلتقط، تُحفَظ في القلب.', color: 'blue', createdAt: Date.now() - 800000 },
+  { id: 'n4', text: 'لم نسافر لنرى أماكن، بل لنرى أنفسنا فيها.', color: 'mint', createdAt: Date.now() - 700000 },
+  { id: 'n5', text: 'الذكريات أخفّ حقيبة... وأثقل وزن.', color: 'cream', createdAt: Date.now() - 600000 },
 ];
 
 /* =========================================================
    STATE
    ========================================================= */
-const initialAddTripForm = () => ({
-  title: '', subtitle: '', location: '', date: '', intro: '',
-  palette: 'warm', motif: 'mountain', emoji: '✈️', accent: '✦',
-});
-const initialAddMomentForm = () => ({
-  date: '', title: '', text: '', palette: 'sand', motif: 'mountain',
-});
+const initialAddNoteForm = () => ({ text: '', color: 'yellow' });
 
 let state = {
   trips: [],
-  view: 'home',
+  notes: [],
+  view: 'home',       // 'home' | 'detail'
   currentTripId: null,
-  showAddTrip: false,
-  showAddMoment: false,
-  pendingMomentTripId: null,
-  addTripForm: initialAddTripForm(),
-  addMomentForm: initialAddMomentForm(),
+  showAddNote: false,
+  addNoteForm: initialAddNoteForm(),
 };
 
 /* =========================================================
    STORAGE
    ========================================================= */
-function loadTrips() {
+function loadFromStorage(key, fallback) {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(key);
     if (stored) return JSON.parse(stored);
   } catch (e) { /* ignore */ }
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_TRIPS)); } catch (e) {}
-  return JSON.parse(JSON.stringify(SAMPLE_TRIPS));
+  try { localStorage.setItem(key, JSON.stringify(fallback)); } catch (e) {}
+  return JSON.parse(JSON.stringify(fallback));
 }
-
-function persistTrips() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.trips)); }
-  catch (e) { console.warn('Could not persist trips:', e); }
+function saveToStorage(key, data) {
+  try { localStorage.setItem(key, JSON.stringify(data)); }
+  catch (e) { console.warn('Storage write failed:', e); }
 }
 
 /* =========================================================
@@ -427,409 +1584,479 @@ function persistTrips() {
    ========================================================= */
 function esc(s) {
   return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
-
-function newId() {
-  return 't_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
-}
+function newId() { return 'x_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7); }
 
 /* =========================================================
-   MOTIFS (gradient cover SVG illustrations)
+   COMPONENTS
    ========================================================= */
-function motifSvg(name, color) {
-  const fill = 'fill="' + color + '" opacity="0.9"';
-  switch (name) {
-    case 'mosque': return '<g ' + fill + '>' +
-      '<rect x="14" y="38" width="3" height="55" />' +
-      '<circle cx="15.5" cy="36" r="3" />' +
-      '<path d="M14 30 L15.5 24 L17 30 Z" />' +
-      '<rect x="83" y="38" width="3" height="55" />' +
-      '<circle cx="84.5" cy="36" r="3" />' +
-      '<path d="M83 30 L84.5 24 L86 30 Z" />' +
-      '<path d="M28 93 L28 62 Q28 42 50 42 Q72 42 72 62 L72 93 Z" />' +
-      '<rect x="46" y="32" width="8" height="10" />' +
-      '<path d="M48 32 L50 26 L52 32 Z" />' +
-      '<rect x="8" y="91" width="84" height="3" />' +
-    '</g>';
-    case 'temple': return '<g ' + fill + '>' +
-      '<rect x="18" y="42" width="64" height="52" />' +
-      '<polygon points="14,42 50,18 86,42" />' +
-      '<rect x="46" y="20" width="8" height="22" opacity="0.5" fill="' + color + '" />' +
-      '<rect x="28" y="55" width="6" height="39" opacity="0.4" />' +
-      '<rect x="40" y="55" width="6" height="39" opacity="0.4" />' +
-      '<rect x="54" y="55" width="6" height="39" opacity="0.4" />' +
-      '<rect x="66" y="55" width="6" height="39" opacity="0.4" />' +
-      '<rect x="44" y="68" width="12" height="26" opacity="0.55" />' +
-    '</g>';
-    case 'torii': return '<g ' + fill + '>' +
-      '<rect x="14" y="30" width="72" height="6" />' +
-      '<rect x="18" y="36" width="64" height="3" />' +
-      '<rect x="22" y="39" width="6" height="58" />' +
-      '<rect x="72" y="39" width="6" height="58" />' +
-      '<rect x="40" y="50" width="20" height="4" />' +
-    '</g>';
-    case 'mountain': return '<g ' + fill + '>' +
-      '<polygon points="2,95 28,38 48,68 70,28 98,95" />' +
-      '<polygon points="36,95 56,58 78,82 95,95" opacity="0.55" />' +
-      '<circle cx="72" cy="22" r="6" opacity="0.7" />' +
-    '</g>';
-    case 'pyramid': return '<g ' + fill + '>' +
-      '<circle cx="76" cy="24" r="7" opacity="0.85" />' +
-      '<polygon points="50,18 5,92 95,92" />' +
-      '<polygon points="50,22 22,92 78,92" opacity="0.5" />' +
-      '<rect x="0" y="92" width="100" height="3" />' +
-    '</g>';
-    case 'tree': return '<g ' + fill + '>' +
-      '<rect x="46" y="58" width="8" height="35" />' +
-      '<circle cx="50" cy="42" r="24" />' +
-      '<circle cx="34" cy="50" r="14" opacity="0.85" />' +
-      '<circle cx="66" cy="50" r="14" opacity="0.85" />' +
-      '<circle cx="50" cy="28" r="10" opacity="0.7" />' +
-      '<rect x="0" y="92" width="100" height="2" />' +
-    '</g>';
-    case 'ship': return '<g ' + fill + '>' +
-      '<path d="M8 72 L92 72 L82 88 L18 88 Z" />' +
-      '<rect x="48" y="32" width="3" height="40" />' +
-      '<polygon points="51,34 78,55 51,55" />' +
-      '<polygon points="48,58 24,70 48,70" />' +
-      '<path d="M0 88 Q15 84 30 88 T60 88 T100 88 L100 95 L0 95 Z" opacity="0.4" />' +
-    '</g>';
-    case 'cup': return '<g ' + fill + '>' +
-      '<path d="M28 52 Q28 82 50 82 Q72 82 72 52 Z" />' +
-      '<ellipse cx="50" cy="52" rx="22" ry="3" />' +
-      '<path d="M72 58 Q86 58 86 68 Q86 78 72 78" fill="none" stroke="' + color + '" stroke-width="3" />' +
-      '<path d="M40 38 Q40 30 46 28 M50 38 Q50 30 56 28 M60 38 Q60 30 66 28" fill="none" stroke="' + color + '" stroke-width="2" opacity="0.55" stroke-linecap="round" />' +
-      '<rect x="20" y="84" width="60" height="3" />' +
-    '</g>';
-    case 'lantern': return '<g ' + fill + '>' +
-      '<rect x="48" y="8" width="4" height="14" />' +
-      '<ellipse cx="50" cy="50" rx="20" ry="28" />' +
-      '<rect x="28" y="22" width="44" height="3" />' +
-      '<rect x="28" y="78" width="44" height="3" />' +
-      '<path d="M50 30 L50 70" stroke="' + color + '" stroke-width="1" opacity="0.4" fill="none" />' +
-    '</g>';
-    case 'dune': return '<g ' + fill + '>' +
-      '<path d="M0 78 Q25 60 50 72 T100 70 L100 100 L0 100 Z" />' +
-      '<path d="M0 88 Q30 75 60 85 T100 82 L100 100 L0 100 Z" opacity="0.55" />' +
-      '<circle cx="78" cy="28" r="9" opacity="0.85" />' +
-    '</g>';
-    default: return '<circle cx="50" cy="50" r="22" ' + fill + ' />';
-  }
-}
 
-function coverHtml(palette, motif, sizeClass, motifSize) {
-  motifSize = motifSize || 0.55;
-  const p = PALETTES[palette] || PALETTES.warm;
-  const inset = ((1 - motifSize) / 2) * 100;
-  const svgStyle = 'top:' + inset + '%;right:' + inset + '%;width:' + (motifSize * 100) + '%;height:' + (motifSize * 100) + '%;';
-  return '<div class="cover ' + sizeClass + '" style="background: linear-gradient(135deg, ' + p.from + ' 0%, ' + p.to + ' 100%);">' +
-    '<div class="grain"></div>' +
-    '<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style="' + svgStyle + '">' +
-      motifSvg(motif, p.motif) +
-    '</svg>' +
-  '</div>';
-}
-
-/* =========================================================
-   RENDER — COMPONENTS
-   ========================================================= */
+// ---------- TOP NAV ----------
 function renderTopNav() {
   return '' +
   '<header class="nav">' +
     '<div class="container nav-inner">' +
       '<button class="nav-logo" data-action="go-home">' +
-        '<span class="display name">إسراء ومُعتَز</span>' +
-        '<span class="nav-logo-orn hidden-sm">✦</span>' +
+        '<div>' +
+          '<div class="nav-logo-en">Israa &amp; Muataz</div>' +
+          '<div class="nav-logo-name">إسراء ومُعتَز</div>' +
+        '</div>' +
       '</button>' +
       '<nav class="nav-links">' +
-        '<button class="nav-link hidden-sm ' + (state.view === 'home' ? 'active' : '') + '" data-action="go-home">الرئيسية</button>' +
-        '<button class="nav-link hidden-md" data-action="go-home">الرحلات</button>' +
-        '<a class="nav-link hidden-md">الوجهات</a>' +
-        '<a class="nav-link hidden-md">عنّا</a>' +
+        '<button class="nav-link ' + (state.view === 'home' ? 'active' : '') + '" data-action="go-home">الرئيسية</button>' +
+        '<button class="nav-link hidden-md" data-action="scroll-to" data-target="destinations">الوجهات</button>' +
+        '<button class="nav-link hidden-md" data-action="scroll-to" data-target="notes">المُلاحظات</button>' +
+        '<button class="nav-add-btn" data-action="show-add-note">' + ICONS.plus + '<span>ملاحظة</span></button>' +
       '</nav>' +
     '</div>' +
   '</header>';
 }
 
-function renderAvatar(letter, palette) {
-  const p = PALETTES[palette];
-  return '<div class="avatar" style="background: linear-gradient(135deg, ' + p.from + ', ' + p.to + '); color: ' + p.text + ';">' + esc(letter) + '</div>';
-}
+// ---------- HERO with image-masked letters ----------
+function renderHero() {
+  // "Israa" / "&" / "Muataz" — each letter has a destination photo masked
+  // Letters indexed: 0-4 = "Israa", 5-10 = "Muataz" (skip ampersand visually)
+  const lettersIsraa = ['I', 's', 'r', 'a', 'a'];
+  const lettersMuataz = ['M', 'u', 'a', 't', 'a', 'z'];
+  let photoIdx = 0;
+  const renderLetter = (l) => {
+    const photoId = HERO_LETTER_PHOTOS[photoIdx % HERO_LETTER_PHOTOS.length];
+    photoIdx++;
+    const url = IMG(photoId, 600);
+    return '<span class="letter" style="background-image:url(' + url + ');">' + l + '</span>';
+  };
 
-function renderByline(date) {
   return '' +
-  '<div class="byline">' +
-    '<div class="avatar-stack">' +
-      renderAvatar('إ', 'warm') +
-      renderAvatar('م', 'ocean') +
-    '</div>' +
-    '<div class="byline-text">' +
-      '<span class="highlight-name">إسراء ومُعتَز</span>' +
-      '<span class="byline-sep">·</span>' +
-      '<span class="byline-date">' + esc(date) + '</span>' +
-    '</div>' +
-  '</div>';
-}
-
-function renderFeaturedHero(trip) {
-  return '' +
-  '<section class="featured-section container fade-in">' +
-    '<div class="section-label">' +
-      '<span class="section-label-text">الرحلة المُختارة</span>' +
-      '<span class="section-label-line"></span>' +
-    '</div>' +
-    '<button class="featured-cover-btn card-hover" data-action="open-trip" data-id="' + esc(trip.id) + '" aria-label="فتح الرحلة">' +
-      coverHtml(trip.palette, trip.motif, 'cover-featured', 0.45) +
-    '</button>' +
-    '<div class="featured-meta">' +
-      '<div class="ornament featured-location">' + esc(trip.accent || '✦') + ' &nbsp; ' + esc(trip.location) + ' &nbsp; ' + esc(trip.accent || '✦') + '</div>' +
-      '<h1 class="display featured-title">' +
-        '<span class="featured-title-inner">' +
-          '<span class="featured-emoji">' + esc(trip.emoji) + '</span>' +
-          '<span>' + esc(trip.title) + '</span>' +
-        '</span>' +
-      '</h1>' +
-      '<p class="featured-subtitle">' + esc(trip.subtitle) + '</p>' +
-      '<div class="featured-byline-wrap">' + renderByline(trip.date) + '</div>' +
-      '<div class="featured-cta">' +
-        '<button class="btn btn-primary" data-action="open-trip" data-id="' + esc(trip.id) + '">' +
-          '<span>اقرأ الرحلة</span>' + ICONS.arrowLeft +
-        '</button>' +
-      '</div>' +
+  '<section class="hero fade-in">' +
+    '<div class="hero-supertitle">our travel journal</div>' +
+    '<div class="hero-arabic-intro">— مذكّرات سفر —</div>' +
+    '<h1 class="hero-title" dir="ltr" aria-label="Israa and Muataz">' +
+      '<div class="hero-title-line">' + lettersIsraa.map(renderLetter).join('') + '</div>' +
+      '<div class="hero-title-line hero-title-line-amp">&amp;</div>' +
+      '<div class="hero-title-line">' + lettersMuataz.map(renderLetter).join('') + '</div>' +
+    '</h1>' +
+    '<p class="hero-subtitle">سبعةُ أسفار، آلافُ الذكريات، ولحظاتٌ لا يكفيها كتاب.</p>' +
+    '<div class="hero-decoration" aria-hidden="true">' +
+      '<span class="hero-decoration-line"></span>' +
+      '<span class="hero-decoration-dot"></span>' +
+      '<span>◇</span>' +
+      '<span class="hero-decoration-dot"></span>' +
+      '<span class="hero-decoration-line"></span>' +
     '</div>' +
   '</section>';
 }
 
-function renderTripCard(trip) {
+// ---------- DESTINATION CARD ----------
+function renderDestCard(trip, index) {
+  const numStr = String(index + 1).padStart(2, '0');
   return '' +
-  '<div class="trip-card card-hover" data-action="open-trip" data-id="' + esc(trip.id) + '" role="button" tabindex="0">' +
-    coverHtml(trip.palette, trip.motif, 'cover-card', 0.55) +
-    '<div class="trip-card-body">' +
-      '<div class="ornament trip-card-location">' + esc(trip.location) + '</div>' +
-      '<h3 class="display trip-card-title">' +
-        '<span class="trip-card-title-inner">' +
-          '<span class="trip-card-emoji">' + esc(trip.emoji) + '</span>' +
-          '<span>' + esc(trip.title) + '</span>' +
-        '</span>' +
-      '</h3>' +
-      '<p class="trip-card-subtitle">' + esc(trip.subtitle) + '</p>' +
-      '<div class="trip-card-meta">' + ICONS.calendar + '<span>' + esc(trip.date) + '</span></div>' +
-    '</div>' +
-  '</div>';
-}
-
-function renderTripsGrid(trips) {
-  let body;
-  if (trips.length === 0) {
-    body = '<div class="empty-state">لا توجد رحلات بعد. ابدأ بإضافة واحدة.</div>';
-  } else {
-    body = '<div class="trips-grid">' + trips.map(renderTripCard).join('') + '</div>';
-  }
-  return '' +
-  '<section class="container grid-section">' +
-    '<div class="grid-header">' +
-      '<div>' +
-        '<div class="ornament grid-title-label">دفتر الأسفار</div>' +
-        '<h2 class="display grid-title">كلُّ الرحلات</h2>' +
+  '<button class="dest-card fade-in stagger-' + Math.min(index + 1, 5) + '" data-action="open-trip" data-id="' + esc(trip.id) + '" type="button">' +
+    '<span class="dest-card-tape" aria-hidden="true"></span>' +
+    '<div class="dest-card-photo">' +
+      '<img class="dest-card-img" src="' + esc(trip.thumbImage) + '" alt="' + esc(trip.titleAr) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+      '<div class="dest-card-photo-overlay"></div>' +
+      '<div class="dest-card-overlay-content">' +
+        '<span class="dest-card-overlay-num">N° ' + numStr + '</span>' +
+        '<span class="dest-card-overlay-emoji">' + esc(trip.emoji) + '</span>' +
       '</div>' +
-      '<button class="btn btn-primary btn-sm" data-action="show-add-trip">' +
-        ICONS.plus + '<span>رحلة جديدة</span>' +
-      '</button>' +
     '</div>' +
-    body +
-  '</section>';
+    '<div class="dest-card-body">' +
+      '<div class="dest-card-loc-en">' + esc(trip.titleEn) + '</div>' +
+      '<div class="dest-card-title">' + esc(trip.titleAr) + '</div>' +
+      '<div class="dest-card-meta">' + ICONS.mapPin + '<span>' + esc(trip.location) + '</span></div>' +
+      '<div class="dest-card-divider"></div>' +
+      '<div class="dest-card-meta">' + ICONS.calendar +
+        '<span>' + esc(trip.dateStart) + ' — ' + esc(trip.dateEnd) + '</span>' +
+      '</div>' +
+      '<div class="dest-card-cta">' +
+        '<span>اكتشف الرحلة</span>' +
+        '<span class="dest-card-cta-arrow">' + ICONS.arrowRightSm + '</span>' +
+      '</div>' +
+    '</div>' +
+  '</button>';
 }
 
-function renderTimelineEntry(trip, m) {
-  const p = PALETTES[m.palette] || PALETTES.warm;
+function renderDestinationsSection() {
   return '' +
-  '<div class="timeline-entry fade-in">' +
-    '<div class="timeline-dot" style="background: ' + p.from + ';"></div>' +
-    '<div class="ornament timeline-date">' + esc(m.date) + '</div>' +
-    '<h3 class="display timeline-title">' + esc(m.title) + '</h3>' +
-    coverHtml(m.palette, m.motif, 'cover-moment', 0.5) +
-    '<p class="timeline-body">' + esc(m.text) + '</p>' +
-    '<button class="timeline-delete" data-action="delete-moment" data-trip-id="' + esc(trip.id) + '" data-id="' + esc(m.id) + '">' +
-      ICONS.trash + '<span>حذف</span>' +
-    '</button>' +
-  '</div>';
-}
-
-function renderTripDetail(trip) {
-  let timelineBody;
-  if (trip.timeline.length === 0) {
-    timelineBody = '<div class="empty-state-small">لا توجد لحظات بعد في هذه الرحلة.</div>';
-  } else {
-    timelineBody = '<div class="timeline"><div class="timeline-line"></div>' +
-      trip.timeline.map(function(m){ return renderTimelineEntry(trip, m); }).join('') +
-    '</div>';
-  }
-
-  return '' +
-  '<article class="fade-in">' +
-    coverHtml(trip.palette, trip.motif, 'cover-detail', 0.32) +
-    '<div class="trip-detail-card">' +
-      '<div class="trip-detail-inner">' +
-        '<button class="trip-detail-back" data-action="go-home">' +
-          ICONS.arrowRight + '<span>عودة إلى الرحلات</span>' +
-        '</button>' +
-        '<div class="trip-detail-loc">' + ICONS.mapPin + '<span>' + esc(trip.location) + '</span></div>' +
-        '<h1 class="display trip-detail-title">' +
-          '<span class="trip-detail-title-inner">' +
-            '<span class="trip-detail-emoji">' + esc(trip.emoji) + '</span>' +
-            '<span>' + esc(trip.title) + '</span>' +
-          '</span>' +
-        '</h1>' +
-        '<p class="trip-detail-subtitle">' + esc(trip.subtitle) + '</p>' +
-        '<div class="trip-detail-byline">' +
-          renderByline(trip.date) +
-          '<button class="delete-btn" data-action="delete-trip" data-id="' + esc(trip.id) + '">' +
-            ICONS.trash + '<span>حذف الرحلة</span>' +
-          '</button>' +
+  '<section class="destinations-section" id="destinations">' +
+    '<div class="container">' +
+      '<div class="section-heading">' +
+        '<div class="section-heading-en">our destinations</div>' +
+        '<h2 class="section-heading-ar">الوجهات التي زرناها</h2>' +
+        '<div class="section-heading-deco" aria-hidden="true">' +
+          '<span class="section-heading-deco-line"></span>' +
+          '<span>✦</span>' +
+          '<span class="section-heading-deco-line"></span>' +
         '</div>' +
-        (trip.intro ? '<p class="trip-detail-intro">' + esc(trip.intro) + '</p>' : '') +
+        '<p class="section-heading-sub">كل وجهة فصلٌ في كتابٍ نَكتبه معاً، وكل صورةٌ ذكرى نَحفظها.</p>' +
+      '</div>' +
+      '<div class="destinations-grid">' +
+        state.trips.map(function(t, i){ return renderDestCard(t, i); }).join('') +
       '</div>' +
     '</div>' +
-    '<div class="timeline-section">' +
-      '<div class="section-label" style="margin-bottom: 2.5rem;">' +
-        '<span class="section-label-text">الخط الزمني</span>' +
-        '<span class="section-label-line"></span>' +
+  '</section>';
+}
+
+// ---------- STICKY NOTES (home wall) ----------
+function renderNote(note) {
+  const color = NOTE_COLORS.indexOf(note.color) >= 0 ? note.color : 'yellow';
+  return '' +
+  '<div class="note note-' + color + ' fade-in">' +
+    '<span class="note-tape" aria-hidden="true"></span>' +
+    '<div class="note-text">' + esc(note.text) + '</div>' +
+    '<div class="note-meta">' +
+      '<span>· ذكرى ·</span>' +
+      '<button class="note-delete" data-action="delete-note" data-id="' + esc(note.id) + '" aria-label="حذف">حذف</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderNotesSection() {
+  let notesHtml;
+  if (state.notes.length === 0) {
+    notesHtml = '';
+  } else {
+    notesHtml = state.notes.map(renderNote).join('');
+  }
+  return '' +
+  '<section class="notes-section" id="notes">' +
+    '<div class="container">' +
+      '<div class="section-heading">' +
+        '<div class="section-heading-en">sticky notes</div>' +
+        '<h2 class="section-heading-ar">ملاحظات على الحائط</h2>' +
+        '<div class="section-heading-deco" aria-hidden="true">' +
+          '<span class="section-heading-deco-line"></span>' +
+          '<span>✿</span>' +
+          '<span class="section-heading-deco-line"></span>' +
+        '</div>' +
+        '<p class="section-heading-sub">جُمَل قصيرة، اقتباسات، نصائح، أو ذكرى عابرة. اضغط لتضيف ملاحظة جديدة.</p>' +
       '</div>' +
-      timelineBody +
-      '<div class="add-moment-wrap">' +
-        '<button class="btn btn-primary btn-sm" data-action="show-add-moment" data-id="' + esc(trip.id) + '">' +
-          ICONS.plus + '<span>أضف لحظة</span>' +
+      '<div class="notes-wall">' +
+        notesHtml +
+        '<button class="note note-add" data-action="show-add-note" type="button">' +
+          ICONS.plusLarge +
+          '<span>أضف ملاحظة</span>' +
         '</button>' +
       '</div>' +
     '</div>' +
-    '<div class="end-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>' +
-  '</article>';
+  '</section>';
 }
 
+// ---------- FOOTER ----------
 function renderFooter() {
   return '' +
   '<footer class="footer">' +
-    '<div class="footer-name">إسراء ومُعتَز</div>' +
-    '<div>مذكّرات سفر · صُنِعَ بحُبٍّ على الطريق</div>' +
-    '<div class="footer-ornament ornament">✦</div>' +
+    '<div class="footer-mark">Israa <span class="footer-mark-amp">&amp;</span> Muataz</div>' +
+    '<div class="footer-tagline">إسراء ومُعتَز · مذكّرات سفر</div>' +
+    '<div class="footer-meta">صُنِعَت بحُبٍّ على الطريق · ' + (new Date().getFullYear()) + '</div>' +
+    '<div class="footer-deco">✦ ✦ ✦</div>' +
   '</footer>';
 }
 
-function renderPaletteSelect(target, value) {
-  return '<div class="palette-grid">' +
-    Object.keys(PALETTES).map(function(key){
-      const p = PALETTES[key];
-      return '<button class="palette-swatch ' + (value === key ? 'active' : '') + '"' +
-        ' style="background: linear-gradient(135deg, ' + p.from + ', ' + p.to + ');"' +
-        ' data-action="select-palette" data-target="' + target + '" data-value="' + key + '" aria-label="' + key + '"></button>';
-    }).join('') +
-  '</div>';
-}
-
-function renderMotifSelect(target, value) {
-  return '<div class="motif-grid">' +
-    MOTIFS_LIST.map(function(m){
-      return '<button class="motif-btn ' + (value === m ? 'active' : '') + '" data-action="select-motif" data-target="' + target + '" data-value="' + m + '">' +
-        esc(MOTIF_LABELS[m]) +
-      '</button>';
-    }).join('') +
-  '</div>';
-}
-
-function renderAddTripModal() {
-  const f = state.addTripForm;
+// ---------- TRIP DETAIL ----------
+function renderTripDetail(trip) {
   return '' +
-  '<div class="modal-overlay" data-modal="overlay">' +
-    '<div class="modal">' +
-      '<button class="modal-close" data-action="close-modal" aria-label="إغلاق">' + ICONS.x + '</button>' +
-      '<h3 class="modal-title">رحلة جديدة</h3>' +
-      '<div class="modal-form">' +
-        coverHtml(f.palette, f.motif, 'cover-preview', 0.5) +
-        '<div class="field-group">' +
-          '<label class="field-label">العنوان</label>' +
-          '<input class="input-field" data-form="addTripForm" data-field="title" value="' + esc(f.title) + '" placeholder="مثلاً: ليالٍ في مَراكش">' +
-        '</div>' +
-        '<div class="modal-form-row">' +
-          '<div class="field-group">' +
-            '<label class="field-label">الوجهة</label>' +
-            '<input class="input-field" data-form="addTripForm" data-field="location" value="' + esc(f.location) + '" placeholder="المدينة، البلد">' +
-          '</div>' +
-          '<div class="field-group">' +
-            '<label class="field-label">التاريخ</label>' +
-            '<input class="input-field" data-form="addTripForm" data-field="date" value="' + esc(f.date) + '" placeholder="مثلاً: مايو 2026">' +
-          '</div>' +
-        '</div>' +
-        '<div class="field-group">' +
-          '<label class="field-label">الوصف</label>' +
-          '<textarea class="input-field" data-form="addTripForm" data-field="subtitle" rows="2" placeholder="سطرٌ يلخّص روح الرحلة">' + esc(f.subtitle) + '</textarea>' +
-        '</div>' +
-        '<div class="field-group">' +
-          '<label class="field-label">المقدمة (اختياري)</label>' +
-          '<textarea class="input-field" data-form="addTripForm" data-field="intro" rows="3" placeholder="الفقرة الأولى من الرحلة">' + esc(f.intro) + '</textarea>' +
-        '</div>' +
-        '<div class="modal-form-row">' +
-          '<div class="field-group">' +
-            '<label class="field-label">الرمز التعبيري</label>' +
-            '<input class="input-field" data-form="addTripForm" data-field="emoji" value="' + esc(f.emoji) + '" maxlength="3">' +
-          '</div>' +
-          '<div class="field-group">' +
-            '<label class="field-label">زخرفة</label>' +
-            '<input class="input-field" data-form="addTripForm" data-field="accent" value="' + esc(f.accent) + '" maxlength="2">' +
-          '</div>' +
-        '</div>' +
-        '<div class="field-group">' +
-          '<label class="field-label">لون الغلاف</label>' +
-          renderPaletteSelect('trip', f.palette) +
-        '</div>' +
-        '<div class="field-group">' +
-          '<label class="field-label">رمز الغلاف</label>' +
-          renderMotifSelect('trip', f.motif) +
-        '</div>' +
-        '<div class="modal-form-actions">' +
-          '<button class="btn btn-primary btn-flex" data-action="save-trip">حفظ الرحلة</button>' +
-          '<button class="btn-cancel" data-action="close-modal">إلغاء</button>' +
-        '</div>' +
+  '<article class="fade-in">' +
+    renderDetailHero(trip) +
+    renderDetailIntro(trip) +
+    renderToc(trip) +
+    renderMemoriesSection(trip) +
+    renderPlacesSection(trip) +
+    renderStaysSection(trip) +
+    renderFoodSection(trip) +
+    renderActivitiesSection(trip) +
+    renderFeelingsSection(trip) +
+    renderTipsSection(trip) +
+    renderGallerySection(trip) +
+  '</article>';
+}
+
+function renderDetailHero(trip) {
+  return '' +
+  '<section class="detail-hero">' +
+    '<img class="detail-hero-img" src="' + esc(trip.coverImage) + '" alt="' + esc(trip.titleAr) + '" onerror="this.style.display=\'none\'">' +
+    '<div class="detail-hero-overlay"></div>' +
+    '<button class="detail-hero-back" data-action="go-home">' +
+      ICONS.arrowRight + '<span>الرحلات</span>' +
+    '</button>' +
+    '<div class="detail-hero-content">' +
+      '<div class="detail-hero-supertitle">' + esc(trip.titleEn) + '</div>' +
+      '<h1 class="detail-hero-title">' + esc(trip.titleAr) + '</h1>' +
+      '<div class="detail-hero-dates">' + esc(trip.dateStart) + ' — ' + esc(trip.dateEnd) + '</div>' +
+      '<div class="detail-hero-deco">✦ ✦ ✦</div>' +
+    '</div>' +
+  '</section>';
+}
+
+function renderDetailIntro(trip) {
+  return '' +
+  '<section class="detail-intro container">' +
+    '<div class="intro-card">' +
+      '<div class="intro-card-emoji">' + esc(trip.emoji) + '</div>' +
+      '<p class="intro-card-text">' + esc(trip.intro) + '</p>' +
+    '</div>' +
+    renderSummaryGrid(trip) +
+  '</section>';
+}
+
+function renderSummaryGrid(trip) {
+  const s = trip.summary || {};
+  return '' +
+  '<div class="summary-grid">' +
+    summaryItem(ICONS.calendar, 'المدّة', s.duration || '') +
+    summaryItem(ICONS.mapPin, 'المدن', s.cities || '') +
+    summaryItem(ICONS.sun, 'الطقس', s.weather || '') +
+    summaryItem(ICONS.heart, 'مناسبة لـ', s.bestFor || '') +
+  '</div>';
+}
+function summaryItem(icon, label, value) {
+  return '<div class="summary-item">' +
+    '<div class="summary-icon">' + icon + '</div>' +
+    '<div class="summary-label">' + esc(label) + '</div>' +
+    '<div class="summary-value">' + esc(value) + '</div>' +
+  '</div>';
+}
+
+function renderToc(trip) {
+  const counts = {
+    memories: (trip.memories || []).length,
+    places: (trip.places || []).length,
+    stays: (trip.stays || []).length,
+    food: (trip.food || []).length,
+    activities: (trip.activities || []).length,
+    feelings: trip.feelings ? 1 : 0,
+    tips: (trip.tips || []).length,
+  };
+  return '' +
+  '<section class="toc-section container">' +
+    '<div class="toc-card">' +
+      '<h3 class="toc-title">TRAVEL JOURNAL</h3>' +
+      '<div class="toc-title-ar">دفتر الرحلة</div>' +
+      '<div class="toc-list">' +
+        SECTIONS.map(function(sec){
+          const count = counts[sec.key];
+          const countText = count ? '· ' + count : '';
+          return '<button class="toc-item" data-action="scroll-to" data-target="section-' + sec.key + '">' +
+            '<span class="toc-item-icon">' + sec.icon + '</span>' +
+            '<span class="toc-item-text">' + esc(sec.ar) + '</span>' +
+            '<span class="toc-item-count">' + countText + '</span>' +
+          '</button>';
+        }).join('') +
       '</div>' +
     '</div>' +
+  '</section>';
+}
+
+function sectionHeader(sec) {
+  return '<div class="section-label-row">' +
+    '<div class="section-label-icon">' + sec.icon + '</div>' +
+    '<div class="section-label-text">' +
+      '<div class="section-label-en">' + esc(sec.en) + '</div>' +
+      '<div class="section-label-ar">' + esc(sec.ar) + '</div>' +
+    '</div>' +
+    '<div class="section-label-line"></div>' +
   '</div>';
 }
 
-function renderAddMomentModal() {
-  const f = state.addMomentForm;
+// ---------- DETAIL SECTIONS ----------
+function renderMemoriesSection(trip) {
+  const sec = SECTIONS[0];
+  const memories = trip.memories || [];
+  if (memories.length === 0) return '';
+  const featured = memories[0];
+  const rest = memories.slice(1);
+
+  return '' +
+  '<section class="content-section" id="section-memories">' +
+    sectionHeader(sec) +
+    '<div class="memories-layout">' +
+      '<div class="memory-featured">' +
+        '<div class="memory-featured-photo">' +
+          '<img src="' + esc(featured.image) + '" alt="' + esc(featured.caption) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+        '</div>' +
+        '<div class="memory-featured-caption">' + esc(featured.caption) + '</div>' +
+        (featured.story ? '<p class="memory-featured-story">' + esc(featured.story) + '</p>' : '') +
+      '</div>' +
+      '<div class="memory-grid">' +
+        rest.map(function(m){
+          return '<div class="memory-small">' +
+            '<div class="memory-small-photo">' +
+              '<img src="' + esc(m.image) + '" alt="' + esc(m.caption) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+            '</div>' +
+            '<div class="memory-small-caption">' + esc(m.caption) + '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+  '</section>';
+}
+
+function renderPlacesSection(trip) {
+  const sec = SECTIONS[1];
+  const places = trip.places || [];
+  if (places.length === 0) return '';
+  return '' +
+  '<section class="content-section" id="section-places">' +
+    sectionHeader(sec) +
+    '<div class="places-list">' +
+      places.map(function(p, i){
+        return '<div class="places-item">' +
+          '<div class="places-item-num">' + (i+1) + '</div>' +
+          '<div class="places-item-text">' + esc(p) + '</div>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+  '</section>';
+}
+
+function renderStaysSection(trip) {
+  const sec = SECTIONS[2];
+  const stays = trip.stays || [];
+  if (stays.length === 0) return '';
+  return '' +
+  '<section class="content-section" id="section-stays">' +
+    sectionHeader(sec) +
+    '<div class="stays-list">' +
+      stays.map(function(s){
+        return '<div class="stay-card">' +
+          '<div class="stay-card-name">' + esc(s.name) + '</div>' +
+          (s.type ? '<div class="stay-card-type">' + esc(s.type) + '</div>' : '') +
+          (s.note ? '<div class="stay-card-note">' + esc(s.note) + '</div>' : '') +
+        '</div>';
+      }).join('') +
+    '</div>' +
+  '</section>';
+}
+
+function renderFoodSection(trip) {
+  const sec = SECTIONS[3];
+  const food = trip.food || [];
+  if (food.length === 0) return '';
+  return '' +
+  '<section class="content-section" id="section-food">' +
+    sectionHeader(sec) +
+    '<div class="food-list">' +
+      food.map(function(f){
+        return '<div class="food-card">' +
+          '<div class="food-card-name">' + esc(f.name) + '</div>' +
+          (f.type ? '<div class="food-card-type">' + esc(f.type) + '</div>' : '') +
+          (f.note ? '<div class="food-card-note">' + esc(f.note) + '</div>' : '') +
+        '</div>';
+      }).join('') +
+    '</div>' +
+  '</section>';
+}
+
+function renderActivitiesSection(trip) {
+  const sec = SECTIONS[4];
+  const acts = trip.activities || [];
+  if (acts.length === 0) return '';
+  return '' +
+  '<section class="content-section" id="section-activities">' +
+    sectionHeader(sec) +
+    '<div class="activities-list">' +
+      acts.map(function(a, i){
+        return '<div class="activities-item">' +
+          '<div class="places-item-num">' + (i+1) + '</div>' +
+          '<div class="places-item-text">' + esc(a) + '</div>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+  '</section>';
+}
+
+function renderFeelingsSection(trip) {
+  const sec = SECTIONS[5];
+  if (!trip.feelings) return '';
+  return '' +
+  '<section class="content-section" id="section-feelings">' +
+    sectionHeader(sec) +
+    '<div class="feelings-block">' +
+      '<div class="feelings-quote-mark">"</div>' +
+      '<p class="feelings-text">' + esc(trip.feelings) + '</p>' +
+      '<div class="feelings-attribution">— من دفتر إسراء ومُعتَز</div>' +
+    '</div>' +
+  '</section>';
+}
+
+function renderTipsSection(trip) {
+  const sec = SECTIONS[6];
+  const tips = trip.tips || [];
+  if (tips.length === 0) return '';
+  return '' +
+  '<section class="content-section" id="section-tips">' +
+    sectionHeader(sec) +
+    '<div class="tips-list">' +
+      tips.map(function(t){
+        return '<div class="tip-item">' + esc(t) + '</div>';
+      }).join('') +
+    '</div>' +
+  '</section>';
+}
+
+// ---------- GALLERY (combines all images from the trip) ----------
+function renderGallerySection(trip) {
+  const memories = trip.memories || [];
+  if (memories.length < 2) return '';
+  const featured = memories[0];
+  const rest = memories.slice(1);
+
+  return '' +
+  '<section class="gallery-section">' +
+    '<div class="section-heading">' +
+      '<div class="section-heading-en">photo album</div>' +
+      '<h2 class="section-heading-ar">ألبوم الذكريات</h2>' +
+      '<div class="section-heading-deco" aria-hidden="true">' +
+        '<span class="section-heading-deco-line"></span>' +
+        '<span>✦</span>' +
+        '<span class="section-heading-deco-line"></span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="gallery-layout">' +
+      '<div class="gallery-featured">' +
+        '<img src="' + esc(featured.image) + '" alt="' + esc(featured.caption) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+        '<div class="gallery-featured-caption">' + esc(featured.caption) + '</div>' +
+      '</div>' +
+      '<div class="gallery-grid">' +
+        rest.map(function(m){
+          return '<div class="gallery-item">' +
+            '<div class="gallery-item-photo">' +
+              '<img src="' + esc(m.image) + '" alt="' + esc(m.caption) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+            '</div>' +
+            '<div class="gallery-item-caption">' + esc(m.caption) + '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+  '</section>';
+}
+
+// ---------- MODAL: Add Note ----------
+function renderAddNoteModal() {
+  const f = state.addNoteForm;
   return '' +
   '<div class="modal-overlay" data-modal="overlay">' +
     '<div class="modal">' +
       '<button class="modal-close" data-action="close-modal" aria-label="إغلاق">' + ICONS.x + '</button>' +
-      '<h3 class="modal-title">لحظة جديدة</h3>' +
+      '<h3 class="modal-title">ملاحظة جديدة</h3>' +
       '<div class="modal-form">' +
-        coverHtml(f.palette, f.motif, 'cover-preview', 0.5) +
-        '<div class="field-group">' +
-          '<label class="field-label">التاريخ / المرحلة</label>' +
-          '<input class="input-field" data-form="addMomentForm" data-field="date" value="' + esc(f.date) + '" placeholder="مثلاً: اليوم الثاني · 16 مارس">' +
-        '</div>' +
-        '<div class="field-group">' +
-          '<label class="field-label">عنوان اللحظة</label>' +
-          '<input class="input-field" data-form="addMomentForm" data-field="title" value="' + esc(f.title) + '" placeholder="مثلاً: صباحٌ في السوق القديم">' +
-        '</div>' +
         '<div class="field-group">' +
           '<label class="field-label">النص</label>' +
-          '<textarea class="input-field" data-form="addMomentForm" data-field="text" rows="5" placeholder="احكِ ما حدث، ما رأيت، وما شعرتَ به">' + esc(f.text) + '</textarea>' +
+          '<textarea class="input-field" data-form="addNoteForm" data-field="text" rows="4" placeholder="اكتب ذكرى، اقتباس، أو نصيحة سفر...">' + esc(f.text) + '</textarea>' +
         '</div>' +
         '<div class="field-group">' +
-          '<label class="field-label">لون الغلاف</label>' +
-          renderPaletteSelect('moment', f.palette) +
-        '</div>' +
-        '<div class="field-group">' +
-          '<label class="field-label">رمز الغلاف</label>' +
-          renderMotifSelect('moment', f.motif) +
+          '<label class="field-label">لون الورقة</label>' +
+          '<div class="color-picker">' +
+            NOTE_COLORS.map(function(c){
+              const isActive = f.color === c ? 'active' : '';
+              return '<button type="button" class="color-swatch ' + isActive + ' note-' + c + '" data-action="select-note-color" data-value="' + c + '" aria-label="' + c + '"></button>';
+            }).join('') +
+          '</div>' +
         '</div>' +
         '<div class="modal-form-actions">' +
-          '<button class="btn btn-primary btn-flex" data-action="save-moment">أضف اللحظة</button>' +
+          '<button class="btn btn-primary btn-flex" data-action="save-note">أضف الملاحظة</button>' +
           '<button class="btn-cancel" data-action="close-modal">إلغاء</button>' +
         '</div>' +
       '</div>' +
@@ -837,29 +2064,23 @@ function renderAddMomentModal() {
   '</div>';
 }
 
+// ---------- APP SHELL ----------
 function renderApp() {
-  const featured = state.trips.find(function(t){ return t.featured; }) || state.trips[0];
-  const rest = featured ? state.trips.filter(function(t){ return t.id !== featured.id; }) : state.trips;
-  const currentTrip = state.trips.find(function(t){ return t.id === state.currentTripId; });
-
   let main = '';
   if (state.view === 'home') {
-    main = (featured ? renderFeaturedHero(featured) : '') + renderTripsGrid(rest);
-  } else if (state.view === 'detail' && currentTrip) {
-    main = renderTripDetail(currentTrip);
-  } else {
-    // fallback
-    main = renderTripsGrid(state.trips);
+    main = renderHero() + renderDestinationsSection() + renderNotesSection();
+  } else if (state.view === 'detail') {
+    const trip = state.trips.find(function(t){ return t.id === state.currentTripId; });
+    if (trip) main = renderTripDetail(trip);
+    else main = '<div class="empty-state">الرحلة غير موجودة</div>';
   }
-
   return renderTopNav() + '<main>' + main + '</main>' + renderFooter() +
-    (state.showAddTrip ? renderAddTripModal() : '') +
-    (state.showAddMoment ? renderAddMomentModal() : '');
+    (state.showAddNote ? renderAddNoteModal() : '');
 }
 
 function render() {
   document.getElementById('app').innerHTML = renderApp();
-  document.body.style.overflow = (state.showAddTrip || state.showAddMoment) ? 'hidden' : '';
+  document.body.style.overflow = state.showAddNote ? 'hidden' : '';
 }
 
 /* =========================================================
@@ -869,107 +2090,54 @@ function openTrip(id) {
   state.currentTripId = id;
   state.view = 'detail';
   render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
 function goHome() {
   state.view = 'home';
   state.currentTripId = null;
   render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
-function showAddTrip() {
-  state.showAddTrip = true;
-  state.addTripForm = initialAddTripForm();
+function scrollToTarget(targetId) {
+  setTimeout(function(){
+    const el = document.getElementById(targetId);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+}
+
+function showAddNote() {
+  state.showAddNote = true;
+  state.addNoteForm = initialAddNoteForm();
   render();
 }
-
-function showAddMoment(tripId) {
-  state.showAddMoment = true;
-  state.pendingMomentTripId = tripId;
-  state.addMomentForm = initialAddMomentForm();
-  render();
-}
-
 function closeModal() {
-  state.showAddTrip = false;
-  state.showAddMoment = false;
-  state.pendingMomentTripId = null;
+  state.showAddNote = false;
   render();
 }
-
-function saveTrip() {
-  const f = state.addTripForm;
-  if (!f.title.trim() || !f.location.trim()) {
-    alert('من فضلك أدخل العنوان والوجهة');
-    return;
-  }
-  const trip = {
+function saveNote() {
+  const f = state.addNoteForm;
+  if (!f.text.trim()) { alert('من فضلك اكتب نص الملاحظة'); return; }
+  const note = {
     id: newId(),
-    title: f.title, subtitle: f.subtitle, location: f.location,
-    date: f.date, intro: f.intro,
-    palette: f.palette, motif: f.motif,
-    emoji: f.emoji || '✈️', accent: f.accent || '✦',
-    featured: false, timeline: [],
+    text: f.text.trim(),
+    color: f.color || 'yellow',
+    createdAt: Date.now(),
   };
-  state.trips = [trip].concat(state.trips);
-  state.showAddTrip = false;
-  state.currentTripId = trip.id;
-  state.view = 'detail';
-  persistTrips();
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function saveMoment() {
-  const f = state.addMomentForm;
-  if (!f.title.trim()) {
-    alert('من فضلك أدخل عنوان اللحظة');
-    return;
-  }
-  const moment = {
-    id: newId(),
-    date: f.date, title: f.title, text: f.text,
-    palette: f.palette, motif: f.motif,
-  };
-  const targetId = state.pendingMomentTripId;
-  state.trips = state.trips.map(function(t){
-    return t.id === targetId ? Object.assign({}, t, { timeline: t.timeline.concat([moment]) }) : t;
-  });
-  state.showAddMoment = false;
-  state.pendingMomentTripId = null;
-  persistTrips();
+  state.notes = [note].concat(state.notes);
+  state.showAddNote = false;
+  saveToStorage(STORAGE_KEY_NOTES, state.notes);
   render();
 }
-
-function deleteTrip(id) {
-  state.trips = state.trips.filter(function(t){ return t.id !== id; });
-  state.view = 'home';
-  state.currentTripId = null;
-  persistTrips();
+function deleteNote(id) {
+  if (!confirm('حذف هذه الملاحظة؟')) return;
+  state.notes = state.notes.filter(function(n){ return n.id !== id; });
+  saveToStorage(STORAGE_KEY_NOTES, state.notes);
   render();
 }
-
-function deleteMoment(tripId, momentId) {
-  state.trips = state.trips.map(function(t){
-    return t.id === tripId
-      ? Object.assign({}, t, { timeline: t.timeline.filter(function(m){ return m.id !== momentId; }) })
-      : t;
-  });
-  persistTrips();
-  render();
-}
-
-function selectPalette(target, value) {
-  if (target === 'trip') state.addTripForm.palette = value;
-  else state.addMomentForm.palette = value;
-  render();
-}
-
-function selectMotif(target, value) {
-  if (target === 'trip') state.addTripForm.motif = value;
-  else state.addMomentForm.motif = value;
+function selectNoteColor(color) {
+  state.addNoteForm.color = color;
   render();
 }
 
@@ -977,37 +2145,27 @@ function selectMotif(target, value) {
    EVENT DELEGATION
    ========================================================= */
 function handleClick(e) {
-  // Click on modal overlay (outside the modal content) closes modal
+  // Overlay click closes modal
   if (e.target.dataset && e.target.dataset.modal === 'overlay') {
-    closeModal();
-    return;
+    closeModal(); return;
   }
-
   const target = e.target.closest('[data-action]');
   if (!target) return;
 
   const action = target.dataset.action;
   const id = target.dataset.id;
-  const tripId = target.dataset.tripId;
   const value = target.dataset.value;
-  const ttype = target.dataset.target;
+  const tgtTarget = target.dataset.target;
 
   switch (action) {
     case 'go-home': goHome(); break;
     case 'open-trip': openTrip(id); break;
-    case 'show-add-trip': showAddTrip(); break;
-    case 'show-add-moment': showAddMoment(id); break;
+    case 'scroll-to': scrollToTarget(tgtTarget); break;
+    case 'show-add-note': showAddNote(); break;
     case 'close-modal': closeModal(); break;
-    case 'delete-trip':
-      if (confirm('هل تريد حذف هذه الرحلة؟ لا يمكن التراجع.')) deleteTrip(id);
-      break;
-    case 'delete-moment':
-      if (confirm('هل تريد حذف هذه اللحظة؟')) deleteMoment(tripId, id);
-      break;
-    case 'save-trip': saveTrip(); break;
-    case 'save-moment': saveMoment(); break;
-    case 'select-palette': selectPalette(ttype, value); break;
-    case 'select-motif': selectMotif(ttype, value); break;
+    case 'save-note': saveNote(); break;
+    case 'delete-note': deleteNote(id); break;
+    case 'select-note-color': selectNoteColor(value); break;
   }
 }
 
@@ -1015,24 +2173,24 @@ function handleInput(e) {
   const form = e.target.dataset.form;
   const field = e.target.dataset.field;
   if (form && field && state[form]) {
-    // Silent update — no re-render so the input keeps focus while typing
+    // Silent update — no re-render so input keeps focus
     state[form][field] = e.target.value;
   }
 }
 
 function handleKeydown(e) {
-  if (e.key === 'Escape' && (state.showAddTrip || state.showAddMoment)) {
-    closeModal();
-  }
+  if (e.key === 'Escape' && state.showAddNote) closeModal();
 }
 
 /* =========================================================
    INIT
    ========================================================= */
 function init() {
-  state.trips = loadTrips();
-  document.getElementById('app').addEventListener('click', handleClick);
-  document.getElementById('app').addEventListener('input', handleInput);
+  state.trips = loadFromStorage(STORAGE_KEY_TRIPS, SAMPLE_TRIPS);
+  state.notes = loadFromStorage(STORAGE_KEY_NOTES, SAMPLE_NOTES);
+  const app = document.getElementById('app');
+  app.addEventListener('click', handleClick);
+  app.addEventListener('input', handleInput);
   document.addEventListener('keydown', handleKeydown);
   render();
 }
