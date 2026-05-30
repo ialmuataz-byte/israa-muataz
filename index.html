@@ -9,13 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@400;600;700&family=Markazi+Text:wght@400;500;600;700&family=Tajawal:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+<!-- Curated font alternatives — preloaded so users can switch in Settings without dynamic loading -->
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Oswald:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Lora:ital,wght@0,400;0,500;0,700;1,400&family=Caveat:wght@400;600;700&family=Dancing+Script:wght@400;700&family=Sacramento&family=Markazi+Text:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Reem+Kufi:wght@400;500;600;700&family=Tajawal:wght@200;300;400;500;700;900&family=Cairo:wght@300;400;600;700&family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   1. BASE & DESIGN TOKENS
+   1. BASE & DESIGN TOKENS (CSS Variables for dynamic theming)
    ========================================================= */
 :root {
-  /* Warm beige & sand palette per spec */
+  /* Warm beige & sand palette — overridable from JS */
   --cream:        #F5EFE5;
   --cream-warm:   #EFE5D2;
   --cream-soft:   #FAF6EE;
@@ -49,17 +50,22 @@
   --radius-xl:    28px;
 
   --ease:         cubic-bezier(.2,.7,.2,1);
+
+  /* Fonts — overridable from JS for dynamic font switching */
+  --font-body:        'Tajawal', system-ui, sans-serif;
+  --font-display:     'Markazi Text', 'Amiri', serif;
+  --font-en-display:  'Playfair Display', Georgia, serif;
+  --font-en-script:   'Caveat', cursive;
+  --font-hero:        'Anton', 'Archivo Black', sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 html, body { background: var(--cream); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 body {
-  font-family: 'Tajawal', system-ui, sans-serif;
+  font-family: var(--font-body);
   color: var(--ink);
   min-height: 100vh;
   line-height: 1.6;
-  /* Subtle paper texture overlay across whole site */
   background-image:
     radial-gradient(at 20% 10%, rgba(201,169,97,0.05) 0%, transparent 50%),
     radial-gradient(at 80% 90%, rgba(184,92,67,0.04) 0%, transparent 50%);
@@ -72,16 +78,11 @@ a { color: inherit; text-decoration: none; cursor: pointer; }
 img, svg { display: block; max-width: 100%; }
 img { height: auto; }
 
-/* Typography utility classes */
-.display      { font-family: 'Markazi Text', 'Amiri', serif; line-height: 1.15; }
-.display-en   { font-family: 'Playfair Display', Georgia, serif; }
-.script-en    { font-family: 'Caveat', cursive; }
-.serif-en     { font-family: 'Cormorant Garamond', Georgia, serif; }
+.display      { font-family: var(--font-display); line-height: 1.15; }
+.display-en   { font-family: var(--font-en-display); }
+.script-en    { font-family: var(--font-en-script); }
 
-/* Selection */
 ::selection { background: var(--gold); color: var(--ink); }
-
-/* Focus */
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
 
 /* =========================================================
@@ -90,12 +91,141 @@ img { height: auto; }
 .container { max-width: 78rem; margin: 0 auto; padding: 0 1.25rem; }
 @media (min-width: 640px) { .container { padding: 0 2rem; } }
 @media (min-width: 1024px) { .container { padding: 0 3rem; } }
-
 .container-narrow { max-width: 56rem; margin: 0 auto; padding: 0 1.25rem; }
 @media (min-width: 640px) { .container-narrow { padding: 0 2rem; } }
 
 /* =========================================================
-   3. NAVIGATION
+   3. LOGIN SCREEN
+   ========================================================= */
+.login-screen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+.login-screen::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(at 30% 20%, rgba(201,169,97,0.18) 0%, transparent 45%),
+    radial-gradient(at 70% 80%, rgba(184,92,67,0.12) 0%, transparent 45%);
+  pointer-events: none;
+}
+.login-card {
+  position: relative;
+  background: var(--cream-soft);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem 1.75rem;
+  width: 100%;
+  max-width: 26rem;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  border: 1px solid var(--line);
+}
+@media (min-width: 640px) { .login-card { padding: 3rem 2.5rem; } }
+.login-supertitle {
+  font-family: var(--font-en-script);
+  font-size: 1.5rem;
+  color: var(--gold-deep);
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.02em;
+}
+.login-title {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+.login-subtitle {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  color: var(--ink-mute);
+  margin-bottom: 2rem;
+}
+.login-deco {
+  display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  color: var(--gold-deep);
+  margin: 0 auto 2rem;
+  max-width: 12rem;
+}
+.login-deco-line { flex: 1; height: 1px; background: currentColor; opacity: 0.3; }
+.login-form { text-align: right; }
+.login-label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.password-wrap {
+  position: relative;
+  display: flex;
+}
+.password-input {
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  padding: 0.875rem 3rem 0.875rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  line-height: 1.4;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  letter-spacing: 0.03em;
+  font-family: var(--font-body);
+}
+.password-input:focus {
+  outline: none;
+  border-color: var(--gold-deep);
+  box-shadow: 0 0 0 3px rgba(201,169,97,0.15);
+}
+.password-toggle {
+  position: absolute;
+  left: 0.625rem; top: 50%;
+  transform: translateY(-50%);
+  width: 2.25rem; height: 2.25rem;
+  border-radius: 9999px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-mute);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.password-toggle:hover { color: var(--ink); background: var(--cream-warm); }
+.login-error {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--terracotta);
+  min-height: 1.25rem;
+  text-align: center;
+}
+.login-submit {
+  width: 100%;
+  margin-top: 1.25rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--radius-md);
+  background: var(--ink);
+  color: var(--cream-soft);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background 0.2s ease, transform 0.2s ease;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.login-submit:hover { background: var(--terracotta); }
+.login-submit:active { transform: translateY(1px); }
+.login-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+.login-footer {
+  margin-top: 2rem;
+  font-size: 0.8125rem;
+  color: var(--ink-light);
+  font-family: var(--font-en-script);
+  font-size: 1.125rem;
+}
+
+/* =========================================================
+   4. NAVIGATION
    ========================================================= */
 .nav {
   position: sticky; top: 0; z-index: 40;
@@ -104,19 +234,29 @@ img { height: auto; }
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   border-bottom: 1px solid var(--line);
 }
-.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.875rem 0; }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.875rem 0; }
 .nav-logo { display: flex; align-items: center; gap: 0.625rem; }
-.nav-logo-name { font-family: 'Markazi Text', serif; font-size: 1.5rem; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+.nav-logo-name { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
 @media (min-width: 640px) { .nav-logo-name { font-size: 1.75rem; } }
-.nav-logo-en { font-family: 'Caveat', cursive; font-size: 1.125rem; color: var(--gold-deep); margin-bottom: -0.25rem; display: none; }
+.nav-logo-en { font-family: var(--font-en-script); font-size: 1.125rem; color: var(--gold-deep); margin-bottom: -0.25rem; display: none; }
 @media (min-width: 768px) { .nav-logo-en { display: inline; } }
 
-.nav-links { display: flex; align-items: center; gap: 1.25rem; font-size: 0.875rem; color: var(--ink-soft); }
+.nav-actions { display: flex; align-items: center; gap: 0.625rem; }
+.nav-links { display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; color: var(--ink-soft); }
 @media (min-width: 640px) { .nav-links { gap: 1.5rem; font-size: 0.9375rem; } }
 .nav-link { position: relative; transition: color 0.2s ease; padding-bottom: 4px; }
 .nav-link::after { content: ''; position: absolute; right: 0; left: 0; bottom: -2px; height: 1px; background: var(--terracotta); transform: scaleX(0); transform-origin: right; transition: transform 0.3s var(--ease); }
 .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
 .nav-link:hover, .nav-link.active { color: var(--ink); }
+
+.nav-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2.25rem; height: 2.25rem; border-radius: 9999px;
+  color: var(--ink-soft); transition: background 0.2s ease, color 0.2s ease;
+}
+.nav-icon-btn:hover { background: var(--cream-warm); color: var(--ink); }
+.nav-icon-btn.active { background: var(--ink); color: var(--cream-soft); }
+
 .nav-add-btn {
   display: inline-flex; align-items: center; gap: 0.4rem;
   padding: 0.5rem 0.875rem; border-radius: 9999px;
@@ -128,72 +268,128 @@ img { height: auto; }
 .hidden-md { display: none; }
 @media (min-width: 768px) { .hidden-md { display: inline-block; } }
 
-/* =========================================================
-   4. HERO — large image-masked letters "Israa & Muataz"
-   ========================================================= */
-.hero {
-  position: relative;
-  padding: 3.5rem 1.25rem 5rem;
-  text-align: center;
-  overflow: hidden;
+/* Edit mode badge in nav */
+.edit-mode-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.375rem 0.75rem;
+  background: var(--terracotta);
+  color: var(--cream-soft);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  animation: pulse-soft 2s infinite;
 }
+@keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
+
+/* =========================================================
+   5. EDIT MODE — affordances on top of regular UI
+   ========================================================= */
+body.edit-mode .edit-affordance { display: inline-flex; }
+.edit-affordance { display: none; }
+
+/* Edit overlay on destination cards */
+.dest-card-edit-overlay {
+  position: absolute;
+  top: 0.5rem; left: 0.5rem;
+  display: none;
+  gap: 0.375rem;
+  z-index: 5;
+}
+body.edit-mode .dest-card-edit-overlay { display: flex; }
+.dest-card-edit-btn {
+  width: 2.25rem; height: 2.25rem;
+  border-radius: 9999px;
+  background: rgba(245,239,229,0.95);
+  color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+.dest-card-edit-btn:hover { background: var(--cream-soft); transform: scale(1.08); }
+.dest-card-edit-btn.danger { color: var(--rust); }
+.dest-card-edit-btn.danger:hover { background: var(--rust); color: var(--cream-soft); }
+
+/* "Add" affordance card (for adding new destinations) */
+.dest-add-card {
+  display: none;
+  background: transparent;
+  border: 2px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  min-height: 320px;
+  align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: var(--ink-mute);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+body.edit-mode .dest-add-card { display: flex; }
+.dest-add-card:hover { border-color: var(--terracotta); color: var(--terracotta); background: rgba(184,92,67,0.04); }
+
+/* Edit button in detail view */
+.detail-edit-fab {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem; left: 1.5rem;
+  z-index: 30;
+  align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 9999px;
+  background: var(--ink);
+  color: var(--cream-soft);
+  font-size: 0.9375rem; font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+body.edit-mode .detail-edit-fab { display: inline-flex; }
+.detail-edit-fab:hover { background: var(--terracotta); }
+.detail-edit-fab:active { transform: translateY(1px); }
+
+/* Note edit/delete buttons (made visible in edit mode) */
+body.edit-mode .note-delete { opacity: 0.6 !important; }
+.note-edit-btn {
+  display: none;
+  position: absolute; top: 6px; right: 6px;
+  width: 1.75rem; height: 1.75rem;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.6);
+  color: var(--ink-soft);
+  align-items: center; justify-content: center;
+  font-size: 0.875rem;
+  transition: background 0.2s ease;
+}
+body.edit-mode .note-edit-btn { display: inline-flex; }
+.note-edit-btn:hover { background: rgba(255,255,255,0.9); color: var(--ink); }
+
+/* =========================================================
+   6. HERO
+   ========================================================= */
+.hero { position: relative; padding: 3.5rem 1.25rem 5rem; text-align: center; overflow: hidden; }
 @media (min-width: 640px) { .hero { padding: 5rem 2rem 6rem; } }
 @media (min-width: 1024px) { .hero { padding: 6rem 3rem 7rem; } }
 
-.hero-supertitle {
-  font-family: 'Caveat', cursive;
-  font-size: 1.5rem;
-  color: var(--gold-deep);
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.02em;
-}
+.hero-supertitle { font-family: var(--font-en-script); font-size: 1.5rem; color: var(--gold-deep); margin-bottom: 0.5rem; letter-spacing: 0.02em; }
 @media (min-width: 640px) { .hero-supertitle { font-size: 1.875rem; } }
-
-.hero-arabic-intro {
-  font-family: 'Markazi Text', serif;
-  font-size: 1.125rem;
-  color: var(--ink-soft);
-  margin-bottom: 2.5rem;
-  letter-spacing: 0.02em;
-}
+.hero-arabic-intro { font-family: var(--font-display); font-size: 1.125rem; color: var(--ink-soft); margin-bottom: 2.5rem; letter-spacing: 0.02em; }
 @media (min-width: 640px) { .hero-arabic-intro { font-size: 1.375rem; margin-bottom: 3rem; } }
 
-/* The masked-letters title */
 .hero-title {
-  font-family: 'Anton', 'Archivo Black', sans-serif;
+  font-family: var(--font-hero);
   font-weight: 400;
   line-height: 0.88;
   letter-spacing: 0.01em;
-  /* Fallback color for browsers that don't support background-clip:text */
   color: var(--ink);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.05em;
+  display: flex; flex-direction: column; align-items: center; gap: 0.05em;
   margin-bottom: 2.25rem;
-  /* dir-ltr because letters read left-to-right inside an RTL page */
 }
-
-.hero-title-line {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(4.5rem, 18vw, 11rem);
-  /* Reserve generous height for tall letters */
-}
-
-.hero-title-line-amp {
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(2.75rem, 10vw, 6rem);
-  color: var(--gold-deep);
-  line-height: 1;
-}
+.hero-title-line { display: inline-flex; align-items: center; justify-content: center; font-size: clamp(4.5rem, 18vw, 11rem); }
+.hero-title-line-amp { font-family: var(--font-en-display); font-style: italic; font-weight: 400; font-size: clamp(2.75rem, 10vw, 6rem); color: var(--gold-deep); line-height: 1; }
 
 .letter {
   display: inline-block;
-  /* Image-masked text — falls back to color if unsupported */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -205,80 +401,38 @@ img { height: auto; }
   padding: 0 0.005em;
 }
 .letter:hover { transform: translateY(-4px); filter: brightness(1.1) saturate(1.15); }
-
-/* Fallback for browsers without background-clip text */
 @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
   .letter { color: var(--terracotta); -webkit-text-fill-color: var(--terracotta); background: none !important; }
 }
 
-.hero-subtitle {
-  font-family: 'Markazi Text', serif;
-  font-size: 1.25rem;
-  color: var(--ink-soft);
-  max-width: 36rem;
-  margin: 0 auto;
-  line-height: 1.6;
-}
+.hero-subtitle { font-family: var(--font-display); font-size: 1.25rem; color: var(--ink-soft); max-width: 36rem; margin: 0 auto; line-height: 1.6; }
 @media (min-width: 640px) { .hero-subtitle { font-size: 1.5rem; } }
 
-.hero-decoration {
-  display: flex; align-items: center; justify-content: center; gap: 1rem;
-  margin: 1.75rem auto 0;
-  color: var(--gold-deep);
-}
+.hero-decoration { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 1.75rem auto 0; color: var(--gold-deep); }
 .hero-decoration-line { width: 3rem; height: 1px; background: var(--gold); opacity: 0.5; }
 .hero-decoration-dot { width: 4px; height: 4px; border-radius: 9999px; background: var(--gold-deep); }
 
 /* =========================================================
-   5. DESTINATIONS GRID
+   7. DESTINATIONS GRID
    ========================================================= */
 .destinations-section { padding: 2rem 0 6rem; position: relative; }
 
-.section-heading {
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center;
-  margin-bottom: 3rem;
-  gap: 0.5rem;
-}
-.section-heading-en {
-  font-family: 'Caveat', cursive;
-  font-size: 1.5rem;
-  color: var(--gold-deep);
-}
-.section-heading-ar {
-  font-family: 'Markazi Text', serif;
-  font-size: 2.25rem;
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1.1;
-}
+.section-heading { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 3rem; gap: 0.5rem; }
+.section-heading-en { font-family: var(--font-en-script); font-size: 1.5rem; color: var(--gold-deep); }
+.section-heading-ar { font-family: var(--font-display); font-size: 2.25rem; font-weight: 600; color: var(--ink); line-height: 1.1; }
 @media (min-width: 640px) { .section-heading-ar { font-size: 3rem; } }
-.section-heading-sub {
-  font-size: 0.9375rem;
-  color: var(--ink-mute);
-  margin-top: 0.25rem;
-  max-width: 30rem;
-}
-.section-heading-deco {
-  display: flex; align-items: center; gap: 0.625rem;
-  margin-top: 0.75rem; color: var(--gold-deep);
-}
+.section-heading-sub { font-size: 0.9375rem; color: var(--ink-mute); margin-top: 0.25rem; max-width: 30rem; }
+.section-heading-deco { display: flex; align-items: center; gap: 0.625rem; margin-top: 0.75rem; color: var(--gold-deep); }
 .section-heading-deco-line { width: 2.5rem; height: 1px; background: currentColor; opacity: 0.4; }
 
-.destinations-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem 1.75rem;
-}
+.destinations-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem 1.75rem; }
 @media (min-width: 640px) { .destinations-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1024px) { .destinations-grid { grid-template-columns: repeat(3, 1fr); gap: 3rem 2rem; } }
 
-/* Destination card — clean polaroid-inspired but modern */
 .dest-card {
   position: relative;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
   background: var(--paper);
   padding: 0.875rem 0.875rem 1.25rem;
   border-radius: var(--radius-md);
@@ -288,18 +442,14 @@ img { height: auto; }
   width: 100%;
 }
 @media (min-width: 640px) {
-  /* Subtle alternating tilt for visual rhythm */
   .destinations-grid > .dest-card:nth-child(3n+1) { transform: rotate(-0.4deg); }
   .destinations-grid > .dest-card:nth-child(3n+2) { transform: rotate(0.3deg); }
   .destinations-grid > .dest-card:nth-child(3n+3) { transform: rotate(-0.2deg); }
 }
 .dest-card:hover { transform: translateY(-8px) rotate(0deg); box-shadow: var(--shadow-lg); }
 .dest-card:focus-visible { transform: translateY(-8px) rotate(0deg); }
-
-/* Washi tape decoration on top of card */
 .dest-card-tape {
-  position: absolute;
-  top: -10px; left: 50%;
+  position: absolute; top: -10px; left: 50%;
   transform: translateX(-50%) rotate(-2deg);
   width: 3.5rem; height: 18px;
   background: rgba(201,169,97,0.5);
@@ -310,97 +460,29 @@ img { height: auto; }
 .dest-card:nth-child(2n) .dest-card-tape { background: rgba(184,92,67,0.45); transform: translateX(-50%) rotate(2deg); }
 .dest-card:nth-child(3n) .dest-card-tape { background: rgba(123,150,168,0.45); }
 
-.dest-card-photo {
-  position: relative;
-  aspect-ratio: 4/5;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  margin-bottom: 1rem;
-  background: var(--cream-deep);
-}
-.dest-card-img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform 0.7s var(--ease);
-}
+.dest-card-photo { position: relative; aspect-ratio: 4/5; border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 1rem; background: var(--cream-deep); }
+.dest-card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease); }
 .dest-card:hover .dest-card-img { transform: scale(1.05); }
-.dest-card-fallback {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-}
-.dest-card-photo-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(42,31,21,0.45) 100%);
-  pointer-events: none;
-}
-.dest-card-overlay-content {
-  position: absolute; bottom: 0.875rem; right: 1rem; left: 1rem;
-  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
-  color: var(--cream-soft);
-}
-.dest-card-overlay-num {
-  font-family: 'Caveat', cursive;
-  font-size: 1.25rem;
-  opacity: 0.85;
-}
+.dest-card-photo-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(42,31,21,0.45) 100%); pointer-events: none; }
+.dest-card-overlay-content { position: absolute; bottom: 0.875rem; right: 1rem; left: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; color: var(--cream-soft); }
+.dest-card-overlay-num { font-family: var(--font-en-script); font-size: 1.25rem; opacity: 0.85; }
 .dest-card-overlay-emoji { font-size: 1.5rem; }
 
 .dest-card-body { padding: 0 0.25rem; }
-.dest-card-loc-en {
-  font-family: 'Caveat', cursive;
-  color: var(--gold-deep);
-  font-size: 1rem;
-  margin-bottom: 0.125rem;
-  letter-spacing: 0.02em;
-}
-.dest-card-title {
-  font-family: 'Markazi Text', serif;
-  font-weight: 600;
-  font-size: 1.875rem;
-  line-height: 1.1;
-  color: var(--ink);
-  margin-bottom: 0.625rem;
-}
-.dest-card-meta {
-  display: flex; align-items: center; gap: 0.5rem;
-  color: var(--ink-mute);
-  font-size: 0.875rem;
-}
+.dest-card-loc-en { font-family: var(--font-en-script); color: var(--gold-deep); font-size: 1rem; margin-bottom: 0.125rem; letter-spacing: 0.02em; }
+.dest-card-title { font-family: var(--font-display); font-weight: 600; font-size: 1.875rem; line-height: 1.1; color: var(--ink); margin-bottom: 0.625rem; }
+.dest-card-meta { display: flex; align-items: center; gap: 0.5rem; color: var(--ink-mute); font-size: 0.875rem; }
 .dest-card-meta svg { flex-shrink: 0; opacity: 0.7; }
-.dest-card-dates {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: var(--ink-soft);
-  font-weight: 500;
-}
-.dest-card-divider {
-  height: 1px;
-  background: linear-gradient(to left, transparent, var(--line-strong), transparent);
-  margin: 0.75rem 0;
-}
-.dest-card-cta {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-top: 0.625rem;
-  font-size: 0.8125rem;
-  color: var(--terracotta);
-  font-weight: 500;
-}
+.dest-card-divider { height: 1px; background: linear-gradient(to left, transparent, var(--line-strong), transparent); margin: 0.75rem 0; }
+.dest-card-cta { display: flex; align-items: center; justify-content: space-between; margin-top: 0.625rem; font-size: 0.8125rem; color: var(--terracotta); font-weight: 500; }
 .dest-card-cta-arrow { transition: transform 0.3s var(--ease); }
 .dest-card:hover .dest-card-cta-arrow { transform: translateX(-4px); }
 
 /* =========================================================
-   6. STICKY NOTES (home wall)
+   8. STICKY NOTES
    ========================================================= */
-.notes-section {
-  padding: 4rem 0 6rem;
-  background: linear-gradient(180deg, transparent, rgba(232,220,196,0.4) 30%, rgba(232,220,196,0.4) 70%, transparent);
-}
-.notes-wall {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
+.notes-section { padding: 4rem 0 6rem; background: linear-gradient(180deg, transparent, rgba(232,220,196,0.4) 30%, rgba(232,220,196,0.4) 70%, transparent); }
+.notes-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
 @media (min-width: 640px) { .notes-wall { gap: 2rem; } }
 
 .note {
@@ -409,7 +491,7 @@ img { height: auto; }
   min-height: 160px;
   border-radius: 4px;
   box-shadow: var(--shadow-photo);
-  font-family: 'Caveat', 'Tajawal', cursive;
+  font-family: var(--font-en-script), var(--font-body);
   font-size: 1.375rem;
   line-height: 1.4;
   color: var(--ink);
@@ -431,665 +513,259 @@ img { height: auto; }
 .notes-wall .note:nth-child(5n+4) { transform: rotate(1.8deg); }
 .notes-wall .note:nth-child(5n+5) { transform: rotate(-1deg); }
 
-.note-tape {
-  position: absolute;
-  top: -8px; left: 50%;
-  transform: translateX(-50%) rotate(-3deg);
-  width: 3rem; height: 16px;
-  background: rgba(255,255,255,0.45);
-  border-left: 1px dashed rgba(42,31,21,0.08);
-  border-right: 1px dashed rgba(42,31,21,0.08);
-}
+.note-tape { position: absolute; top: -8px; left: 50%; transform: translateX(-50%) rotate(-3deg); width: 3rem; height: 16px; background: rgba(255,255,255,0.45); border-left: 1px dashed rgba(42,31,21,0.08); border-right: 1px dashed rgba(42,31,21,0.08); }
 .note-text { flex: 1; word-break: break-word; }
-.note-meta {
-  margin-top: 0.5rem;
-  font-family: 'Tajawal', sans-serif;
-  font-size: 0.75rem;
-  color: var(--ink-mute);
-  opacity: 0.6;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.note-delete {
-  opacity: 0; transition: opacity 0.2s ease;
-  font-family: 'Tajawal', sans-serif; font-size: 0.75rem;
-  color: var(--ink-mute);
-}
+.note-meta { margin-top: 0.5rem; font-family: var(--font-body); font-size: 0.75rem; color: var(--ink-mute); opacity: 0.6; display: flex; justify-content: space-between; align-items: center; }
+.note-delete { opacity: 0; transition: opacity 0.2s ease; font-family: var(--font-body); font-size: 0.75rem; color: var(--ink-mute); }
 .note:hover .note-delete { opacity: 1; }
 
-.note-add {
-  background: transparent;
-  border: 2px dashed var(--line-strong);
-  color: var(--ink-mute);
-  font-family: 'Tajawal', sans-serif;
-  font-size: 0.9375rem;
-  cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;
-  box-shadow: none;
-  transform: rotate(0deg) !important;
-}
+.note-add { background: transparent; border: 2px dashed var(--line-strong); color: var(--ink-mute); font-family: var(--font-body); font-size: 0.9375rem; cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; box-shadow: none; transform: rotate(0deg) !important; }
 .note-add:hover { border-color: var(--terracotta); color: var(--terracotta); background: rgba(184,92,67,0.04); }
 .note-add svg { opacity: 0.6; }
 
 /* =========================================================
-   7. TRIP DETAIL PAGE
+   9. TRIP DETAIL
    ========================================================= */
-.detail-hero {
-  position: relative;
-  height: 60vh;
-  min-height: 28rem;
-  max-height: 36rem;
-  overflow: hidden;
-  background: var(--cream-deep);
-}
-.detail-hero-img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
-.detail-hero-fallback { position: absolute; inset: 0; background-size: cover; background-position: center; }
-.detail-hero-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(42,31,21,0.25) 0%, rgba(42,31,21,0.15) 30%, rgba(42,31,21,0.55) 100%);
-}
-.detail-hero-content {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
-  padding: 3rem 1.5rem 4rem;
-  text-align: center;
-  color: var(--cream-soft);
-}
-.detail-hero-back {
-  position: absolute; top: 1.25rem; right: 1.25rem;
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  padding: 0.5rem 0.875rem;
-  background: rgba(245,239,229,0.92);
-  color: var(--ink);
-  border-radius: 9999px;
-  font-size: 0.8125rem; font-weight: 500;
-  backdrop-filter: blur(10px);
-  transition: background 0.2s ease;
-}
+.detail-hero { position: relative; height: 60vh; min-height: 28rem; max-height: 36rem; overflow: hidden; background: var(--cream-deep); }
+.detail-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.detail-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(42,31,21,0.25) 0%, rgba(42,31,21,0.15) 30%, rgba(42,31,21,0.55) 100%); }
+.detail-hero-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 3rem 1.5rem 4rem; text-align: center; color: var(--cream-soft); }
+.detail-hero-back { position: absolute; top: 1.25rem; right: 1.25rem; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.875rem; background: rgba(245,239,229,0.92); color: var(--ink); border-radius: 9999px; font-size: 0.8125rem; font-weight: 500; backdrop-filter: blur(10px); transition: background 0.2s ease; }
 .detail-hero-back:hover { background: var(--cream-soft); }
-.detail-hero-supertitle {
-  font-family: 'Caveat', cursive;
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: #F5E5A8;
-  letter-spacing: 0.02em;
-}
+.detail-hero-supertitle { font-family: var(--font-en-script); font-size: 1.5rem; margin-bottom: 0.5rem; color: #F5E5A8; letter-spacing: 0.02em; }
 @media (min-width: 640px) { .detail-hero-supertitle { font-size: 2rem; } }
-.detail-hero-title {
-  font-family: 'Markazi Text', serif;
-  font-weight: 600;
-  font-size: 3rem;
-  line-height: 1;
-  margin-bottom: 0.875rem;
-  text-shadow: 0 4px 24px rgba(0,0,0,0.4);
-}
+.detail-hero-title { font-family: var(--font-display); font-weight: 600; font-size: 3rem; line-height: 1; margin-bottom: 0.875rem; text-shadow: 0 4px 24px rgba(0,0,0,0.4); }
 @media (min-width: 640px) { .detail-hero-title { font-size: 4.5rem; } }
 @media (min-width: 1024px) { .detail-hero-title { font-size: 5.5rem; } }
-.detail-hero-dates {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 1.125rem;
-  color: rgba(250,246,238,0.92);
-  letter-spacing: 0.05em;
-}
+.detail-hero-dates { font-family: var(--font-en-display); font-style: italic; font-size: 1.125rem; color: rgba(250,246,238,0.92); letter-spacing: 0.05em; }
 @media (min-width: 640px) { .detail-hero-dates { font-size: 1.375rem; } }
-.detail-hero-deco {
-  margin-top: 1.5rem;
-  display: flex; gap: 0.625rem; align-items: center;
-  color: rgba(245,229,168,0.85);
-  font-size: 0.875rem; letter-spacing: 0.5em;
-}
+.detail-hero-deco { margin-top: 1.5rem; display: flex; gap: 0.625rem; align-items: center; color: rgba(245,229,168,0.85); font-size: 0.875rem; letter-spacing: 0.5em; }
 
-/* Intro section */
-.detail-intro {
-  position: relative;
-  margin-top: -3rem;
-  z-index: 5;
-  padding-bottom: 3rem;
-}
-.intro-card {
-  background: var(--cream-soft);
-  border-radius: var(--radius-lg);
-  padding: 2rem 1.75rem;
-  box-shadow: var(--shadow-lg);
-  text-align: center;
-  margin: 0 auto;
-  max-width: 44rem;
-}
+.detail-intro { position: relative; margin-top: -3rem; z-index: 5; padding-bottom: 3rem; }
+.intro-card { background: var(--cream-soft); border-radius: var(--radius-lg); padding: 2rem 1.75rem; box-shadow: var(--shadow-lg); text-align: center; margin: 0 auto; max-width: 44rem; }
 @media (min-width: 640px) { .intro-card { padding: 2.75rem 2.5rem; } }
 .intro-card-emoji { font-size: 2rem; margin-bottom: 0.75rem; }
-.intro-card-text {
-  font-family: 'Markazi Text', serif;
-  font-size: 1.375rem;
-  line-height: 1.7;
-  color: var(--ink);
-}
+.intro-card-text { font-family: var(--font-display); font-size: 1.375rem; line-height: 1.7; color: var(--ink); }
 @media (min-width: 640px) { .intro-card-text { font-size: 1.625rem; line-height: 1.6; } }
 
-/* Summary chips */
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  max-width: 44rem;
-  margin: 2rem auto 0;
-}
+.summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: 44rem; margin: 2rem auto 0; }
 @media (min-width: 640px) { .summary-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; } }
-.summary-item {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 1.125rem 0.75rem;
-  background: var(--paper);
-  border-radius: var(--radius-md);
-  text-align: center;
-  border: 1px solid var(--line);
-}
+.summary-item { display: flex; flex-direction: column; align-items: center; padding: 1.125rem 0.75rem; background: var(--paper); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--line); }
 .summary-icon { color: var(--gold-deep); margin-bottom: 0.4rem; }
-.summary-label {
-  font-size: 0.6875rem;
-  color: var(--ink-mute);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.25rem;
-  text-transform: uppercase;
-  font-family: 'Tajawal', sans-serif;
-}
-.summary-value {
-  font-family: 'Markazi Text', serif;
-  font-size: 1.0625rem;
-  font-weight: 500;
-  color: var(--ink);
-}
+.summary-label { font-size: 0.6875rem; color: var(--ink-mute); letter-spacing: 0.1em; margin-bottom: 0.25rem; text-transform: uppercase; font-family: var(--font-body); }
+.summary-value { font-family: var(--font-display); font-size: 1.0625rem; font-weight: 500; color: var(--ink); }
 
-/* Table of Contents card */
 .toc-section { padding: 2rem 0 4rem; }
-.toc-card {
-  max-width: 30rem;
-  margin: 0 auto;
-  background: var(--paper);
-  border-radius: var(--radius-lg);
-  padding: 1.75rem 1.5rem;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--line);
-  position: relative;
-}
-.toc-card::before {
-  content: '';
-  position: absolute;
-  top: -10px; left: 50%;
-  transform: translateX(-50%) rotate(-2deg);
-  width: 4rem; height: 16px;
-  background: rgba(201,169,97,0.4);
-  border-radius: 2px;
-}
-.toc-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
-  text-align: center;
-  margin-bottom: 0.25rem;
-  color: var(--ink);
-  letter-spacing: 0.02em;
-}
-.toc-title-ar {
-  text-align: center;
-  font-family: 'Caveat', cursive;
-  font-size: 1.125rem;
-  color: var(--gold-deep);
-  margin-bottom: 1.25rem;
-}
+.toc-card { max-width: 30rem; margin: 0 auto; background: var(--paper); border-radius: var(--radius-lg); padding: 1.75rem 1.5rem; box-shadow: var(--shadow-md); border: 1px solid var(--line); position: relative; }
+.toc-card::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); width: 4rem; height: 16px; background: rgba(201,169,97,0.4); border-radius: 2px; }
+.toc-title { font-family: var(--font-en-display); font-size: 1.5rem; text-align: center; margin-bottom: 0.25rem; color: var(--ink); letter-spacing: 0.02em; }
+.toc-title-ar { text-align: center; font-family: var(--font-en-script); font-size: 1.125rem; color: var(--gold-deep); margin-bottom: 1.25rem; }
 .toc-list { display: flex; flex-direction: column; gap: 0.25rem; }
-.toc-item {
-  display: flex; align-items: center; gap: 0.875rem;
-  padding: 0.75rem 0.875rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.9375rem;
-  color: var(--ink);
-  transition: background 0.2s ease, color 0.2s ease;
-  cursor: pointer;
-  width: 100%;
-  text-align: right;
-}
+.toc-item { display: flex; align-items: center; gap: 0.875rem; padding: 0.75rem 0.875rem; border-radius: var(--radius-sm); font-size: 0.9375rem; color: var(--ink); transition: background 0.2s ease, color 0.2s ease; cursor: pointer; width: 100%; text-align: right; }
 .toc-item:hover { background: var(--cream-warm); color: var(--terracotta); }
-.toc-item-icon {
-  width: 2rem; height: 2rem; border-radius: 9999px;
-  background: var(--cream-warm); color: var(--gold-deep);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
+.toc-item-icon { width: 2rem; height: 2rem; border-radius: 9999px; background: var(--cream-warm); color: var(--gold-deep); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .toc-item:hover .toc-item-icon { background: var(--terracotta); color: var(--cream-soft); }
-.toc-item-text { font-family: 'Markazi Text', serif; font-size: 1.125rem; font-weight: 500; }
-.toc-item-count {
-  margin-inline-start: auto;
-  font-size: 0.75rem; color: var(--ink-light);
-  font-family: 'Tajawal', sans-serif;
-}
+.toc-item-text { font-family: var(--font-display); font-size: 1.125rem; font-weight: 500; }
+.toc-item-count { margin-inline-start: auto; font-size: 0.75rem; color: var(--ink-light); font-family: var(--font-body); }
 
-/* =========================================================
-   8. CONTENT SECTIONS (memories, places, stays, etc.)
-   ========================================================= */
 .content-section { padding: 3rem 0; scroll-margin-top: 5rem; }
 .content-section:nth-child(even) { background: rgba(232,220,196,0.25); }
-
-.section-label-row {
-  display: flex; align-items: center; gap: 1rem;
-  margin-bottom: 2rem;
-  max-width: 56rem;
-  margin-inline: auto;
-  padding: 0 1.25rem;
-}
-.section-label-icon {
-  width: 2.75rem; height: 2.75rem;
-  border-radius: 9999px;
-  background: var(--cream-warm);
-  color: var(--gold-deep);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  border: 1px solid var(--line);
-}
+.section-label-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; max-width: 56rem; margin-inline: auto; padding: 0 1.25rem; }
+.section-label-icon { width: 2.75rem; height: 2.75rem; border-radius: 9999px; background: var(--cream-warm); color: var(--gold-deep); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--line); }
 .section-label-text { flex: 1; }
-.section-label-en {
-  font-family: 'Caveat', cursive;
-  font-size: 1.25rem;
-  color: var(--gold-deep);
-  line-height: 1;
-  margin-bottom: 0.125rem;
-}
-.section-label-ar {
-  font-family: 'Markazi Text', serif;
-  font-size: 1.875rem;
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1.1;
-}
-.section-label-line {
-  flex: 1; height: 1px;
-  background: linear-gradient(to left, var(--line-strong), transparent);
-  min-width: 2rem;
-}
+.section-label-en { font-family: var(--font-en-script); font-size: 1.25rem; color: var(--gold-deep); line-height: 1; margin-bottom: 0.125rem; }
+.section-label-ar { font-family: var(--font-display); font-size: 1.875rem; font-weight: 600; color: var(--ink); line-height: 1.1; }
+.section-label-line { flex: 1; height: 1px; background: linear-gradient(to left, var(--line-strong), transparent); min-width: 2rem; }
 
-/* Memories — featured + grid layout */
-.memories-layout {
-  display: grid;
-  gap: 1.5rem;
-  max-width: 64rem;
-  margin: 0 auto;
-  padding: 0 1.25rem;
-}
-@media (min-width: 768px) {
-  .memories-layout { grid-template-columns: 1.4fr 1fr; gap: 2rem; }
-}
-.memory-featured {
-  position: relative;
-  background: var(--paper);
-  padding: 0.75rem 0.75rem 1.25rem;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-photo);
-}
-.memory-featured-photo {
-  aspect-ratio: 4/3;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  margin-bottom: 0.875rem;
-  background: var(--cream-deep);
-  position: relative;
-}
+.memories-layout { display: grid; gap: 1.5rem; max-width: 64rem; margin: 0 auto; padding: 0 1.25rem; }
+@media (min-width: 768px) { .memories-layout { grid-template-columns: 1.4fr 1fr; gap: 2rem; } }
+.memory-featured { position: relative; background: var(--paper); padding: 0.75rem 0.75rem 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-photo); }
+.memory-featured-photo { aspect-ratio: 4/3; border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 0.875rem; background: var(--cream-deep); position: relative; }
 .memory-featured-photo img { width: 100%; height: 100%; object-fit: cover; }
-.memory-featured-caption {
-  font-family: 'Caveat', cursive;
-  font-size: 1.375rem;
-  text-align: center;
-  color: var(--ink-soft);
-  padding: 0 0.5rem;
-}
-.memory-featured-story {
-  margin-top: 0.875rem;
-  font-family: 'Markazi Text', serif;
-  font-size: 1.125rem;
-  line-height: 1.7;
-  color: var(--ink);
-  padding: 0 0.5rem;
-}
+.memory-featured-caption { font-family: var(--font-en-script); font-size: 1.375rem; text-align: center; color: var(--ink-soft); padding: 0 0.5rem; }
+.memory-featured-story { margin-top: 0.875rem; font-family: var(--font-display); font-size: 1.125rem; line-height: 1.7; color: var(--ink); padding: 0 0.5rem; }
 
 .memory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.memory-small {
-  position: relative;
-  background: var(--paper);
-  padding: 0.5rem 0.5rem 0.875rem;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-photo);
-  transition: transform 0.3s var(--ease);
-}
+.memory-small { position: relative; background: var(--paper); padding: 0.5rem 0.5rem 0.875rem; border-radius: var(--radius-sm); box-shadow: var(--shadow-photo); transition: transform 0.3s var(--ease); }
 .memory-small:hover { transform: translateY(-3px); }
 .memory-small:nth-child(odd) { transform: rotate(-1deg); }
 .memory-small:nth-child(even) { transform: rotate(0.8deg); }
 .memory-small:nth-child(odd):hover { transform: translateY(-3px) rotate(-1deg); }
 .memory-small:nth-child(even):hover { transform: translateY(-3px) rotate(0.8deg); }
-.memory-small-photo {
-  aspect-ratio: 1;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-  background: var(--cream-deep);
-}
+.memory-small-photo { aspect-ratio: 1; border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem; background: var(--cream-deep); }
 .memory-small-photo img { width: 100%; height: 100%; object-fit: cover; }
-.memory-small-caption {
-  font-family: 'Caveat', cursive;
-  font-size: 1.0625rem;
-  text-align: center;
-  color: var(--ink-soft);
-}
+.memory-small-caption { font-family: var(--font-en-script); font-size: 1.0625rem; text-align: center; color: var(--ink-soft); }
 
-/* Places list — clean numbered list with icons */
-.places-list, .activities-list, .tips-list {
-  max-width: 44rem;
-  margin: 0 auto;
-  padding: 0 1.25rem;
-  display: flex; flex-direction: column;
-  gap: 0.75rem;
-}
-.places-item, .activities-item {
-  display: flex; align-items: center; gap: 1rem;
-  padding: 1rem 1.25rem;
-  background: var(--paper);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--line);
-  font-family: 'Markazi Text', serif;
-  font-size: 1.25rem;
-  color: var(--ink);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
+.places-list, .activities-list, .tips-list { max-width: 44rem; margin: 0 auto; padding: 0 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.places-item, .activities-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: var(--paper); border-radius: var(--radius-md); border: 1px solid var(--line); font-family: var(--font-display); font-size: 1.25rem; color: var(--ink); transition: transform 0.2s ease, border-color 0.2s ease; }
 .places-item:hover, .activities-item:hover { transform: translateX(-4px); border-color: var(--gold); }
-.places-item-num {
-  width: 2rem; height: 2rem;
-  border-radius: 9999px;
-  background: var(--terracotta);
-  color: var(--cream-soft);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Playfair Display', serif;
-  font-size: 0.875rem; font-weight: 700;
-  flex-shrink: 0;
-}
+.places-item-num { width: 2rem; height: 2rem; border-radius: 9999px; background: var(--terracotta); color: var(--cream-soft); display: flex; align-items: center; justify-content: center; font-family: var(--font-en-display); font-size: 0.875rem; font-weight: 700; flex-shrink: 0; }
 .places-item-text { flex: 1; }
 
-/* Tips — sticky-note style */
 .tips-list { display: grid; grid-template-columns: 1fr; gap: 1rem; max-width: 52rem; }
 @media (min-width: 640px) { .tips-list { grid-template-columns: repeat(2, 1fr); } }
-.tip-item {
-  position: relative;
-  padding: 1.25rem 1.125rem;
-  background: #F5E5A8;
-  border-radius: 4px;
-  box-shadow: var(--shadow-photo);
-  font-family: 'Markazi Text', serif;
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: var(--ink);
-}
+.tip-item { position: relative; padding: 1.25rem 1.125rem; background: #F5E5A8; border-radius: 4px; box-shadow: var(--shadow-photo); font-family: var(--font-display); font-size: 1.125rem; line-height: 1.6; color: var(--ink); }
 .tips-list .tip-item:nth-child(4n+1) { background: #F5E5A8; transform: rotate(-0.8deg); }
 .tips-list .tip-item:nth-child(4n+2) { background: #F2D5D0; transform: rotate(0.6deg); }
 .tips-list .tip-item:nth-child(4n+3) { background: #D4DDE5; transform: rotate(-0.4deg); }
 .tips-list .tip-item:nth-child(4n+4) { background: #D5DDC8; transform: rotate(0.9deg); }
-.tip-item::before {
-  content: '✦';
-  display: inline-block;
-  margin-inline-end: 0.5rem;
-  color: var(--gold-deep);
-  font-size: 0.875rem;
-}
+.tip-item::before { content: '✦'; display: inline-block; margin-inline-end: 0.5rem; color: var(--gold-deep); font-size: 0.875rem; }
 
-/* Stays / Food — card list */
-.stays-list, .food-list {
-  max-width: 56rem;
-  margin: 0 auto;
-  padding: 0 1.25rem;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-@media (min-width: 640px) {
-  .stays-list, .food-list { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
-}
-.stay-card, .food-card {
-  background: var(--paper);
-  border-radius: var(--radius-md);
-  padding: 1.25rem 1.375rem;
-  border: 1px solid var(--line);
-  display: flex; flex-direction: column; gap: 0.375rem;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
+.stays-list, .food-list { max-width: 56rem; margin: 0 auto; padding: 0 1.25rem; display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 640px) { .stays-list, .food-list { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; } }
+.stay-card, .food-card { background: var(--paper); border-radius: var(--radius-md); padding: 1.25rem 1.375rem; border: 1px solid var(--line); display: flex; flex-direction: column; gap: 0.375rem; transition: box-shadow 0.3s ease, transform 0.3s ease; }
 .stay-card:hover, .food-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.stay-card-name, .food-card-name {
-  font-family: 'Markazi Text', serif;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--ink);
-  line-height: 1.2;
-}
-.stay-card-type, .food-card-type {
-  font-family: 'Caveat', cursive;
-  font-size: 1.0625rem;
-  color: var(--gold-deep);
-}
-.stay-card-note, .food-card-note {
-  font-size: 0.9375rem;
-  color: var(--ink-soft);
-  line-height: 1.6;
-  margin-top: 0.25rem;
-}
+.stay-card-name, .food-card-name { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--ink); line-height: 1.2; }
+.stay-card-type, .food-card-type { font-family: var(--font-en-script); font-size: 1.0625rem; color: var(--gold-deep); }
+.stay-card-note, .food-card-note { font-size: 0.9375rem; color: var(--ink-soft); line-height: 1.6; margin-top: 0.25rem; }
 
-/* Feelings — long quote */
-.feelings-block {
-  max-width: 44rem;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  position: relative;
-  text-align: center;
-}
-.feelings-quote-mark {
-  font-family: 'Playfair Display', serif;
-  font-size: 5rem;
-  line-height: 1;
-  color: var(--gold);
-  opacity: 0.5;
-  margin-bottom: -1rem;
-}
-.feelings-text {
-  font-family: 'Markazi Text', serif;
-  font-size: 1.5rem;
-  line-height: 1.7;
-  color: var(--ink);
-  font-weight: 500;
-}
+.feelings-block { max-width: 44rem; margin: 0 auto; padding: 2rem 1.5rem; position: relative; text-align: center; }
+.feelings-quote-mark { font-family: var(--font-en-display); font-size: 5rem; line-height: 1; color: var(--gold); opacity: 0.5; margin-bottom: -1rem; }
+.feelings-text { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.7; color: var(--ink); font-weight: 500; }
 @media (min-width: 640px) { .feelings-text { font-size: 1.75rem; } }
-.feelings-attribution {
-  margin-top: 1.5rem;
-  font-family: 'Caveat', cursive;
-  font-size: 1.25rem;
-  color: var(--ink-mute);
-}
+.feelings-attribution { margin-top: 1.5rem; font-family: var(--font-en-script); font-size: 1.25rem; color: var(--ink-mute); }
 
-/* Gallery section — large featured + grid */
 .gallery-section { padding: 4rem 0 6rem; }
-.gallery-layout {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 0 1.25rem;
-}
-.gallery-featured {
-  position: relative;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  margin-bottom: 2rem;
-  aspect-ratio: 16/9;
-  box-shadow: var(--shadow-lg);
-}
+.gallery-layout { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+.gallery-featured { position: relative; border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2rem; aspect-ratio: 16/9; box-shadow: var(--shadow-lg); }
 .gallery-featured img { width: 100%; height: 100%; object-fit: cover; }
-.gallery-featured-caption {
-  position: absolute; bottom: 1.5rem; right: 1.5rem; left: 1.5rem;
-  font-family: 'Caveat', cursive;
-  font-size: 1.75rem;
-  color: var(--cream-soft);
-  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-  text-align: center;
-}
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-}
+.gallery-featured-caption { position: absolute; bottom: 1.5rem; right: 1.5rem; left: 1.5rem; font-family: var(--font-en-script); font-size: 1.75rem; color: var(--cream-soft); text-shadow: 0 2px 8px rgba(0,0,0,0.5); text-align: center; }
+.gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
 @media (min-width: 768px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
-.gallery-item {
-  position: relative;
-  background: var(--paper);
-  padding: 0.5rem 0.5rem 0.875rem;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-photo);
-  transition: transform 0.4s var(--ease);
-}
+.gallery-item { position: relative; background: var(--paper); padding: 0.5rem 0.5rem 0.875rem; border-radius: var(--radius-sm); box-shadow: var(--shadow-photo); transition: transform 0.4s var(--ease); }
 .gallery-item:nth-child(3n+1) { transform: rotate(-1deg); }
 .gallery-item:nth-child(3n+2) { transform: rotate(0.8deg); }
 .gallery-item:nth-child(3n+3) { transform: rotate(-0.5deg); }
 .gallery-item:hover { transform: scale(1.04) rotate(0deg); z-index: 2; }
-.gallery-item-photo {
-  aspect-ratio: 1;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-  background: var(--cream-deep);
-}
+.gallery-item-photo { aspect-ratio: 1; border-radius: 4px; overflow: hidden; margin-bottom: 0.5rem; background: var(--cream-deep); }
 .gallery-item-photo img { width: 100%; height: 100%; object-fit: cover; }
-.gallery-item-caption {
-  font-family: 'Caveat', cursive;
-  font-size: 1.0625rem;
-  text-align: center;
-  color: var(--ink-soft);
-}
+.gallery-item-caption { font-family: var(--font-en-script); font-size: 1.0625rem; text-align: center; color: var(--ink-soft); }
 
 /* =========================================================
-   9. FOOTER
+   10. FOOTER
    ========================================================= */
-.footer {
-  padding: 4rem 1.25rem 3rem;
-  text-align: center;
-  border-top: 1px solid var(--line);
-  background: var(--cream-warm);
-  margin-top: 2rem;
-}
-.footer-mark {
-  font-family: 'Caveat', cursive;
-  font-size: 2.25rem;
-  color: var(--ink);
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
+.footer { padding: 4rem 1.25rem 3rem; text-align: center; border-top: 1px solid var(--line); background: var(--cream-warm); margin-top: 2rem; }
+.footer-mark { font-family: var(--font-en-script); font-size: 2.25rem; color: var(--ink); line-height: 1; margin-bottom: 0.5rem; }
 .footer-mark-amp { color: var(--gold-deep); font-style: italic; }
-.footer-tagline {
-  font-family: 'Markazi Text', serif;
-  font-size: 1.125rem;
-  color: var(--ink-soft);
-  margin-bottom: 1rem;
-}
-.footer-meta {
-  font-size: 0.8125rem;
-  color: var(--ink-mute);
-}
-.footer-deco {
-  margin-top: 1.25rem;
-  color: var(--gold-deep);
-  letter-spacing: 0.5em;
-  font-size: 0.875rem;
-}
+.footer-tagline { font-family: var(--font-display); font-size: 1.125rem; color: var(--ink-soft); margin-bottom: 1rem; }
+.footer-meta { font-size: 0.8125rem; color: var(--ink-mute); }
+.footer-deco { margin-top: 1.25rem; color: var(--gold-deep); letter-spacing: 0.5em; font-size: 0.875rem; }
 
 /* =========================================================
-   10. BUTTONS, INPUTS, MODAL
+   11. BUTTONS, INPUTS, MODAL
    ========================================================= */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-  padding: 0.75rem 1.5rem; border-radius: 9999px;
-  font-size: 0.9375rem; font-weight: 500;
-  transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
-  cursor: pointer;
-  font-family: inherit;
-}
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 9999px; font-size: 0.9375rem; font-weight: 500; transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease; cursor: pointer; font-family: inherit; }
 .btn-primary { background: var(--ink); color: var(--cream-soft); }
 .btn-primary:hover { background: var(--terracotta); }
 .btn-primary:active { transform: translateY(1px); }
 .btn-ghost { color: var(--ink); }
 .btn-ghost:hover { color: var(--terracotta); }
 .btn-sm { padding: 0.5rem 1.125rem; font-size: 0.8125rem; }
-.btn-cancel {
-  padding: 0.75rem 1.25rem; border-radius: 9999px;
-  font-size: 0.875rem; background: var(--cream-warm); color: var(--ink);
-  cursor: pointer; transition: background 0.2s ease; font-family: inherit;
-}
+.btn-danger { background: var(--rust); color: var(--cream-soft); }
+.btn-danger:hover { background: var(--terracotta); }
+.btn-cancel { padding: 0.75rem 1.25rem; border-radius: 9999px; font-size: 0.875rem; background: var(--cream-warm); color: var(--ink); cursor: pointer; transition: background 0.2s ease; font-family: inherit; }
 .btn-cancel:hover { background: var(--cream-deep); }
 .btn-flex { flex: 1; }
 
-.input-field {
-  background: var(--cream-soft);
-  border: 1px solid var(--line-strong);
-  color: var(--ink);
-  padding: 10px 14px;
-  border-radius: var(--radius-sm);
-  width: 100%;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  resize: vertical;
-}
+.input-field { background: var(--cream-soft); border: 1px solid var(--line-strong); color: var(--ink); padding: 10px 14px; border-radius: var(--radius-sm); width: 100%; transition: border-color 0.2s ease, box-shadow 0.2s ease; font-size: 0.9375rem; line-height: 1.5; resize: vertical; font-family: inherit; }
 .input-field:focus { outline: none; border-color: var(--gold-deep); box-shadow: 0 0 0 3px rgba(201,169,97,0.15); }
 .field-label { font-size: 0.8125rem; display: block; margin-bottom: 0.375rem; color: var(--ink-soft); font-weight: 500; }
 .field-group { display: flex; flex-direction: column; }
+.field-hint { font-size: 0.75rem; color: var(--ink-mute); margin-top: 0.25rem; }
 
-/* Modal */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 60;
-  display: flex; align-items: center; justify-content: center;
-  padding: 1rem;
-  background: rgba(42,31,21,0.55);
-  backdrop-filter: blur(4px);
-  animation: fadeIn 0.25s ease both;
-}
-.modal {
-  position: relative; width: 100%; max-width: 32rem;
-  border-radius: var(--radius-lg); padding: 1.75rem;
-  max-height: 90vh; overflow-y: auto;
-  background: var(--cream-soft);
-  animation: modalIn 0.3s var(--ease) both;
-  box-shadow: var(--shadow-lg);
-}
-.modal-close {
-  position: absolute; top: 1rem; left: 1rem;
-  color: var(--ink-mute); transition: color 0.2s ease;
-}
+.modal-overlay { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(42,31,21,0.55); backdrop-filter: blur(4px); animation: fadeIn 0.25s ease both; }
+.modal { position: relative; width: 100%; max-width: 32rem; border-radius: var(--radius-lg); padding: 1.75rem; max-height: 90vh; overflow-y: auto; background: var(--cream-soft); animation: modalIn 0.3s var(--ease) both; box-shadow: var(--shadow-lg); }
+.modal-close { position: absolute; top: 1rem; left: 1rem; color: var(--ink-mute); transition: color 0.2s ease; }
 .modal-close:hover { color: var(--terracotta); }
-.modal-title {
-  font-family: 'Markazi Text', serif;
-  font-size: 1.75rem; font-weight: 600;
-  margin-bottom: 1.25rem;
-  color: var(--ink);
-}
+.modal-title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 600; margin-bottom: 1.25rem; color: var(--ink); }
 .modal-form { display: flex; flex-direction: column; gap: 1rem; }
 .modal-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 @media (max-width: 480px) { .modal-form-row { grid-template-columns: 1fr; } }
-.modal-form-actions { display: flex; gap: 0.75rem; padding-top: 0.75rem; }
+.modal-form-actions { display: flex; gap: 0.75rem; padding-top: 0.75rem; flex-wrap: wrap; }
 
-/* Note color picker */
 .color-picker { display: flex; gap: 0.5rem; margin-top: 0.375rem; flex-wrap: wrap; }
-.color-swatch {
-  width: 2rem; height: 2rem;
-  border-radius: 9999px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
+.color-swatch { width: 2rem; height: 2rem; border-radius: 9999px; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s ease, border-color 0.2s ease; }
 .color-swatch:hover { transform: scale(1.1); }
 .color-swatch.active { border-color: var(--ink); }
 
 /* =========================================================
-   11. ANIMATIONS & UTILITIES
+   12. SETTINGS PANEL (slide-in from leading edge)
+   ========================================================= */
+.settings-overlay { position: fixed; inset: 0; z-index: 65; background: rgba(42,31,21,0.45); backdrop-filter: blur(3px); animation: fadeIn 0.2s ease both; }
+.settings-panel {
+  position: fixed;
+  top: 0; bottom: 0;
+  /* In RTL the leading edge is right; we slide from left visually */
+  left: 0;
+  width: 100%; max-width: 32rem;
+  background: var(--cream-soft);
+  z-index: 66;
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  animation: slideInLeft 0.3s var(--ease) both;
+}
+@keyframes slideInLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+.settings-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: var(--cream-warm); }
+.settings-title { font-family: var(--font-display); font-size: 1.625rem; font-weight: 600; color: var(--ink); }
+.settings-tabs { display: flex; gap: 0.25rem; padding: 0.625rem 1rem; overflow-x: auto; background: var(--cream-warm); border-bottom: 1px solid var(--line); }
+.settings-tab { padding: 0.5rem 0.875rem; border-radius: 9999px; font-size: 0.875rem; white-space: nowrap; color: var(--ink-soft); transition: background 0.2s ease, color 0.2s ease; }
+.settings-tab:hover { background: var(--cream-deep); }
+.settings-tab.active { background: var(--ink); color: var(--cream-soft); }
+.settings-body { flex: 1; overflow-y: auto; padding: 1.5rem; }
+.settings-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--line); display: flex; gap: 0.625rem; background: var(--cream-warm); }
+
+.settings-group { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+.settings-group-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--ink); padding-bottom: 0.5rem; border-bottom: 1px solid var(--line); margin-bottom: 0.5rem; }
+
+/* Color row */
+.color-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; }
+.color-row-label { flex: 1; font-size: 0.9375rem; color: var(--ink); }
+.color-row-hex { font-family: monospace; font-size: 0.8125rem; color: var(--ink-mute); }
+.color-input { width: 2.5rem; height: 2.5rem; border-radius: 9999px; border: 2px solid var(--line-strong); cursor: pointer; background: none; padding: 0; overflow: hidden; }
+.color-input::-webkit-color-swatch-wrapper { padding: 0; }
+.color-input::-webkit-color-swatch { border: none; border-radius: 9999px; }
+.color-input::-moz-color-swatch { border: none; border-radius: 9999px; }
+
+/* Font select */
+.font-select { width: 100%; padding: 10px 14px; background: var(--paper); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); font-size: 0.9375rem; color: var(--ink); }
+
+/* =========================================================
+   13. TRIP EDITOR (full-screen overlay)
+   ========================================================= */
+.trip-editor { position: fixed; inset: 0; z-index: 70; background: var(--cream); display: flex; flex-direction: column; animation: fadeIn 0.2s ease both; }
+.trip-editor-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--line); background: var(--cream-soft); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.trip-editor-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--ink); }
+.trip-editor-tabs { display: flex; gap: 0.25rem; padding: 0.625rem 1rem; overflow-x: auto; background: var(--cream-warm); border-bottom: 1px solid var(--line); }
+.trip-editor-tab { padding: 0.5rem 0.875rem; border-radius: 9999px; font-size: 0.875rem; white-space: nowrap; color: var(--ink-soft); transition: background 0.2s ease, color 0.2s ease; display: inline-flex; align-items: center; gap: 0.375rem; }
+.trip-editor-tab:hover { background: var(--cream-deep); }
+.trip-editor-tab.active { background: var(--ink); color: var(--cream-soft); }
+.trip-editor-content { flex: 1; overflow-y: auto; padding: 1.5rem 1.25rem; }
+.trip-editor-inner { max-width: 48rem; margin: 0 auto; }
+@media (min-width: 640px) { .trip-editor-content { padding: 2rem; } }
+.trip-editor-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--line); background: var(--cream-soft); display: flex; gap: 0.625rem; justify-content: space-between; flex-wrap: wrap; }
+.trip-editor-footer-left, .trip-editor-footer-right { display: flex; gap: 0.625rem; }
+
+/* List editor items (memories, stays, food, etc) */
+.list-editor { display: flex; flex-direction: column; gap: 0.875rem; }
+.list-item-card { background: var(--paper); border-radius: var(--radius-md); padding: 1rem; border: 1px solid var(--line); display: flex; flex-direction: column; gap: 0.75rem; }
+.list-item-header { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.list-item-num { font-family: var(--font-en-display); font-size: 0.875rem; color: var(--gold-deep); font-weight: 700; }
+.list-item-controls { display: flex; gap: 0.25rem; }
+.list-item-btn { width: 2rem; height: 2rem; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; color: var(--ink-mute); transition: background 0.2s ease, color 0.2s ease; }
+.list-item-btn:hover { background: var(--cream-warm); color: var(--ink); }
+.list-item-btn.danger:hover { background: var(--rust); color: var(--cream-soft); }
+
+.list-add-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1rem; border: 2px dashed var(--line-strong); border-radius: var(--radius-md); color: var(--ink-mute); font-size: 0.9375rem; cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease; width: 100%; }
+.list-add-btn:hover { border-color: var(--gold-deep); color: var(--ink); background: rgba(201,169,97,0.05); }
+
+/* Image preview in editor */
+.image-edit-row { display: flex; gap: 0.75rem; align-items: stretch; }
+.image-preview { width: 4.5rem; height: 4.5rem; border-radius: var(--radius-sm); overflow: hidden; background: var(--cream-deep); flex-shrink: 0; }
+.image-preview img { width: 100%; height: 100%; object-fit: cover; }
+.image-edit-fields { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+
+/* =========================================================
+   14. ANIMATIONS
    ========================================================= */
 .fade-in { animation: fadeIn 0.5s ease both; }
 .stagger-1 { animation-delay: 0.05s; }
@@ -1097,112 +773,79 @@ img { height: auto; }
 .stagger-3 { animation-delay: 0.15s; }
 .stagger-4 { animation-delay: 0.2s; }
 .stagger-5 { animation-delay: 0.25s; }
-
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: none; } }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-
 .spinner { width: 1.75rem; height: 1.75rem; color: var(--gold-deep); animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-.loader { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
-
-.empty-state {
-  text-align: center;
-  padding: 3rem 1.5rem;
-  color: var(--ink-mute);
-  font-family: 'Markazi Text', serif;
-  font-size: 1.25rem;
-}
-.empty-state-add {
-  margin-top: 1.25rem;
-}
+.empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--ink-mute); font-family: var(--font-display); font-size: 1.25rem; }
 
 /* =========================================================
-   12. RESPONSIVE TWEAKS
+   15. RESPONSIVE TWEAKS
    ========================================================= */
 @media (max-width: 480px) {
   .hero { padding: 2.5rem 1rem 4rem; }
   .hero-title-line { font-size: clamp(3.5rem, 22vw, 6rem); }
   .nav-add-btn span { display: none; }
   .detail-hero-back span { display: none; }
+  .login-card { padding: 2rem 1.25rem; }
+  .login-title { font-size: 2rem; }
+  .settings-panel { max-width: 100%; }
 }
 </style>
 </head>
 <body>
 <div id="app"></div>
 
+<!-- Hidden file input for import -->
+<input type="file" id="import-file-input" accept="application/json" style="display:none" />
+
 <script>
 'use strict';
 
 /* =========================================================
-   CONSTANTS
+   AUTH — SHA-256 hash of "muataz-israa"
+   (Client-side, so anyone reading source can find this. It's
+   a gentle gate, not real security. Don't put secrets here.)
    ========================================================= */
-const STORAGE_KEY_TRIPS = 'travel_blog_v2_trips';
-const STORAGE_KEY_NOTES = 'travel_blog_v2_notes';
+const PASSWORD_HASH = 'a926fdf05707ceb23f8bb56145b19258f260236025025bb2e011a7cf8f4a43e6';
 
-// Photos sourced from Unsplash (https://unsplash.com) — free to use.
-// Replace these URLs with your own photos when ready.
-// Format: https://images.unsplash.com/photo-{id}?w={width}&q={quality}&auto=format
+/* Storage keys */
+const STORAGE_KEY_TRIPS    = 'travel_blog_v3_trips';
+const STORAGE_KEY_NOTES    = 'travel_blog_v3_notes';
+const STORAGE_KEY_SETTINGS = 'travel_blog_v3_settings';
+const SESSION_KEY_AUTH     = 'travel_blog_v3_auth';
+
+/* =========================================================
+   PHOTOS (Unsplash placeholders — replace with your own URLs)
+   ========================================================= */
 const IMG = (id, w) => 'https://images.unsplash.com/photo-' + id + '?w=' + (w || 1200) + '&q=80&auto=format&fit=crop';
 
-// Curated Unsplash IDs for each destination
 const PHOTOS = {
-  // Dubai
-  dubai_burj:     '1512453979798-5ea266f8880c', // Burj Khalifa skyline
-  dubai_desert:   '1582672060674-bc2bd808a8ce', // Dubai desert dunes
-  dubai_marina:   '1518684079-3c830dcef090',    // Dubai marina at sunset
-  dubai_old:      '1546412414-e1885259563a',    // Old Dubai souk
-  // Turkey
-  turkey_hagia:   '1541432901042-2d8bd64b4a9b', // Hagia Sophia
-  turkey_capp:    '1570939274717-7eda259b50ed', // Cappadocia hot air balloons
-  turkey_uzungol: '1623874228601-f4193c7b1818', // Uzungöl
-  turkey_galata:  '1524231757912-21f4fe3a7200', // Galata
-  turkey_bosph:   '1605101100278-5d1deb2b6498', // Bosphorus
-  // Abu Dhabi / Doha
-  ad_mosque:      '1583062812980-15c1f2c5a8d0', // Sheikh Zayed Mosque
-  ad_louvre:      '1584132905271-512c958d674a', // Louvre Abu Dhabi
-  doha_skyline:   '1582554316960-0c4e95f7d9f6', // Doha
-  doha_souq:      '1568797629192-90eb3573c5c2', // Souq Waqif
-  // Poland
-  poland_krakow:  '1607427293702-036933bbf746', // Krakow main square
-  poland_warsaw:  '1565024676308-e3e2ba8a7a93', // Warsaw old town
-  poland_wawel:   '1601581875309-fafbf2d3ed3a', // Wawel castle
-  poland_gdansk:  '1606992894456-d44a40c91e0d', // Gdansk
-  // Phuket
-  phuket_phi:     '1537956965359-7573183d1f57', // Phi Phi Islands
-  phuket_beach:   '1552465011-b4e21bf6e79a',    // Long-tail boat
-  phuket_buddha:  '1528181304800-259b08848526', // Big Buddha
-  phuket_temple:  '1563492065191-2c0ee45f5ae5', // Thai temple
-  // Lebanon
-  lebanon_beirut: '1572637003895-1c3aa6587e3a', // Beirut
-  lebanon_byblos: '1599661046827-9d1be24cfd24', // Byblos
-  lebanon_cedars: '1620735692151-26a7e0748429', // Cedars
-  lebanon_jeita:  '1576487248805-cf45f6bcc67f', // Jeita
-  // Egypt
-  egypt_pyramids: '1539650116574-75c0c6d73c3e', // Pyramids
-  egypt_khan:     '1572252009286-268acec5ca0a', // Khan el-Khalili
-  egypt_nile:     '1568322445389-f64ac2515020', // Nile
-  egypt_luxor:    '1539768942893-daf53e448371', // Luxor
+  dubai_burj: '1512453979798-5ea266f8880c', dubai_desert: '1582672060674-bc2bd808a8ce',
+  dubai_marina: '1518684079-3c830dcef090', dubai_old: '1546412414-e1885259563a',
+  turkey_hagia: '1541432901042-2d8bd64b4a9b', turkey_capp: '1570939274717-7eda259b50ed',
+  turkey_uzungol: '1623874228601-f4193c7b1818', turkey_galata: '1524231757912-21f4fe3a7200',
+  turkey_bosph: '1605101100278-5d1deb2b6498',
+  ad_mosque: '1583062812980-15c1f2c5a8d0', ad_louvre: '1584132905271-512c958d674a',
+  doha_skyline: '1582554316960-0c4e95f7d9f6', doha_souq: '1568797629192-90eb3573c5c2',
+  poland_krakow: '1607427293702-036933bbf746', poland_warsaw: '1565024676308-e3e2ba8a7a93',
+  poland_wawel: '1601581875309-fafbf2d3ed3a', poland_gdansk: '1606992894456-d44a40c91e0d',
+  phuket_phi: '1537956965359-7573183d1f57', phuket_beach: '1552465011-b4e21bf6e79a',
+  phuket_buddha: '1528181304800-259b08848526', phuket_temple: '1563492065191-2c0ee45f5ae5',
+  lebanon_beirut: '1572637003895-1c3aa6587e3a', lebanon_byblos: '1599661046827-9d1be24cfd24',
+  lebanon_cedars: '1620735692151-26a7e0748429', lebanon_jeita: '1576487248805-cf45f6bcc67f',
+  egypt_pyramids: '1539650116574-75c0c6d73c3e', egypt_khan: '1572252009286-268acec5ca0a',
+  egypt_nile: '1568322445389-f64ac2515020', egypt_luxor: '1539768942893-daf53e448371',
 };
 
-// 12 letters of "Israa & Muataz" each get a destination photo
-// (cycling through the 7 destinations, picked for visual contrast)
 const HERO_LETTER_PHOTOS = [
-  PHOTOS.dubai_burj,      // I
-  PHOTOS.turkey_capp,     // s
-  PHOTOS.poland_krakow,   // r
-  PHOTOS.egypt_pyramids,  // a
-  PHOTOS.phuket_phi,      // a
-  // &
-  PHOTOS.ad_mosque,       // M
-  PHOTOS.doha_skyline,    // u
-  PHOTOS.lebanon_cedars,  // a
-  PHOTOS.turkey_hagia,    // t
-  PHOTOS.egypt_nile,      // a
-  PHOTOS.phuket_beach,    // z
+  PHOTOS.dubai_burj, PHOTOS.turkey_capp, PHOTOS.poland_krakow, PHOTOS.egypt_pyramids, PHOTOS.phuket_phi,
+  PHOTOS.ad_mosque, PHOTOS.doha_skyline, PHOTOS.lebanon_cedars, PHOTOS.turkey_hagia, PHOTOS.egypt_nile, PHOTOS.phuket_beach,
 ];
 
+/* =========================================================
+   ICONS (inline SVG)
+   ========================================================= */
 const ICONS = {
   plus: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
   plusLarge: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
@@ -1210,10 +853,21 @@ const ICONS = {
   arrowLeft: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
   arrowRight: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
   arrowRightSm: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
+  arrowUp: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>',
+  arrowDown: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
   calendar: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
   mapPin: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
   trash: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
-  // Section icons (used in TOC and section labels)
+  trashLg: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  pencil: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+  pencilLg: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+  settings: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  eye: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  eyeOff: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>',
+  download: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+  upload: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+  refresh: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+  logout: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
   camera: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
   pin: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 2-2V3H6v1a2 2 0 0 0 2 2h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>',
   bed: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M22 4v16"/><path d="M2 8h20"/><path d="M2 16h20"/><path d="M2 12h20"/></svg>',
@@ -1221,52 +875,129 @@ const ICONS = {
   compass: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',
   heart: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
   lightbulb: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>',
-  globe: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
   sun: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>',
-  clock: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
 };
 
 const SECTIONS = [
-  { key: 'memories',   ar: 'الذكريات',          en: 'Memories',    icon: ICONS.camera },
-  { key: 'places',     ar: 'الأماكن',           en: 'Places',      icon: ICONS.pin },
-  { key: 'stays',      ar: 'الإقامة',           en: 'Stays',       icon: ICONS.bed },
-  { key: 'food',       ar: 'المطاعم والمقاهي',  en: 'Food',        icon: ICONS.utensils },
-  { key: 'activities', ar: 'الأنشطة',           en: 'Activities',  icon: ICONS.compass },
-  { key: 'feelings',   ar: 'الملاحظات والمشاعر', en: 'Notes & Feelings', icon: ICONS.heart },
-  { key: 'tips',       ar: 'نصائح السفر',       en: 'Travel Tips', icon: ICONS.lightbulb },
+  { key: 'memories',   ar: 'الذكريات',           en: 'Memories',          icon: ICONS.camera },
+  { key: 'places',     ar: 'الأماكن',            en: 'Places',            icon: ICONS.pin },
+  { key: 'stays',      ar: 'الإقامة',            en: 'Stays',             icon: ICONS.bed },
+  { key: 'food',       ar: 'المطاعم والمقاهي',   en: 'Food',              icon: ICONS.utensils },
+  { key: 'activities', ar: 'الأنشطة',            en: 'Activities',        icon: ICONS.compass },
+  { key: 'feelings',   ar: 'الملاحظات والمشاعر', en: 'Notes & Feelings',  icon: ICONS.heart },
+  { key: 'tips',       ar: 'نصائح السفر',        en: 'Travel Tips',       icon: ICONS.lightbulb },
 ];
 
 const NOTE_COLORS = ['yellow', 'pink', 'blue', 'mint', 'cream'];
+
+/* Font options for the Settings panel — preloaded above */
+const FONT_OPTIONS = {
+  display: [
+    { value: "'Markazi Text', serif", label: 'Markazi Text (الافتراضي)' },
+    { value: "'Amiri', serif",         label: 'Amiri' },
+    { value: "'Reem Kufi', serif",     label: 'Reem Kufi' },
+  ],
+  body: [
+    { value: "'Tajawal', sans-serif", label: 'Tajawal (الافتراضي)' },
+    { value: "'Cairo', sans-serif",    label: 'Cairo' },
+    { value: "'Almarai', sans-serif",  label: 'Almarai' },
+  ],
+  enDisplay: [
+    { value: "'Playfair Display', serif",    label: 'Playfair Display (الافتراضي)' },
+    { value: "'Cormorant Garamond', serif",  label: 'Cormorant Garamond' },
+    { value: "'Lora', serif",                label: 'Lora' },
+  ],
+  enScript: [
+    { value: "'Caveat', cursive",          label: 'Caveat (الافتراضي)' },
+    { value: "'Dancing Script', cursive",  label: 'Dancing Script' },
+    { value: "'Sacramento', cursive",      label: 'Sacramento' },
+  ],
+  hero: [
+    { value: "'Anton', sans-serif",       label: 'Anton (الافتراضي)' },
+    { value: "'Bebas Neue', sans-serif",  label: 'Bebas Neue' },
+    { value: "'Oswald', sans-serif",      label: 'Oswald' },
+  ],
+};
+
+/* =========================================================
+   DEFAULT SETTINGS (text, colors, fonts — fully editable)
+   ========================================================= */
+const DEFAULT_SETTINGS = {
+  // Hero section
+  heroSupertitle: 'our travel journal',
+  heroIntro: '— مذكّرات سفر —',
+  heroLine1: 'Israa',
+  heroAmp: '&',
+  heroLine2: 'Muataz',
+  heroSubtitle: 'سبعةُ أسفار، آلافُ الذكريات، ولحظاتٌ لا يكفيها كتاب.',
+
+  // Logo / nav
+  logoEn: 'Israa & Muataz',
+  logoAr: 'إسراء ومُعتَز',
+
+  // Destinations section heading
+  destEnTitle: 'our destinations',
+  destArTitle: 'الوجهات التي زرناها',
+  destSubtitle: 'كل وجهة فصلٌ في كتابٍ نَكتبه معاً، وكل صورةٌ ذكرى نَحفظها.',
+
+  // Notes section heading
+  notesEnTitle: 'sticky notes',
+  notesArTitle: 'ملاحظات على الحائط',
+  notesSubtitle: 'جُمَل قصيرة، اقتباسات، نصائح، أو ذكرى عابرة. اضغط لتضيف ملاحظة جديدة.',
+
+  // Footer
+  footerMark: 'Israa & Muataz',
+  footerTagline: 'إسراء ومُعتَز · مذكّرات سفر',
+  footerMeta: 'صُنِعَت بحُبٍّ على الطريق',
+
+  // Colors — anything from the palette is overridable
+  colors: {
+    cream:      '#F5EFE5',
+    'cream-warm': '#EFE5D2',
+    'cream-soft': '#FAF6EE',
+    'cream-deep': '#E8DCC4',
+    paper:      '#FBF7EF',
+    ink:        '#2A1F15',
+    'ink-soft': '#4A3B2C',
+    'ink-mute': '#8A7A65',
+    gold:       '#C9A961',
+    'gold-deep':'#A8893D',
+    terracotta: '#B85C43',
+    rust:       '#8E3F2C',
+  },
+
+  // Fonts — must be a valid CSS font-family value (preloaded in <head>)
+  fonts: {
+    body:       "'Tajawal', system-ui, sans-serif",
+    display:    "'Markazi Text', 'Amiri', serif",
+    enDisplay:  "'Playfair Display', Georgia, serif",
+    enScript:   "'Caveat', cursive",
+    hero:       "'Anton', 'Archivo Black', sans-serif",
+  },
+};
 
 /* =========================================================
    SAMPLE DATA — 7 destinations
    ========================================================= */
 const SAMPLE_TRIPS = [
-  // ============ DUBAI ============
   {
     id: 'dubai_2024',
-    titleAr: 'دبي',
-    titleEn: 'Dubai',
+    titleAr: 'دبي', titleEn: 'Dubai',
     location: 'الإمارات العربية المتحدة',
-    dateStart: '١ مايو ٢٠٢٤',
-    dateEnd: '٣ مايو ٢٠٢٤',
-    dateRange: 'مايو ٢٠٢٤',
-    durationDays: 3,
-    emoji: '🌇',
+    dateStart: '١ مايو ٢٠٢٤', dateEnd: '٣ مايو ٢٠٢٤', dateRange: 'مايو ٢٠٢٤',
+    durationDays: 3, emoji: '🌇',
     coverImage: IMG(PHOTOS.dubai_burj, 1600),
     thumbImage: IMG(PHOTOS.dubai_burj, 800),
     intro: 'ثلاثة أيام في مدينةٍ لا تنام، حيث تتعانق ناطحات السحاب مع ذكريات الصحراء، وحيث كل زاوية تروي قصةً عن طموحٍ لا يعرف الحدود.',
     summary: { cities: 'دبي', weather: 'حار جاف', bestFor: 'مدن', duration: '٣ أيام' },
     memories: [
       { image: IMG(PHOTOS.dubai_burj, 1200), caption: 'فوق العالم', story: 'وقفنا في الطابق ١٢٤ من برج خليفة وقت الغروب. المدينة تحتنا تتلألأ كصندوق مجوهرات، والصمت في الأعلى مختلف، أشبه بصمت السماء.' },
-      { image: IMG(PHOTOS.dubai_marina, 800), caption: 'مساءٌ في المارينا' },
-      { image: IMG(PHOTOS.dubai_old, 800), caption: 'في السوق القديم' },
-      { image: IMG(PHOTOS.dubai_desert, 800), caption: 'صحراء عند الغروب' },
+      { image: IMG(PHOTOS.dubai_marina, 800), caption: 'مساءٌ في المارينا', story: '' },
+      { image: IMG(PHOTOS.dubai_old, 800), caption: 'في السوق القديم', story: '' },
+      { image: IMG(PHOTOS.dubai_desert, 800), caption: 'صحراء عند الغروب', story: '' },
     ],
     places: ['برج خليفة', 'دبي مول والنافورة', 'مدينة جميرا والقناة', 'السوق القديم في ديرة', 'شاطئ الجميرا', 'نخلة جميرا', 'دبي فريم'],
-    stays: [
-      { name: 'فندق وسط المدينة', type: 'فندق ٥ نجوم', note: 'إطلالة على برج خليفة، قريب من المترو، إفطار متنوع وراقي.' },
-    ],
+    stays: [{ name: 'فندق وسط المدينة', type: 'فندق ٥ نجوم', note: 'إطلالة على برج خليفة، قريب من المترو، إفطار متنوع وراقي.' }],
     food: [
       { name: 'مطعم عربي تقليدي', type: 'مطبخ خليجي', note: 'المجبوس واللقيمات بنكهة بيتية، أجواء عائلية دافئة.' },
       { name: 'مقهى في برج خليفة', type: 'قهوة وحلويات', note: 'إطلالة لا تُنسى مع قهوة عربية ممتازة.' },
@@ -1274,34 +1005,23 @@ const SAMPLE_TRIPS = [
     ],
     activities: ['زيارة قمة برج خليفة عند الغروب', 'عرض نافورة دبي ليلاً', 'رحلة سفاري في الصحراء', 'جولة العَبرة التقليدية في الخور', 'تسوّق في دبي مول', 'مشي على كورنيش الجميرا'],
     feelings: 'دبي مدينةٌ تُذهلك في البداية بحجمها وضوئها وسرعتها، ثم تكتشف ببطء أن خلف الزجاج والمعدن هناك قلبٌ عربي ما زال ينبض. التناقض بين البرج العالي والسوق العتيق، بين الصحراء والمدينة، يجعلها مكاناً واحداً ومتعدداً في الوقت نفسه.',
-    tips: [
-      'احجزوا تذاكر برج خليفة قبل السفر بأسبوع، السعر أرخص والوقت أفضل.',
-      'استخدموا المترو، نظيف وسريع وغير مكلف.',
-      'الصيف حار جداً، أفضل وقت للزيارة من نوفمبر إلى مارس.',
-      'تطبيق Careem أوسع من Uber في الخليج.',
-      'الكاش غير ضروري، كل شيء يقبل البطاقة.',
-    ],
+    tips: ['احجزوا تذاكر برج خليفة قبل السفر بأسبوع، السعر أرخص والوقت أفضل.', 'استخدموا المترو، نظيف وسريع وغير مكلف.', 'الصيف حار جداً، أفضل وقت للزيارة من نوفمبر إلى مارس.', 'تطبيق Careem أوسع من Uber في الخليج.', 'الكاش غير ضروري، كل شيء يقبل البطاقة.'],
   },
-  // ============ TURKEY ============
   {
     id: 'turkey_2024',
-    titleAr: 'تركيا',
-    titleEn: 'Turkey',
+    titleAr: 'تركيا', titleEn: 'Turkey',
     location: 'طرابزون · إسطنبول',
-    dateStart: '٣١ أغسطس ٢٠٢٤',
-    dateEnd: '١٠ سبتمبر ٢٠٢٤',
-    dateRange: 'سبتمبر ٢٠٢٤',
-    durationDays: 11,
-    emoji: '🕌',
+    dateStart: '٣١ أغسطس ٢٠٢٤', dateEnd: '١٠ سبتمبر ٢٠٢٤', dateRange: 'سبتمبر ٢٠٢٤',
+    durationDays: 11, emoji: '🕌',
     coverImage: IMG(PHOTOS.turkey_hagia, 1600),
     thumbImage: IMG(PHOTOS.turkey_capp, 800),
     intro: 'إحدى عشرة ليلةً بين خضرة الجبال وأذان المآذن، من ضباب طرابزون الصباحي إلى بحرٍ من القباب يعانق البوسفور.',
     summary: { cities: 'طرابزون، إسطنبول', weather: 'معتدل', bestFor: 'طبيعة وتاريخ', duration: '١١ يوماً' },
     memories: [
       { image: IMG(PHOTOS.turkey_uzungol, 1200), caption: 'بحيرة أوزنغول', story: 'استيقظنا قبل الفجر للوصول إلى البحيرة، والضباب كان يلامس الماء كأنه نَفَسٌ ساكن. شربنا الشاي على ضفافها، وفي تلك اللحظة فهمنا لماذا يُسمّونها قطعةً من الجنة.' },
-      { image: IMG(PHOTOS.turkey_hagia, 800), caption: 'آيا صوفيا' },
-      { image: IMG(PHOTOS.turkey_galata, 800), caption: 'برج غلطة' },
-      { image: IMG(PHOTOS.turkey_bosph, 800), caption: 'البوسفور عند المغرب' },
+      { image: IMG(PHOTOS.turkey_hagia, 800), caption: 'آيا صوفيا', story: '' },
+      { image: IMG(PHOTOS.turkey_galata, 800), caption: 'برج غلطة', story: '' },
+      { image: IMG(PHOTOS.turkey_bosph, 800), caption: 'البوسفور عند المغرب', story: '' },
     ],
     places: ['دير سوميلا (طرابزون)', 'بحيرة أوزنغول', 'هضبة آيدر', 'جامع آيا صوفيا الكبير', 'جامع السلطان أحمد (الأزرق)', 'قصر توبكابي', 'البازار الكبير والمسقوف', 'مضيق البوسفور وحي أورتاكوي', 'برج غلطة'],
     stays: [
@@ -1316,34 +1036,23 @@ const SAMPLE_TRIPS = [
     ],
     activities: ['رحلة جبلية بسيارة دفع رباعي إلى الهضاب', 'عبور البوسفور بالعبّارة من أوروبا إلى آسيا', 'جولة في البازار الكبير', 'حمام تركي تقليدي', 'صلاة الفجر في آيا صوفيا', 'تناول الشاي على ضفاف أوزنغول'],
     feelings: 'تركيا أرضٌ تجعلك تشعر بالقرب والبُعد في آنٍ واحد. إسطنبول تحتضنك بأذانها، وطرابزون تذكّرك بأن العالم لا يزال أخضر. اللغة كانت حاجزاً صغيراً، لكن الكرم لا يحتاج إلى ترجمة.',
-    tips: [
-      'استخرجوا الإسطنبول كارت من أول يوم، تعمل في كل وسائل النقل.',
-      'الجمع بين طرابزون وإسطنبول يحتاج ١٠ أيام على الأقل.',
-      'طرابزون أبرد من إسطنبول، خذوا جاكيت خفيف حتى في الصيف.',
-      'صلاة الجمعة في آيا صوفيا تجربة مؤثرة، احضروا مبكراً.',
-      'احذروا من سيارات الأجرة في إسطنبول، استخدموا تطبيق BiTaksi.',
-    ],
+    tips: ['استخرجوا الإسطنبول كارت من أول يوم، تعمل في كل وسائل النقل.', 'الجمع بين طرابزون وإسطنبول يحتاج ١٠ أيام على الأقل.', 'طرابزون أبرد من إسطنبول، خذوا جاكيت خفيف حتى في الصيف.', 'صلاة الجمعة في آيا صوفيا تجربة مؤثرة، احضروا مبكراً.', 'احذروا من سيارات الأجرة في إسطنبول، استخدموا تطبيق BiTaksi.'],
   },
-  // ============ ABU DHABI & DOHA ============
   {
     id: 'gulf_2025',
-    titleAr: 'جولة أبوظبي - الدوحة',
-    titleEn: 'Abu Dhabi & Doha',
+    titleAr: 'جولة أبوظبي - الدوحة', titleEn: 'Abu Dhabi & Doha',
     location: 'الإمارات · قطر',
-    dateStart: '١٧ يناير ٢٠٢٥',
-    dateEnd: '٢٢ يناير ٢٠٢٥',
-    dateRange: 'يناير ٢٠٢٥',
-    durationDays: 6,
-    emoji: '🕌',
+    dateStart: '١٧ يناير ٢٠٢٥', dateEnd: '٢٢ يناير ٢٠٢٥', dateRange: 'يناير ٢٠٢٥',
+    durationDays: 6, emoji: '🕌',
     coverImage: IMG(PHOTOS.ad_mosque, 1600),
     thumbImage: IMG(PHOTOS.ad_mosque, 800),
     intro: 'ستّةُ أيامٍ بين عاصمتين خليجيتين تتنافسان في الجمال والهدوء، من بياض جامع الشيخ زايد إلى لآلئ سوق واقف.',
     summary: { cities: 'أبوظبي، الدوحة', weather: 'لطيف', bestFor: 'فن وثقافة', duration: '٦ أيام' },
     memories: [
       { image: IMG(PHOTOS.ad_mosque, 1200), caption: 'جامع الشيخ زايد', story: 'دخلنا الجامع ساعة العصر، الرخام الأبيض يعكس الذهب، والثُريّا الكبرى تتدلّى كنجمة. لم نتكلّم كثيراً، اكتفينا بالنظر والشعور بأنّ المكان أكبر من أي وصف.' },
-      { image: IMG(PHOTOS.ad_louvre, 800), caption: 'لوفر أبوظبي' },
-      { image: IMG(PHOTOS.doha_skyline, 800), caption: 'كورنيش الدوحة' },
-      { image: IMG(PHOTOS.doha_souq, 800), caption: 'سوق واقف' },
+      { image: IMG(PHOTOS.ad_louvre, 800), caption: 'لوفر أبوظبي', story: '' },
+      { image: IMG(PHOTOS.doha_skyline, 800), caption: 'كورنيش الدوحة', story: '' },
+      { image: IMG(PHOTOS.doha_souq, 800), caption: 'سوق واقف', story: '' },
     ],
     places: ['جامع الشيخ زايد الكبير', 'لوفر أبوظبي', 'قصر الوطن', 'كورنيش أبوظبي', 'متحف الفن الإسلامي - الدوحة', 'سوق واقف', 'كتارا - الحي الثقافي', 'اللؤلؤة قطر'],
     stays: [
@@ -1357,34 +1066,23 @@ const SAMPLE_TRIPS = [
     ],
     activities: ['زيارة جامع الشيخ زايد عند الغروب', 'جولة في لوفر أبوظبي ساعتين على الأقل', 'مشي على كورنيش الدوحة عند المساء', 'تسوّق التحف في سوق واقف', 'فعالية فنية في كتارا', 'ركوب الدّو القطري التقليدي'],
     feelings: 'الخليج هنا يقدّم نفسه بثوبين: واحدٌ متحفي راقٍ، وآخر شعبي دافئ. لوفر أبوظبي يجعلك تفكّر في معنى أن يكون الفن جسراً، وسوق واقف يُذكّرك بأن الحرف القديمة لم تَمُت بعد.',
-    tips: [
-      'لباس محتشم ضروري لزيارة الجامع، نساء يمكن استعارة العباية مجاناً.',
-      'يومان لكل مدينة كافيان لمن يخطط جيداً.',
-      'الانتقال من أبوظبي إلى الدوحة برحلة قصيرة (ساعة).',
-      'لوفر أبوظبي مغلق يوم الإثنين.',
-      'أسعار سوق واقف قابلة للمساومة، خاصة على التحف.',
-    ],
+    tips: ['لباس محتشم ضروري لزيارة الجامع، نساء يمكن استعارة العباية مجاناً.', 'يومان لكل مدينة كافيان لمن يخطط جيداً.', 'الانتقال من أبوظبي إلى الدوحة برحلة قصيرة (ساعة).', 'لوفر أبوظبي مغلق يوم الإثنين.', 'أسعار سوق واقف قابلة للمساومة، خاصة على التحف.'],
   },
-  // ============ POLAND ============
   {
     id: 'poland_2025',
-    titleAr: 'بولندا',
-    titleEn: 'Poland',
+    titleAr: 'بولندا', titleEn: 'Poland',
     location: 'كراكوف · وارسو · غدانسك',
-    dateStart: '٢٩ مايو ٢٠٢٥',
-    dateEnd: '٥ يوليو ٢٠٢٥',
-    dateRange: 'مايو – يوليو ٢٠٢٥',
-    durationDays: 38,
-    emoji: '🏰',
+    dateStart: '٢٩ مايو ٢٠٢٥', dateEnd: '٥ يوليو ٢٠٢٥', dateRange: 'مايو – يوليو ٢٠٢٥',
+    durationDays: 38, emoji: '🏰',
     coverImage: IMG(PHOTOS.poland_krakow, 1600),
     thumbImage: IMG(PHOTOS.poland_warsaw, 800),
     intro: 'شهرٌ وأكثر في بلدٍ يحمل ذاكرةً ثقيلة وقلباً دافئاً، بين قلاع وارسو القديمة وميادين كراكوف، ومناجم الملح التي تحتها بستان من التماثيل.',
     summary: { cities: 'كراكوف، وارسو، غدانسك', weather: 'صيف معتدل', bestFor: 'تاريخ وعمارة', duration: '٣٨ يوماً' },
     memories: [
       { image: IMG(PHOTOS.poland_krakow, 1200), caption: 'ميدان كراكوف الرئيسي', story: 'جلسنا في الميدان عند المساء، والشمس تختفي خلف برج كنيسة سانت ماري، والكمان يعزف من زاويةٍ بعيدة. هذه اللحظة وحدها تستحق رحلةً كاملة.' },
-      { image: IMG(PHOTOS.poland_warsaw, 800), caption: 'وارسو القديمة' },
-      { image: IMG(PHOTOS.poland_wawel, 800), caption: 'قلعة فافل' },
-      { image: IMG(PHOTOS.poland_gdansk, 800), caption: 'غدانسك على البحر' },
+      { image: IMG(PHOTOS.poland_warsaw, 800), caption: 'وارسو القديمة', story: '' },
+      { image: IMG(PHOTOS.poland_wawel, 800), caption: 'قلعة فافل', story: '' },
+      { image: IMG(PHOTOS.poland_gdansk, 800), caption: 'غدانسك على البحر', story: '' },
     ],
     places: ['ميدان كراكوف الرئيسي (ريِنيك غووفني)', 'قلعة فافل', 'منجم ملح فيليتشكا', 'متحف أوشفيتز-بيركيناو', 'مدينة وارسو القديمة', 'حمام الملك في وارسو', 'غدانسك القديمة', 'فروتسواف وأقزامها', 'حي كازيميَش اليهودي - كراكوف'],
     stays: [
@@ -1400,40 +1098,26 @@ const SAMPLE_TRIPS = [
     ],
     activities: ['جولة سيرٍ في كراكوف القديمة', 'النزول إلى مناجم فيليتشكا', 'زيارة أوشفيتز يوماً كاملاً (تجربة ثقيلة لكن ضرورية)', 'حضور حفل بيانو في وارسو (شوبان)', 'مشي على البلطيق في غدانسك', 'زيارة قلعة فافل', 'تجوّل في حي كازيميَش اليهودي'],
     feelings: 'بولندا لم تكن وجهةً سياحيةً عاديّة، كانت رحلةً في الذاكرة. أوشفيتز يترك أثراً لا يُمحى، لكن المدن القديمة بميادينها وموسيقاها تعيد إليك الإيمان بالجمال. اللطف البولندي مفاجئ، والكرم أيضاً.',
-    tips: [
-      'العملة الزلوتي البولندي، الصرف من البنوك أفضل.',
-      'القطارات بين المدن سريعة ونظيفة، احجزوا قبلها.',
-      'أوشفيتز يحتاج يوماً كاملاً، احجزوا التذاكر قبل أسابيع.',
-      'الإنترنت ممتاز في كل مكان.',
-      'الطعام البولندي ثقيل، تنوّعوا في الوجبات.',
-      'العاصمة وارسو تحتاج ٣ أيام على الأقل.',
-    ],
+    tips: ['العملة الزلوتي البولندي، الصرف من البنوك أفضل.', 'القطارات بين المدن سريعة ونظيفة، احجزوا قبلها.', 'أوشفيتز يحتاج يوماً كاملاً، احجزوا التذاكر قبل أسابيع.', 'الإنترنت ممتاز في كل مكان.', 'الطعام البولندي ثقيل، تنوّعوا في الوجبات.', 'العاصمة وارسو تحتاج ٣ أيام على الأقل.'],
   },
-  // ============ PHUKET ============
   {
     id: 'phuket_2025',
-    titleAr: 'بوكيت',
-    titleEn: 'Phuket',
+    titleAr: 'بوكيت', titleEn: 'Phuket',
     location: 'تايلاند',
-    dateStart: '٢٣ أغسطس ٢٠٢٥',
-    dateEnd: '٣٠ أغسطس ٢٠٢٥',
-    dateRange: 'أغسطس ٢٠٢٥',
-    durationDays: 8,
-    emoji: '🌴',
+    dateStart: '٢٣ أغسطس ٢٠٢٥', dateEnd: '٣٠ أغسطس ٢٠٢٥', dateRange: 'أغسطس ٢٠٢٥',
+    durationDays: 8, emoji: '🌴',
     coverImage: IMG(PHOTOS.phuket_phi, 1600),
     thumbImage: IMG(PHOTOS.phuket_beach, 800),
     intro: 'ثمانية أيام في جزيرةٍ كأنّها لوحة، حيث ينعكس الزمرّد على الرمال البيضاء، وحيث الابتسامة التايلندية تجعلك تنسى الزحام.',
     summary: { cities: 'بوكيت، جزر فيفي', weather: 'استوائي', bestFor: 'شواطئ', duration: '٨ أيام' },
     memories: [
       { image: IMG(PHOTOS.phuket_phi, 1200), caption: 'جزر فيفي', story: 'وصلنا إلى مايا باي مبكراً، قبل القوارب السياحية. كان الماء صافياً لدرجة أنك ترى رمل القاع كأنه قريبٌ من يدك. وقفنا في الموج، ولم نُرد أن نغادر.' },
-      { image: IMG(PHOTOS.phuket_buddha, 800), caption: 'بوذا الكبير' },
-      { image: IMG(PHOTOS.phuket_beach, 800), caption: 'القوارب الطويلة' },
-      { image: IMG(PHOTOS.phuket_temple, 800), caption: 'معبد على التل' },
+      { image: IMG(PHOTOS.phuket_buddha, 800), caption: 'بوذا الكبير', story: '' },
+      { image: IMG(PHOTOS.phuket_beach, 800), caption: 'القوارب الطويلة', story: '' },
+      { image: IMG(PHOTOS.phuket_temple, 800), caption: 'معبد على التل', story: '' },
     ],
     places: ['جزر فيفي (Phi Phi)', 'بوذا الكبير', 'شاطئ كاتا نوي', 'شاطئ باتونغ', 'مدينة بوكيت القديمة', 'معبد تشالونغ', 'كهف فيكينغ', 'جزيرة جيمس بوند (خاو بينغ كان)'],
-    stays: [
-      { name: 'منتجع على شاطئ كاتا', type: 'منتجع عائلي', note: 'حمام سباحة على البحر، فطور آسيوي وغربي، هدوء.' },
-    ],
+    stays: [{ name: 'منتجع على شاطئ كاتا', type: 'منتجع عائلي', note: 'حمام سباحة على البحر، فطور آسيوي وغربي، هدوء.' }],
     food: [
       { name: 'مطعم محلي - كاتا', type: 'مطبخ تايلندي', note: 'باد تاي، كاري أخضر، البطّيخ الطازج. أسعار شعبية.' },
       { name: 'سوق ليلي - بوكيت القديمة', type: 'طعام شارع', note: 'مأكولات بحرية مشوية، حلويات بجوز الهند، تجربة لا تُنسى.' },
@@ -1442,35 +1126,23 @@ const SAMPLE_TRIPS = [
     ],
     activities: ['رحلة قارب طويل إلى جزر فيفي', 'غوص في خليج بانياو', 'تدليك تايلندي تقليدي', 'صعود إلى بوذا الكبير عند الغروب', 'جولة في مدينة بوكيت القديمة', 'تذوّق طعام الشارع في الأسواق الليلية'],
     feelings: 'تايلاند تُعلّمك معنى البساطة. شاطئ، طعام طازج، ابتسامة، وانتهى. الناس هنا لا يتعبون من الكرم، والابتسامة عملةٌ متداولة لا تنفد. الطبيعة كريمة جداً، والبحر يستقبلك كأنه ينتظرك.',
-    tips: [
-      'استأجروا دراجة نارية لو كنتم مرتاحين، أفضل وسيلة تنقّل.',
-      'تجنّبوا فخاخ السياح في باتونغ، الأسعار مضاعفة.',
-      'الصرف في مكاتب SuperRich أفضل بكثير من الفنادق.',
-      'لباس محتشم عند زيارة المعابد.',
-      'جزر فيفي تكتظ بعد الساعة ١٠ صباحاً، اذهبوا مبكراً.',
-      'لا تشربوا ماء الصنبور.',
-    ],
+    tips: ['استأجروا دراجة نارية لو كنتم مرتاحين، أفضل وسيلة تنقّل.', 'تجنّبوا فخاخ السياح في باتونغ، الأسعار مضاعفة.', 'الصرف في مكاتب SuperRich أفضل بكثير من الفنادق.', 'لباس محتشم عند زيارة المعابد.', 'جزر فيفي تكتظ بعد الساعة ١٠ صباحاً، اذهبوا مبكراً.', 'لا تشربوا ماء الصنبور.'],
   },
-  // ============ LEBANON ============
   {
     id: 'lebanon_2025',
-    titleAr: 'لبنان',
-    titleEn: 'Lebanon',
+    titleAr: 'لبنان', titleEn: 'Lebanon',
     location: 'بيروت · جبيل · أرز الرب',
-    dateStart: '٣ ديسمبر ٢٠٢٥',
-    dateEnd: '٩ ديسمبر ٢٠٢٥',
-    dateRange: 'ديسمبر ٢٠٢٥',
-    durationDays: 7,
-    emoji: '🌲',
+    dateStart: '٣ ديسمبر ٢٠٢٥', dateEnd: '٩ ديسمبر ٢٠٢٥', dateRange: 'ديسمبر ٢٠٢٥',
+    durationDays: 7, emoji: '🌲',
     coverImage: IMG(PHOTOS.lebanon_byblos, 1600),
     thumbImage: IMG(PHOTOS.lebanon_cedars, 800),
     intro: 'سبعة أيامٍ في بلدٍ صغيرٍ بحجم الراحة، كبيرٍ بحجم القلب. من البحر إلى الأرز، ومن الأكل إلى الموسيقى، لبنان هو وعدُ الكَرَم.',
     summary: { cities: 'بيروت، جبيل، الأرز', weather: 'شتاء جبلي', bestFor: 'طعام وطبيعة', duration: '٧ أيام' },
     memories: [
       { image: IMG(PHOTOS.lebanon_cedars, 1200), caption: 'أرز الرب', story: 'وصلنا والثلج كان قد بدأ يتراكم. الأشجار العملاقة، بعضها يفوق الألف سنة، كأنها شيوخٌ يحرسون السماء. وقفنا تحتها وأحسسنا أن الزمن نفسه يَسكُن هذه الأرض.' },
-      { image: IMG(PHOTOS.lebanon_byblos, 800), caption: 'ميناء جبيل' },
-      { image: IMG(PHOTOS.lebanon_beirut, 800), caption: 'كورنيش بيروت' },
-      { image: IMG(PHOTOS.lebanon_jeita, 800), caption: 'مغارة جعيتا' },
+      { image: IMG(PHOTOS.lebanon_byblos, 800), caption: 'ميناء جبيل', story: '' },
+      { image: IMG(PHOTOS.lebanon_beirut, 800), caption: 'كورنيش بيروت', story: '' },
+      { image: IMG(PHOTOS.lebanon_jeita, 800), caption: 'مغارة جعيتا', story: '' },
     ],
     places: ['مغارة جعيتا', 'جبيل (بيبلوس) القديمة', 'أرز الرب في بشري', 'كورنيش بيروت والروشة', 'الحمرا', 'وسط بيروت', 'صيدا القديمة', 'وادي قاديشا'],
     stays: [
@@ -1485,35 +1157,23 @@ const SAMPLE_TRIPS = [
     ],
     activities: ['زيارة مغارة جعيتا (تجربة بصرية مذهلة)', 'مشي في جبيل القديمة عند الغروب', 'زيارة أرز الرب', 'سهرة موسيقية في الحمرا', 'تذوّق المطبخ اللبناني الكامل', 'جولة في وادي قاديشا'],
     feelings: 'لبنان يفاجئك في كل زاوية. تصعد إلى الجبل فترى الثلج، تنزل إلى الساحل فترى البحر، تدخل مطعماً فتأكل لساعات، تجلس مع أحد فتسمع تاريخاً كاملاً. هذا البلد، رغم كل ما مرّ به، ما زال يبتسم ويُطعم ضيوفه.',
-    tips: [
-      'استئجار سيارة ضروري للتنقّل بين المدن.',
-      'الدولار مقبول في كل مكان، الليرة اللبنانية للتفاصيل الصغيرة.',
-      'الشتاء بارد جداً في الجبل، استعدّوا للثلج.',
-      'الأمان جيد عموماً، لكن تحقّقوا من المستجدات قبل السفر.',
-      'الحجز مسبقاً في المطاعم الشهيرة ضروري.',
-      'الكهرباء غير مستقرة، الفنادق الكبيرة لديها مولّدات.',
-    ],
+    tips: ['استئجار سيارة ضروري للتنقّل بين المدن.', 'الدولار مقبول في كل مكان، الليرة اللبنانية للتفاصيل الصغيرة.', 'الشتاء بارد جداً في الجبل، استعدّوا للثلج.', 'الأمان جيد عموماً، لكن تحقّقوا من المستجدات قبل السفر.', 'الحجز مسبقاً في المطاعم الشهيرة ضروري.', 'الكهرباء غير مستقرة، الفنادق الكبيرة لديها مولّدات.'],
   },
-  // ============ EGYPT ============
   {
     id: 'egypt_2026',
-    titleAr: 'مصر',
-    titleEn: 'Egypt',
+    titleAr: 'مصر', titleEn: 'Egypt',
     location: 'القاهرة · الأقصر · أسوان',
-    dateStart: '٢٤ فبراير ٢٠٢٦',
-    dateEnd: '٣ مارس ٢٠٢٦',
-    dateRange: 'فبراير – مارس ٢٠٢٦',
-    durationDays: 9,
-    emoji: '🐪',
+    dateStart: '٢٤ فبراير ٢٠٢٦', dateEnd: '٣ مارس ٢٠٢٦', dateRange: 'فبراير – مارس ٢٠٢٦',
+    durationDays: 9, emoji: '🐪',
     coverImage: IMG(PHOTOS.egypt_pyramids, 1600),
     thumbImage: IMG(PHOTOS.egypt_khan, 800),
     intro: 'تسعةُ أيامٍ على ضفاف النيل، حيث يلتقي خمسةُ آلاف عام بساعة عصرٍ في خان الخليلي، وحيث تشعر بأن الزمن نهرٌ، لا خط.',
     summary: { cities: 'القاهرة، الأقصر، أسوان', weather: 'شتاء لطيف', bestFor: 'حضارة وتاريخ', duration: '٩ أيام' },
     memories: [
       { image: IMG(PHOTOS.egypt_pyramids, 1200), caption: 'أهرامات الجيزة', story: 'وقفنا أمام هرم خوفو، والصمت الصحراوي يبلع كل شيء. اقتربنا حتى لمسنا الحجر، وفجأة أدركنا أن أيدينا تَلمس ما لمسه أناسٌ قبل خمسة آلاف سنة. هذه اللحظة وحدها تستحق المسافة.' },
-      { image: IMG(PHOTOS.egypt_khan, 800), caption: 'خان الخليلي' },
-      { image: IMG(PHOTOS.egypt_nile, 800), caption: 'النيل في المساء' },
-      { image: IMG(PHOTOS.egypt_luxor, 800), caption: 'معابد الأقصر' },
+      { image: IMG(PHOTOS.egypt_khan, 800), caption: 'خان الخليلي', story: '' },
+      { image: IMG(PHOTOS.egypt_nile, 800), caption: 'النيل في المساء', story: '' },
+      { image: IMG(PHOTOS.egypt_luxor, 800), caption: 'معابد الأقصر', story: '' },
     ],
     places: ['أهرامات الجيزة وأبو الهول', 'المتحف المصري الكبير', 'خان الخليلي', 'قلعة صلاح الدين', 'جامع محمد علي', 'وادي الملوك - الأقصر', 'معبد الكرنك', 'معبد فيلة - أسوان', 'السد العالي', 'كورنيش النيل'],
     stays: [
@@ -1528,19 +1188,10 @@ const SAMPLE_TRIPS = [
     ],
     activities: ['زيارة الأهرامات صباحاً قبل الزحام', 'رحلة فلوكة على النيل عند الغروب', 'جولة في خان الخليلي والأسواق', 'يوم كامل في المتحف المصري', 'رحلة الأقصر بالباخرة', 'زيارة وادي الملوك', 'صعود مقابر الأقصر بالحمار (تجربة محلية)'],
     feelings: 'مصر بلدٌ يَشحَنُكَ بالحياة وبالتاريخ في آنٍ واحد. القاهرة فوضى منظّمة وحياة لا تتوقف، الأقصر هدوءٌ يصاحبه عمق، أسوان امتنانٌ للجمال البسيط. الناس يضحكون، يلاطفون، يطعمونك حتى لو لا يعرفونك. هذه البلاد قديمة جداً وحيّة جداً.',
-    tips: [
-      'احذروا الباعة المتجوّلين عند المعالم، الأسعار مُبالغ فيها.',
-      'الرحلة النيلية من الأقصر إلى أسوان من أجمل التجارب.',
-      'لباس محتشم عند زيارة المساجد.',
-      'تطبيق Uber/Careem يعمل في القاهرة.',
-      'احتفظوا بكاش صغير دائماً للإكراميات.',
-      'أفضل وقت للزيارة من نوفمبر إلى مارس.',
-      'مرشد سياحي معتمد يفتح المعالم بشكل أعمق.',
-    ],
+    tips: ['احذروا الباعة المتجوّلين عند المعالم، الأسعار مُبالغ فيها.', 'الرحلة النيلية من الأقصر إلى أسوان من أجمل التجارب.', 'لباس محتشم عند زيارة المساجد.', 'تطبيق Uber/Careem يعمل في القاهرة.', 'احتفظوا بكاش صغير دائماً للإكراميات.', 'أفضل وقت للزيارة من نوفمبر إلى مارس.', 'مرشد سياحي معتمد يفتح المعالم بشكل أعمق.'],
   },
 ];
 
-// Sample sticky notes (home wall)
 const SAMPLE_NOTES = [
   { id: 'n1', text: 'السفر يُعلّمك أن البيت ليس مكاناً، بل شعور.', color: 'yellow', createdAt: Date.now() - 1000000 },
   { id: 'n2', text: 'كل رحلة تبدأ بخطوة... وكوب قهوة في المطار 🌍', color: 'pink', createdAt: Date.now() - 900000 },
@@ -1549,19 +1200,52 @@ const SAMPLE_NOTES = [
   { id: 'n5', text: 'الذكريات أخفّ حقيبة... وأثقل وزن.', color: 'cream', createdAt: Date.now() - 600000 },
 ];
 
+
 /* =========================================================
    STATE
    ========================================================= */
-const initialAddNoteForm = () => ({ text: '', color: 'yellow' });
+const initialAddNoteForm = () => ({ id: null, text: '', color: 'yellow' });
+const initialLoginForm   = () => ({ password: '', showPassword: false, error: '', loading: false });
 
 let state = {
+  // auth
+  authed: false,
+  loginForm: initialLoginForm(),
+
+  // data
   trips: [],
   notes: [],
-  view: 'home',       // 'home' | 'detail'
+  settings: null, // populated on load
+
+  // navigation
+  view: 'home',                   // 'home' | 'detail'
   currentTripId: null,
+
+  // edit mode
+  editMode: false,
+
+  // modals & overlays
   showAddNote: false,
   addNoteForm: initialAddNoteForm(),
+  showSettings: false,
+  settingsTab: 'text',            // 'text' | 'colors' | 'fonts' | 'data'
+
+  // trip editor (full-screen overlay)
+  editingTripId: null,            // when set, shows trip editor
+  editingTripDraft: null,         // working copy of the trip
+  tripEditorTab: 'basics',        // 'basics' | 'memories' | 'places' | 'stays' | 'food' | 'activities' | 'feelings' | 'tips'
 };
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function newId(prefix) { return (prefix || 'x') + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7); }
+function deepCopy(obj) { return JSON.parse(JSON.stringify(obj)); }
 
 /* =========================================================
    STORAGE
@@ -1572,7 +1256,7 @@ function loadFromStorage(key, fallback) {
     if (stored) return JSON.parse(stored);
   } catch (e) { /* ignore */ }
   try { localStorage.setItem(key, JSON.stringify(fallback)); } catch (e) {}
-  return JSON.parse(JSON.stringify(fallback));
+  return deepCopy(fallback);
 }
 function saveToStorage(key, data) {
   try { localStorage.setItem(key, JSON.stringify(data)); }
@@ -1580,64 +1264,139 @@ function saveToStorage(key, data) {
 }
 
 /* =========================================================
-   UTILS
+   PASSWORD HASHING (SHA-256 via SubtleCrypto)
    ========================================================= */
-function esc(s) {
-  return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+async function sha256(text) {
+  const buf = new TextEncoder().encode(text);
+  const digest = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
-function newId() { return 'x_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7); }
 
 /* =========================================================
-   COMPONENTS
+   APPLY SETTINGS — write CSS variables and update DOM
    ========================================================= */
+function applySettings() {
+  if (!state.settings) return;
+  const s = state.settings;
+  const root = document.documentElement;
 
-// ---------- TOP NAV ----------
+  // Colors
+  if (s.colors) {
+    Object.keys(s.colors).forEach(function(k){
+      root.style.setProperty('--' + k, s.colors[k]);
+    });
+  }
+  // Fonts
+  if (s.fonts) {
+    if (s.fonts.body)      root.style.setProperty('--font-body', s.fonts.body);
+    if (s.fonts.display)   root.style.setProperty('--font-display', s.fonts.display);
+    if (s.fonts.enDisplay) root.style.setProperty('--font-en-display', s.fonts.enDisplay);
+    if (s.fonts.enScript)  root.style.setProperty('--font-en-script', s.fonts.enScript);
+    if (s.fonts.hero)      root.style.setProperty('--font-hero', s.fonts.hero);
+  }
+}
+
+
+/* =========================================================
+   RENDER — LOGIN SCREEN
+   ========================================================= */
+function renderLoginScreen() {
+  const f = state.loginForm;
+  const inputType = f.showPassword ? 'text' : 'password';
+  const toggleIcon = f.showPassword ? ICONS.eyeOff : ICONS.eye;
+  const toggleLabel = f.showPassword ? 'إخفاء' : 'إظهار';
+  return '' +
+  '<section class="login-screen">' +
+    '<div class="login-card fade-in">' +
+      '<div class="login-supertitle">welcome back</div>' +
+      '<h1 class="login-title">' + esc(state.settings.logoAr || 'إسراء ومُعتَز') + '</h1>' +
+      '<div class="login-subtitle">مذكّرات سفر · أدخل كلمة السر للدخول</div>' +
+      '<div class="login-deco" aria-hidden="true">' +
+        '<span class="login-deco-line"></span>' +
+        '<span>✦</span>' +
+        '<span class="login-deco-line"></span>' +
+      '</div>' +
+      '<form class="login-form" data-action="submit-login" id="login-form">' +
+        '<label class="login-label" for="login-password">كلمة السر</label>' +
+        '<div class="password-wrap">' +
+          '<input id="login-password" class="password-input" type="' + inputType + '" ' +
+            'data-form="loginForm" data-field="password" ' +
+            'value="' + esc(f.password) + '" ' +
+            'placeholder="••••••••••••" ' +
+            'autocomplete="current-password" ' +
+            'autofocus>' +
+          '<button type="button" class="password-toggle" data-action="toggle-password" aria-label="' + toggleLabel + ' كلمة السر" title="' + toggleLabel + '">' +
+            toggleIcon +
+          '</button>' +
+        '</div>' +
+        '<div class="login-error">' + esc(f.error) + '</div>' +
+        '<button type="submit" class="login-submit" ' + (f.loading ? 'disabled' : '') + '>' +
+          (f.loading ? '<span class="spinner">' + '</span>' : '') +
+          '<span>' + (f.loading ? 'جاري التحقق...' : 'دخول') + '</span>' +
+        '</button>' +
+      '</form>' +
+      '<div class="login-footer">Israa &amp; Muataz · Travel Journal</div>' +
+    '</div>' +
+  '</section>';
+}
+
+/* =========================================================
+   RENDER — TOP NAV
+   ========================================================= */
 function renderTopNav() {
+  const editClass = state.editMode ? 'active' : '';
   return '' +
   '<header class="nav">' +
     '<div class="container nav-inner">' +
       '<button class="nav-logo" data-action="go-home">' +
         '<div>' +
-          '<div class="nav-logo-en">Israa &amp; Muataz</div>' +
-          '<div class="nav-logo-name">إسراء ومُعتَز</div>' +
+          '<div class="nav-logo-en">' + esc(state.settings.logoEn) + '</div>' +
+          '<div class="nav-logo-name">' + esc(state.settings.logoAr) + '</div>' +
         '</div>' +
       '</button>' +
-      '<nav class="nav-links">' +
-        '<button class="nav-link ' + (state.view === 'home' ? 'active' : '') + '" data-action="go-home">الرئيسية</button>' +
-        '<button class="nav-link hidden-md" data-action="scroll-to" data-target="destinations">الوجهات</button>' +
-        '<button class="nav-link hidden-md" data-action="scroll-to" data-target="notes">المُلاحظات</button>' +
+      '<div class="nav-actions">' +
+        (state.editMode ? '<span class="edit-mode-badge">' + ICONS.pencil + '<span>وضع التعديل</span></span>' : '') +
+        '<nav class="nav-links">' +
+          '<button class="nav-link hidden-md ' + (state.view === 'home' ? 'active' : '') + '" data-action="go-home">الرئيسية</button>' +
+          '<button class="nav-link hidden-md" data-action="scroll-to" data-target="destinations">الوجهات</button>' +
+          '<button class="nav-link hidden-md" data-action="scroll-to" data-target="notes">المُلاحظات</button>' +
+        '</nav>' +
+        '<button class="nav-icon-btn ' + editClass + '" data-action="toggle-edit-mode" title="' + (state.editMode ? 'إيقاف وضع التعديل' : 'وضع التعديل') + '" aria-label="تعديل">' + ICONS.pencilLg + '</button>' +
+        '<button class="nav-icon-btn" data-action="open-settings" title="الإعدادات" aria-label="الإعدادات">' + ICONS.settings + '</button>' +
+        '<button class="nav-icon-btn" data-action="logout" title="تسجيل الخروج" aria-label="تسجيل الخروج">' + ICONS.logout + '</button>' +
         '<button class="nav-add-btn" data-action="show-add-note">' + ICONS.plus + '<span>ملاحظة</span></button>' +
-      '</nav>' +
+      '</div>' +
     '</div>' +
   '</header>';
 }
 
-// ---------- HERO with image-masked letters ----------
+/* =========================================================
+   RENDER — HERO
+   ========================================================= */
 function renderHero() {
-  // "Israa" / "&" / "Muataz" — each letter has a destination photo masked
-  // Letters indexed: 0-4 = "Israa", 5-10 = "Muataz" (skip ampersand visually)
-  const lettersIsraa = ['I', 's', 'r', 'a', 'a'];
-  const lettersMuataz = ['M', 'u', 'a', 't', 'a', 'z'];
+  const s = state.settings;
+  // Split text into letters for image-masking
+  const line1Letters = String(s.heroLine1 || '').split('');
+  const line2Letters = String(s.heroLine2 || '').split('');
   let photoIdx = 0;
   const renderLetter = (l) => {
+    if (l === ' ') return '<span style="display:inline-block;width:0.3em;"></span>';
     const photoId = HERO_LETTER_PHOTOS[photoIdx % HERO_LETTER_PHOTOS.length];
     photoIdx++;
     const url = IMG(photoId, 600);
-    return '<span class="letter" style="background-image:url(' + url + ');">' + l + '</span>';
+    return '<span class="letter" style="background-image:url(' + url + ');">' + esc(l) + '</span>';
   };
 
   return '' +
   '<section class="hero fade-in">' +
-    '<div class="hero-supertitle">our travel journal</div>' +
-    '<div class="hero-arabic-intro">— مذكّرات سفر —</div>' +
-    '<h1 class="hero-title" dir="ltr" aria-label="Israa and Muataz">' +
-      '<div class="hero-title-line">' + lettersIsraa.map(renderLetter).join('') + '</div>' +
-      '<div class="hero-title-line hero-title-line-amp">&amp;</div>' +
-      '<div class="hero-title-line">' + lettersMuataz.map(renderLetter).join('') + '</div>' +
+    '<div class="hero-supertitle">' + esc(s.heroSupertitle) + '</div>' +
+    '<div class="hero-arabic-intro">' + esc(s.heroIntro) + '</div>' +
+    '<h1 class="hero-title" dir="ltr" aria-label="' + esc(s.heroLine1) + ' and ' + esc(s.heroLine2) + '">' +
+      '<div class="hero-title-line">' + line1Letters.map(renderLetter).join('') + '</div>' +
+      '<div class="hero-title-line hero-title-line-amp">' + esc(s.heroAmp) + '</div>' +
+      '<div class="hero-title-line">' + line2Letters.map(renderLetter).join('') + '</div>' +
     '</h1>' +
-    '<p class="hero-subtitle">سبعةُ أسفار، آلافُ الذكريات، ولحظاتٌ لا يكفيها كتاب.</p>' +
+    '<p class="hero-subtitle">' + esc(s.heroSubtitle) + '</p>' +
     '<div class="hero-decoration" aria-hidden="true">' +
       '<span class="hero-decoration-line"></span>' +
       '<span class="hero-decoration-dot"></span>' +
@@ -1648,11 +1407,20 @@ function renderHero() {
   '</section>';
 }
 
-// ---------- DESTINATION CARD ----------
+/* =========================================================
+   RENDER — DESTINATION CARDS & GRID
+   ========================================================= */
 function renderDestCard(trip, index) {
   const numStr = String(index + 1).padStart(2, '0');
+  const editOverlay = state.editMode ? '' +
+    '<div class="dest-card-edit-overlay" data-no-open>' +
+      '<button class="dest-card-edit-btn" data-action="edit-trip" data-id="' + esc(trip.id) + '" title="تعديل" aria-label="تعديل">' + ICONS.pencilLg + '</button>' +
+      '<button class="dest-card-edit-btn danger" data-action="delete-trip" data-id="' + esc(trip.id) + '" title="حذف" aria-label="حذف">' + ICONS.trashLg + '</button>' +
+    '</div>' : '';
+
   return '' +
   '<button class="dest-card fade-in stagger-' + Math.min(index + 1, 5) + '" data-action="open-trip" data-id="' + esc(trip.id) + '" type="button">' +
+    editOverlay +
     '<span class="dest-card-tape" aria-hidden="true"></span>' +
     '<div class="dest-card-photo">' +
       '<img class="dest-card-img" src="' + esc(trip.thumbImage) + '" alt="' + esc(trip.titleAr) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
@@ -1679,32 +1447,43 @@ function renderDestCard(trip, index) {
 }
 
 function renderDestinationsSection() {
+  const s = state.settings;
+  const addCard = state.editMode ? '' +
+    '<button type="button" class="dest-add-card" data-action="add-trip">' +
+      ICONS.plusLarge +
+      '<span>أضف وجهة جديدة</span>' +
+    '</button>' : '';
+
   return '' +
   '<section class="destinations-section" id="destinations">' +
     '<div class="container">' +
       '<div class="section-heading">' +
-        '<div class="section-heading-en">our destinations</div>' +
-        '<h2 class="section-heading-ar">الوجهات التي زرناها</h2>' +
+        '<div class="section-heading-en">' + esc(s.destEnTitle) + '</div>' +
+        '<h2 class="section-heading-ar">' + esc(s.destArTitle) + '</h2>' +
         '<div class="section-heading-deco" aria-hidden="true">' +
           '<span class="section-heading-deco-line"></span>' +
           '<span>✦</span>' +
           '<span class="section-heading-deco-line"></span>' +
         '</div>' +
-        '<p class="section-heading-sub">كل وجهة فصلٌ في كتابٍ نَكتبه معاً، وكل صورةٌ ذكرى نَحفظها.</p>' +
+        '<p class="section-heading-sub">' + esc(s.destSubtitle) + '</p>' +
       '</div>' +
       '<div class="destinations-grid">' +
         state.trips.map(function(t, i){ return renderDestCard(t, i); }).join('') +
+        addCard +
       '</div>' +
     '</div>' +
   '</section>';
 }
 
-// ---------- STICKY NOTES (home wall) ----------
+/* =========================================================
+   RENDER — STICKY NOTES
+   ========================================================= */
 function renderNote(note) {
   const color = NOTE_COLORS.indexOf(note.color) >= 0 ? note.color : 'yellow';
   return '' +
   '<div class="note note-' + color + ' fade-in">' +
     '<span class="note-tape" aria-hidden="true"></span>' +
+    (state.editMode ? '<button class="note-edit-btn" data-action="edit-note" data-id="' + esc(note.id) + '" title="تعديل">' + ICONS.pencil + '</button>' : '') +
     '<div class="note-text">' + esc(note.text) + '</div>' +
     '<div class="note-meta">' +
       '<span>· ذكرى ·</span>' +
@@ -1712,50 +1491,52 @@ function renderNote(note) {
     '</div>' +
   '</div>';
 }
-
 function renderNotesSection() {
-  let notesHtml;
-  if (state.notes.length === 0) {
-    notesHtml = '';
-  } else {
-    notesHtml = state.notes.map(renderNote).join('');
-  }
+  const s = state.settings;
+  const notesHtml = state.notes.map(renderNote).join('');
   return '' +
   '<section class="notes-section" id="notes">' +
     '<div class="container">' +
       '<div class="section-heading">' +
-        '<div class="section-heading-en">sticky notes</div>' +
-        '<h2 class="section-heading-ar">ملاحظات على الحائط</h2>' +
+        '<div class="section-heading-en">' + esc(s.notesEnTitle) + '</div>' +
+        '<h2 class="section-heading-ar">' + esc(s.notesArTitle) + '</h2>' +
         '<div class="section-heading-deco" aria-hidden="true">' +
           '<span class="section-heading-deco-line"></span>' +
           '<span>✿</span>' +
           '<span class="section-heading-deco-line"></span>' +
         '</div>' +
-        '<p class="section-heading-sub">جُمَل قصيرة، اقتباسات، نصائح، أو ذكرى عابرة. اضغط لتضيف ملاحظة جديدة.</p>' +
+        '<p class="section-heading-sub">' + esc(s.notesSubtitle) + '</p>' +
       '</div>' +
       '<div class="notes-wall">' +
         notesHtml +
         '<button class="note note-add" data-action="show-add-note" type="button">' +
-          ICONS.plusLarge +
-          '<span>أضف ملاحظة</span>' +
+          ICONS.plusLarge + '<span>أضف ملاحظة</span>' +
         '</button>' +
       '</div>' +
     '</div>' +
   '</section>';
 }
 
-// ---------- FOOTER ----------
+/* =========================================================
+   RENDER — FOOTER
+   ========================================================= */
 function renderFooter() {
+  const s = state.settings;
+  // footerMark may contain "&" — we'll wrap it for styling
+  const markHtml = esc(s.footerMark).replace(/&amp;/g, '<span class="footer-mark-amp">&amp;</span>');
   return '' +
   '<footer class="footer">' +
-    '<div class="footer-mark">Israa <span class="footer-mark-amp">&amp;</span> Muataz</div>' +
-    '<div class="footer-tagline">إسراء ومُعتَز · مذكّرات سفر</div>' +
-    '<div class="footer-meta">صُنِعَت بحُبٍّ على الطريق · ' + (new Date().getFullYear()) + '</div>' +
+    '<div class="footer-mark">' + markHtml + '</div>' +
+    '<div class="footer-tagline">' + esc(s.footerTagline) + '</div>' +
+    '<div class="footer-meta">' + esc(s.footerMeta) + ' · ' + (new Date().getFullYear()) + '</div>' +
     '<div class="footer-deco">✦ ✦ ✦</div>' +
   '</footer>';
 }
 
-// ---------- TRIP DETAIL ----------
+
+/* =========================================================
+   RENDER — TRIP DETAIL & SECTIONS
+   ========================================================= */
 function renderTripDetail(trip) {
   return '' +
   '<article class="fade-in">' +
@@ -1770,6 +1551,7 @@ function renderTripDetail(trip) {
     renderFeelingsSection(trip) +
     renderTipsSection(trip) +
     renderGallerySection(trip) +
+    (state.editMode ? '<button class="detail-edit-fab" data-action="edit-trip" data-id="' + esc(trip.id) + '">' + ICONS.pencilLg + '<span>تعديل الرحلة</span></button>' : '') +
   '</article>';
 }
 
@@ -1860,14 +1642,12 @@ function sectionHeader(sec) {
   '</div>';
 }
 
-// ---------- DETAIL SECTIONS ----------
 function renderMemoriesSection(trip) {
   const sec = SECTIONS[0];
   const memories = trip.memories || [];
   if (memories.length === 0) return '';
   const featured = memories[0];
   const rest = memories.slice(1);
-
   return '' +
   '<section class="content-section" id="section-memories">' +
     sectionHeader(sec) +
@@ -1892,32 +1672,22 @@ function renderMemoriesSection(trip) {
     '</div>' +
   '</section>';
 }
-
 function renderPlacesSection(trip) {
   const sec = SECTIONS[1];
   const places = trip.places || [];
   if (places.length === 0) return '';
-  return '' +
-  '<section class="content-section" id="section-places">' +
-    sectionHeader(sec) +
+  return '<section class="content-section" id="section-places">' + sectionHeader(sec) +
     '<div class="places-list">' +
       places.map(function(p, i){
-        return '<div class="places-item">' +
-          '<div class="places-item-num">' + (i+1) + '</div>' +
-          '<div class="places-item-text">' + esc(p) + '</div>' +
-        '</div>';
+        return '<div class="places-item"><div class="places-item-num">' + (i+1) + '</div><div class="places-item-text">' + esc(p) + '</div></div>';
       }).join('') +
-    '</div>' +
-  '</section>';
+    '</div></section>';
 }
-
 function renderStaysSection(trip) {
   const sec = SECTIONS[2];
   const stays = trip.stays || [];
   if (stays.length === 0) return '';
-  return '' +
-  '<section class="content-section" id="section-stays">' +
-    sectionHeader(sec) +
+  return '<section class="content-section" id="section-stays">' + sectionHeader(sec) +
     '<div class="stays-list">' +
       stays.map(function(s){
         return '<div class="stay-card">' +
@@ -1926,17 +1696,13 @@ function renderStaysSection(trip) {
           (s.note ? '<div class="stay-card-note">' + esc(s.note) + '</div>' : '') +
         '</div>';
       }).join('') +
-    '</div>' +
-  '</section>';
+    '</div></section>';
 }
-
 function renderFoodSection(trip) {
   const sec = SECTIONS[3];
   const food = trip.food || [];
   if (food.length === 0) return '';
-  return '' +
-  '<section class="content-section" id="section-food">' +
-    sectionHeader(sec) +
+  return '<section class="content-section" id="section-food">' + sectionHeader(sec) +
     '<div class="food-list">' +
       food.map(function(f){
         return '<div class="food-card">' +
@@ -1945,73 +1711,50 @@ function renderFoodSection(trip) {
           (f.note ? '<div class="food-card-note">' + esc(f.note) + '</div>' : '') +
         '</div>';
       }).join('') +
-    '</div>' +
-  '</section>';
+    '</div></section>';
 }
-
 function renderActivitiesSection(trip) {
   const sec = SECTIONS[4];
   const acts = trip.activities || [];
   if (acts.length === 0) return '';
-  return '' +
-  '<section class="content-section" id="section-activities">' +
-    sectionHeader(sec) +
+  return '<section class="content-section" id="section-activities">' + sectionHeader(sec) +
     '<div class="activities-list">' +
       acts.map(function(a, i){
-        return '<div class="activities-item">' +
-          '<div class="places-item-num">' + (i+1) + '</div>' +
-          '<div class="places-item-text">' + esc(a) + '</div>' +
-        '</div>';
+        return '<div class="activities-item"><div class="places-item-num">' + (i+1) + '</div><div class="places-item-text">' + esc(a) + '</div></div>';
       }).join('') +
-    '</div>' +
-  '</section>';
+    '</div></section>';
 }
-
 function renderFeelingsSection(trip) {
   const sec = SECTIONS[5];
   if (!trip.feelings) return '';
-  return '' +
-  '<section class="content-section" id="section-feelings">' +
-    sectionHeader(sec) +
+  return '<section class="content-section" id="section-feelings">' + sectionHeader(sec) +
     '<div class="feelings-block">' +
       '<div class="feelings-quote-mark">"</div>' +
       '<p class="feelings-text">' + esc(trip.feelings) + '</p>' +
-      '<div class="feelings-attribution">— من دفتر إسراء ومُعتَز</div>' +
-    '</div>' +
-  '</section>';
+      '<div class="feelings-attribution">— من دفتر ' + esc(state.settings.logoAr || 'إسراء ومُعتَز') + '</div>' +
+    '</div></section>';
 }
-
 function renderTipsSection(trip) {
   const sec = SECTIONS[6];
   const tips = trip.tips || [];
   if (tips.length === 0) return '';
-  return '' +
-  '<section class="content-section" id="section-tips">' +
-    sectionHeader(sec) +
+  return '<section class="content-section" id="section-tips">' + sectionHeader(sec) +
     '<div class="tips-list">' +
-      tips.map(function(t){
-        return '<div class="tip-item">' + esc(t) + '</div>';
-      }).join('') +
-    '</div>' +
-  '</section>';
+      tips.map(function(t){ return '<div class="tip-item">' + esc(t) + '</div>'; }).join('') +
+    '</div></section>';
 }
-
-// ---------- GALLERY (combines all images from the trip) ----------
 function renderGallerySection(trip) {
   const memories = trip.memories || [];
   if (memories.length < 2) return '';
   const featured = memories[0];
   const rest = memories.slice(1);
-
   return '' +
   '<section class="gallery-section">' +
     '<div class="section-heading">' +
       '<div class="section-heading-en">photo album</div>' +
       '<h2 class="section-heading-ar">ألبوم الذكريات</h2>' +
       '<div class="section-heading-deco" aria-hidden="true">' +
-        '<span class="section-heading-deco-line"></span>' +
-        '<span>✦</span>' +
-        '<span class="section-heading-deco-line"></span>' +
+        '<span class="section-heading-deco-line"></span><span>✦</span><span class="section-heading-deco-line"></span>' +
       '</div>' +
     '</div>' +
     '<div class="gallery-layout">' +
@@ -2022,9 +1765,7 @@ function renderGallerySection(trip) {
       '<div class="gallery-grid">' +
         rest.map(function(m){
           return '<div class="gallery-item">' +
-            '<div class="gallery-item-photo">' +
-              '<img src="' + esc(m.image) + '" alt="' + esc(m.caption) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
-            '</div>' +
+            '<div class="gallery-item-photo"><img src="' + esc(m.image) + '" alt="' + esc(m.caption) + '" loading="lazy" onerror="this.style.display=\'none\'"></div>' +
             '<div class="gallery-item-caption">' + esc(m.caption) + '</div>' +
           '</div>';
         }).join('') +
@@ -2033,14 +1774,18 @@ function renderGallerySection(trip) {
   '</section>';
 }
 
-// ---------- MODAL: Add Note ----------
+
+/* =========================================================
+   RENDER — ADD/EDIT NOTE MODAL
+   ========================================================= */
 function renderAddNoteModal() {
   const f = state.addNoteForm;
+  const isEdit = !!f.id;
   return '' +
   '<div class="modal-overlay" data-modal="overlay">' +
     '<div class="modal">' +
       '<button class="modal-close" data-action="close-modal" aria-label="إغلاق">' + ICONS.x + '</button>' +
-      '<h3 class="modal-title">ملاحظة جديدة</h3>' +
+      '<h3 class="modal-title">' + (isEdit ? 'تعديل الملاحظة' : 'ملاحظة جديدة') + '</h3>' +
       '<div class="modal-form">' +
         '<div class="field-group">' +
           '<label class="field-label">النص</label>' +
@@ -2050,13 +1795,12 @@ function renderAddNoteModal() {
           '<label class="field-label">لون الورقة</label>' +
           '<div class="color-picker">' +
             NOTE_COLORS.map(function(c){
-              const isActive = f.color === c ? 'active' : '';
-              return '<button type="button" class="color-swatch ' + isActive + ' note-' + c + '" data-action="select-note-color" data-value="' + c + '" aria-label="' + c + '"></button>';
+              return '<button type="button" class="color-swatch ' + (f.color === c ? 'active' : '') + ' note-' + c + '" data-action="select-note-color" data-value="' + c + '" aria-label="' + c + '"></button>';
             }).join('') +
           '</div>' +
         '</div>' +
         '<div class="modal-form-actions">' +
-          '<button class="btn btn-primary btn-flex" data-action="save-note">أضف الملاحظة</button>' +
+          '<button class="btn btn-primary btn-flex" data-action="save-note">' + (isEdit ? 'حفظ التعديل' : 'أضف الملاحظة') + '</button>' +
           '<button class="btn-cancel" data-action="close-modal">إلغاء</button>' +
         '</div>' +
       '</div>' +
@@ -2064,8 +1808,442 @@ function renderAddNoteModal() {
   '</div>';
 }
 
-// ---------- APP SHELL ----------
+/* =========================================================
+   RENDER — SETTINGS PANEL
+   ========================================================= */
+function renderSettingsPanel() {
+  const tabs = [
+    { key: 'text',   label: 'النصوص' },
+    { key: 'colors', label: 'الألوان' },
+    { key: 'fonts',  label: 'الخطوط' },
+    { key: 'data',   label: 'البيانات' },
+  ];
+  return '' +
+  '<div class="settings-overlay" data-modal="overlay"></div>' +
+  '<aside class="settings-panel" role="dialog" aria-label="إعدادات الموقع">' +
+    '<div class="settings-header">' +
+      '<h2 class="settings-title">إعدادات الموقع</h2>' +
+      '<button class="nav-icon-btn" data-action="close-modal" aria-label="إغلاق">' + ICONS.x + '</button>' +
+    '</div>' +
+    '<div class="settings-tabs">' +
+      tabs.map(function(t){
+        return '<button class="settings-tab ' + (state.settingsTab === t.key ? 'active' : '') + '" data-action="set-settings-tab" data-value="' + t.key + '">' + esc(t.label) + '</button>';
+      }).join('') +
+    '</div>' +
+    '<div class="settings-body">' +
+      (state.settingsTab === 'text'   ? renderSettingsText()   : '') +
+      (state.settingsTab === 'colors' ? renderSettingsColors() : '') +
+      (state.settingsTab === 'fonts'  ? renderSettingsFonts()  : '') +
+      (state.settingsTab === 'data'   ? renderSettingsData()   : '') +
+    '</div>' +
+    '<div class="settings-footer">' +
+      '<button class="btn-cancel" data-action="close-modal">إغلاق</button>' +
+      '<button class="btn btn-primary btn-flex" data-action="reset-settings">' + ICONS.refresh + '<span>استعادة الافتراضي</span></button>' +
+    '</div>' +
+  '</aside>';
+}
+
+function settingsField(label, fieldKey, isTextarea, hint) {
+  const val = state.settings[fieldKey] || '';
+  const tag = isTextarea ? 'textarea' : 'input';
+  const inner = isTextarea
+    ? '<textarea class="input-field" data-settings-field="' + fieldKey + '" rows="2">' + esc(val) + '</textarea>'
+    : '<input class="input-field" data-settings-field="' + fieldKey + '" value="' + esc(val) + '">';
+  return '<div class="field-group">' +
+    '<label class="field-label">' + esc(label) + '</label>' +
+    inner +
+    (hint ? '<div class="field-hint">' + esc(hint) + '</div>' : '') +
+  '</div>';
+}
+
+function renderSettingsText() {
+  return '' +
+  '<div class="settings-group">' +
+    '<div class="settings-group-title">الترويسة (Logo)</div>' +
+    settingsField('الاسم بالعربي', 'logoAr') +
+    settingsField('الاسم بالإنجليزي', 'logoEn') +
+  '</div>' +
+  '<div class="settings-group">' +
+    '<div class="settings-group-title">قسم الهيرو الرئيسي</div>' +
+    settingsField('السوبر تايتل (إنجليزي)', 'heroSupertitle') +
+    settingsField('مقدمة عربية', 'heroIntro') +
+    settingsField('السطر الأول (الاسم الأول)', 'heroLine1', false, 'كل حرف سيُعبَّأ بصورة وجهة سفر') +
+    settingsField('الرمز الفاصل', 'heroAmp') +
+    settingsField('السطر الثاني (الاسم الثاني)', 'heroLine2', false, 'كل حرف سيُعبَّأ بصورة وجهة سفر') +
+    settingsField('وصف تحت الهيرو', 'heroSubtitle', true) +
+  '</div>' +
+  '<div class="settings-group">' +
+    '<div class="settings-group-title">قسم الوجهات</div>' +
+    settingsField('العنوان (إنجليزي)', 'destEnTitle') +
+    settingsField('العنوان (عربي)', 'destArTitle') +
+    settingsField('وصف القسم', 'destSubtitle', true) +
+  '</div>' +
+  '<div class="settings-group">' +
+    '<div class="settings-group-title">قسم الملاحظات</div>' +
+    settingsField('العنوان (إنجليزي)', 'notesEnTitle') +
+    settingsField('العنوان (عربي)', 'notesArTitle') +
+    settingsField('وصف القسم', 'notesSubtitle', true) +
+  '</div>' +
+  '<div class="settings-group">' +
+    '<div class="settings-group-title">التذييل (Footer)</div>' +
+    settingsField('العلامة', 'footerMark') +
+    settingsField('الشعار', 'footerTagline') +
+    settingsField('نص إضافي', 'footerMeta') +
+  '</div>';
+}
+
+const COLOR_LABELS = {
+  cream: 'الكريم الأساسي',
+  'cream-warm': 'كريم دافئ',
+  'cream-soft': 'كريم ناعم',
+  'cream-deep': 'كريم غامق',
+  paper: 'الورق',
+  ink: 'الحبر (نص أساسي)',
+  'ink-soft': 'حبر ناعم',
+  'ink-mute': 'حبر باهت',
+  gold: 'الذهبي',
+  'gold-deep': 'ذهبي غامق',
+  terracotta: 'التيراكوتا',
+  rust: 'صدأ',
+};
+
+function renderSettingsColors() {
+  const colors = state.settings.colors || {};
+  return '' +
+  '<div class="settings-group">' +
+    '<div class="settings-group-title">ألوان الموقع</div>' +
+    '<div class="field-hint" style="margin-bottom:0.75rem;">اضغط على دائرة اللون لاختيار لون جديد. التغييرات تُحفظ تلقائياً.</div>' +
+    Object.keys(colors).map(function(key){
+      const val = colors[key];
+      const label = COLOR_LABELS[key] || key;
+      return '<div class="color-row">' +
+        '<input type="color" class="color-input" data-settings-color="' + key + '" value="' + esc(val) + '">' +
+        '<div class="color-row-label">' + esc(label) + '</div>' +
+        '<div class="color-row-hex">' + esc(val.toUpperCase()) + '</div>' +
+      '</div>';
+    }).join('') +
+  '</div>';
+}
+
+function renderSettingsFonts() {
+  const fonts = state.settings.fonts || {};
+  const fontField = (label, key, options) => {
+    return '<div class="field-group">' +
+      '<label class="field-label">' + esc(label) + '</label>' +
+      '<select class="font-select" data-settings-font="' + key + '">' +
+        options.map(function(o){
+          return '<option value="' + esc(o.value) + '" ' + (fonts[key] === o.value ? 'selected' : '') + '>' + esc(o.label) + '</option>';
+        }).join('') +
+      '</select>' +
+    '</div>';
+  };
+
+  return '' +
+  '<div class="settings-group">' +
+    '<div class="settings-group-title">خطوط الموقع</div>' +
+    '<div class="field-hint" style="margin-bottom:0.75rem;">الخطوط محمّلة مسبقاً. التغيير فوري.</div>' +
+    fontField('الخط الأساسي للنص العربي', 'body', FONT_OPTIONS.body) +
+    fontField('الخط العربي للعناوين', 'display', FONT_OPTIONS.display) +
+    fontField('الخط الإنجليزي للعناوين', 'enDisplay', FONT_OPTIONS.enDisplay) +
+    fontField('الخط الإنجليزي المخطوط', 'enScript', FONT_OPTIONS.enScript) +
+    fontField('خط الحروف الكبيرة (Hero)', 'hero', FONT_OPTIONS.hero) +
+  '</div>';
+}
+
+function renderSettingsData() {
+  return '' +
+  '<div class="settings-group">' +
+    '<div class="settings-group-title">إدارة البيانات</div>' +
+    '<div class="field-hint" style="margin-bottom:1rem;">احفظ نسخة من بياناتك (الرحلات + الملاحظات + الإعدادات) كملف JSON، أو استعد نسخة سابقة.</div>' +
+    '<div style="display:flex; flex-direction:column; gap:0.625rem;">' +
+      '<button class="btn btn-primary" data-action="export-data">' + ICONS.download + '<span>تنزيل نسخة احتياطية</span></button>' +
+      '<button class="btn btn-primary" data-action="import-data">' + ICONS.upload + '<span>استيراد نسخة احتياطية</span></button>' +
+      '<button class="btn btn-danger" data-action="reset-all-data">' + ICONS.trash + '<span>حذف كل البيانات والبدء من جديد</span></button>' +
+    '</div>' +
+  '</div>';
+}
+
+
+/* =========================================================
+   RENDER — TRIP EDITOR (full-screen overlay)
+   ========================================================= */
+function renderTripEditor() {
+  const t = state.editingTripDraft;
+  if (!t) return '';
+  const tabs = [
+    { key: 'basics',     label: 'الأساسيات' },
+    { key: 'memories',   label: 'الذكريات' },
+    { key: 'places',     label: 'الأماكن' },
+    { key: 'stays',      label: 'الإقامة' },
+    { key: 'food',       label: 'المطاعم' },
+    { key: 'activities', label: 'الأنشطة' },
+    { key: 'feelings',   label: 'المشاعر' },
+    { key: 'tips',       label: 'النصائح' },
+  ];
+  const isNew = !state.trips.find(function(x){ return x.id === t.id; });
+  return '' +
+  '<div class="trip-editor" role="dialog" aria-label="محرر الرحلة">' +
+    '<div class="trip-editor-header">' +
+      '<div>' +
+        '<div style="font-size:0.8125rem;color:var(--ink-mute);">' + (isNew ? 'وجهة جديدة' : 'تعديل الوجهة') + '</div>' +
+        '<div class="trip-editor-title">' + esc(t.titleAr || 'بدون عنوان') + '</div>' +
+      '</div>' +
+      '<button class="nav-icon-btn" data-action="close-trip-editor" aria-label="إغلاق">' + ICONS.x + '</button>' +
+    '</div>' +
+    '<div class="trip-editor-tabs">' +
+      tabs.map(function(tab){
+        return '<button class="trip-editor-tab ' + (state.tripEditorTab === tab.key ? 'active' : '') + '" data-action="set-trip-editor-tab" data-value="' + tab.key + '">' + esc(tab.label) + '</button>';
+      }).join('') +
+    '</div>' +
+    '<div class="trip-editor-content">' +
+      '<div class="trip-editor-inner">' +
+        renderTripEditorTab(t) +
+      '</div>' +
+    '</div>' +
+    '<div class="trip-editor-footer">' +
+      '<div class="trip-editor-footer-left">' +
+        (isNew ? '' : '<button class="btn btn-danger btn-sm" data-action="delete-trip-from-editor">' + ICONS.trash + '<span>حذف الوجهة</span></button>') +
+      '</div>' +
+      '<div class="trip-editor-footer-right">' +
+        '<button class="btn-cancel" data-action="close-trip-editor">إلغاء</button>' +
+        '<button class="btn btn-primary" data-action="save-trip">حفظ التغييرات</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderTripEditorTab(t) {
+  switch (state.tripEditorTab) {
+    case 'basics':     return renderTripEditorBasics(t);
+    case 'memories':   return renderTripEditorMemories(t);
+    case 'places':     return renderTripEditorPlaces(t);
+    case 'stays':      return renderTripEditorStays(t);
+    case 'food':       return renderTripEditorFood(t);
+    case 'activities': return renderTripEditorActivities(t);
+    case 'feelings':   return renderTripEditorFeelings(t);
+    case 'tips':       return renderTripEditorTips(t);
+    default:           return renderTripEditorBasics(t);
+  }
+}
+
+function tripField(label, fieldPath, isTextarea, rows, hint) {
+  // fieldPath is a dot path into editingTripDraft like 'titleAr' or 'summary.cities'
+  const parts = fieldPath.split('.');
+  let val = state.editingTripDraft;
+  for (let i = 0; i < parts.length; i++) { val = val ? val[parts[i]] : ''; }
+  val = val || '';
+  const inner = isTextarea
+    ? '<textarea class="input-field" data-trip-field="' + fieldPath + '" rows="' + (rows || 3) + '">' + esc(val) + '</textarea>'
+    : '<input class="input-field" data-trip-field="' + fieldPath + '" value="' + esc(val) + '">';
+  return '<div class="field-group">' +
+    '<label class="field-label">' + esc(label) + '</label>' +
+    inner +
+    (hint ? '<div class="field-hint">' + esc(hint) + '</div>' : '') +
+  '</div>';
+}
+
+function renderTripEditorBasics(t) {
+  return '<div class="settings-group">' +
+    '<div class="settings-group-title">العنوان والتواريخ</div>' +
+    tripField('العنوان بالعربي', 'titleAr') +
+    tripField('العنوان بالإنجليزي', 'titleEn') +
+    tripField('الموقع', 'location', false, 0, 'مثل: إسطنبول، تركيا') +
+    '<div class="modal-form-row">' +
+      tripField('تاريخ البداية', 'dateStart') +
+      tripField('تاريخ النهاية', 'dateEnd') +
+    '</div>' +
+    '<div class="modal-form-row">' +
+      tripField('الرمز (إيموجي)', 'emoji') +
+      tripField('فترة قصيرة', 'dateRange', false, 0, 'مثل: مايو ٢٠٢٤') +
+    '</div>' +
+  '</div>' +
+  '<div class="settings-group">' +
+    '<div class="settings-group-title">الصور الرئيسية</div>' +
+    tripField('صورة الغلاف (Detail Hero)', 'coverImage', false, 0, 'رابط الصورة الكاملة') +
+    (t.coverImage ? '<div class="image-preview" style="width:100%;height:8rem;border-radius:8px;margin-bottom:0.5rem;"><img src="' + esc(t.coverImage) + '" onerror="this.style.display=\'none\'"></div>' : '') +
+    tripField('صورة البطاقة المصغّرة', 'thumbImage', false, 0, 'رابط الصورة في الشبكة') +
+    (t.thumbImage ? '<div class="image-preview" style="width:100%;height:8rem;border-radius:8px;"><img src="' + esc(t.thumbImage) + '" onerror="this.style.display=\'none\'"></div>' : '') +
+  '</div>' +
+  '<div class="settings-group">' +
+    '<div class="settings-group-title">المقدمة وملخّص الرحلة</div>' +
+    tripField('المقدمة العاطفية', 'intro', true, 3) +
+    '<div class="modal-form-row">' +
+      tripField('المدّة', 'summary.duration') +
+      tripField('المدن', 'summary.cities') +
+    '</div>' +
+    '<div class="modal-form-row">' +
+      tripField('الطقس', 'summary.weather') +
+      tripField('مناسبة لـ', 'summary.bestFor') +
+    '</div>' +
+  '</div>';
+}
+
+function renderTripEditorMemories(t) {
+  const items = t.memories || [];
+  return '<div class="settings-group">' +
+    '<div class="settings-group-title">الذكريات والصور</div>' +
+    '<div class="field-hint" style="margin-bottom:0.75rem;">الذكرى الأولى هي الذكرى المميّزة (تظهر أكبر مع قصة).</div>' +
+    '<div class="list-editor">' +
+      items.map(function(m, i){
+        return '<div class="list-item-card">' +
+          '<div class="list-item-header">' +
+            '<span class="list-item-num">' + (i+1) + (i === 0 ? ' · ذكرى مميّزة' : '') + '</span>' +
+            '<div class="list-item-controls">' +
+              (i > 0 ? '<button class="list-item-btn" data-action="move-item" data-list="memories" data-index="' + i + '" data-dir="-1" title="أعلى">' + ICONS.arrowUp + '</button>' : '') +
+              (i < items.length-1 ? '<button class="list-item-btn" data-action="move-item" data-list="memories" data-index="' + i + '" data-dir="1" title="أسفل">' + ICONS.arrowDown + '</button>' : '') +
+              '<button class="list-item-btn danger" data-action="delete-item" data-list="memories" data-index="' + i + '" title="حذف">' + ICONS.trash + '</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="image-edit-row">' +
+            '<div class="image-preview"><img src="' + esc(m.image) + '" onerror="this.style.display=\'none\'"></div>' +
+            '<div class="image-edit-fields">' +
+              tripField('رابط الصورة', 'memories.' + i + '.image') +
+              tripField('التسمية تحت الصورة', 'memories.' + i + '.caption') +
+            '</div>' +
+          '</div>' +
+          (i === 0 ? tripField('قصة الذكرى (تظهر تحت الصورة المميّزة)', 'memories.' + i + '.story', true, 3) : '') +
+        '</div>';
+      }).join('') +
+      '<button class="list-add-btn" data-action="add-item" data-list="memories">' + ICONS.plus + '<span>أضف ذكرى</span></button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderTripEditorPlaces(t) {
+  const items = t.places || [];
+  return '<div class="settings-group">' +
+    '<div class="settings-group-title">الأماكن التي زرتموها</div>' +
+    '<div class="list-editor">' +
+      items.map(function(p, i){
+        return '<div class="list-item-card">' +
+          '<div class="list-item-header">' +
+            '<span class="list-item-num">' + (i+1) + '</span>' +
+            '<div class="list-item-controls">' +
+              (i > 0 ? '<button class="list-item-btn" data-action="move-item" data-list="places" data-index="' + i + '" data-dir="-1">' + ICONS.arrowUp + '</button>' : '') +
+              (i < items.length-1 ? '<button class="list-item-btn" data-action="move-item" data-list="places" data-index="' + i + '" data-dir="1">' + ICONS.arrowDown + '</button>' : '') +
+              '<button class="list-item-btn danger" data-action="delete-item" data-list="places" data-index="' + i + '">' + ICONS.trash + '</button>' +
+            '</div>' +
+          '</div>' +
+          '<input class="input-field" data-trip-field="places.' + i + '" value="' + esc(p) + '">' +
+        '</div>';
+      }).join('') +
+      '<button class="list-add-btn" data-action="add-item" data-list="places">' + ICONS.plus + '<span>أضف مكان</span></button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderTripEditorStays(t) {
+  const items = t.stays || [];
+  return '<div class="settings-group">' +
+    '<div class="settings-group-title">الإقامة والفنادق</div>' +
+    '<div class="list-editor">' +
+      items.map(function(s, i){
+        return '<div class="list-item-card">' +
+          '<div class="list-item-header">' +
+            '<span class="list-item-num">' + (i+1) + '</span>' +
+            '<div class="list-item-controls">' +
+              (i > 0 ? '<button class="list-item-btn" data-action="move-item" data-list="stays" data-index="' + i + '" data-dir="-1">' + ICONS.arrowUp + '</button>' : '') +
+              (i < items.length-1 ? '<button class="list-item-btn" data-action="move-item" data-list="stays" data-index="' + i + '" data-dir="1">' + ICONS.arrowDown + '</button>' : '') +
+              '<button class="list-item-btn danger" data-action="delete-item" data-list="stays" data-index="' + i + '">' + ICONS.trash + '</button>' +
+            '</div>' +
+          '</div>' +
+          tripField('اسم الفندق', 'stays.' + i + '.name') +
+          tripField('النوع', 'stays.' + i + '.type') +
+          tripField('ملاحظات', 'stays.' + i + '.note', true, 2) +
+        '</div>';
+      }).join('') +
+      '<button class="list-add-btn" data-action="add-item" data-list="stays">' + ICONS.plus + '<span>أضف إقامة</span></button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderTripEditorFood(t) {
+  const items = t.food || [];
+  return '<div class="settings-group">' +
+    '<div class="settings-group-title">المطاعم والمقاهي</div>' +
+    '<div class="list-editor">' +
+      items.map(function(f, i){
+        return '<div class="list-item-card">' +
+          '<div class="list-item-header">' +
+            '<span class="list-item-num">' + (i+1) + '</span>' +
+            '<div class="list-item-controls">' +
+              (i > 0 ? '<button class="list-item-btn" data-action="move-item" data-list="food" data-index="' + i + '" data-dir="-1">' + ICONS.arrowUp + '</button>' : '') +
+              (i < items.length-1 ? '<button class="list-item-btn" data-action="move-item" data-list="food" data-index="' + i + '" data-dir="1">' + ICONS.arrowDown + '</button>' : '') +
+              '<button class="list-item-btn danger" data-action="delete-item" data-list="food" data-index="' + i + '">' + ICONS.trash + '</button>' +
+            '</div>' +
+          '</div>' +
+          tripField('الاسم', 'food.' + i + '.name') +
+          tripField('النوع', 'food.' + i + '.type') +
+          tripField('ملاحظات', 'food.' + i + '.note', true, 2) +
+        '</div>';
+      }).join('') +
+      '<button class="list-add-btn" data-action="add-item" data-list="food">' + ICONS.plus + '<span>أضف مطعم</span></button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderTripEditorActivities(t) {
+  const items = t.activities || [];
+  return '<div class="settings-group">' +
+    '<div class="settings-group-title">الأنشطة</div>' +
+    '<div class="list-editor">' +
+      items.map(function(a, i){
+        return '<div class="list-item-card">' +
+          '<div class="list-item-header">' +
+            '<span class="list-item-num">' + (i+1) + '</span>' +
+            '<div class="list-item-controls">' +
+              (i > 0 ? '<button class="list-item-btn" data-action="move-item" data-list="activities" data-index="' + i + '" data-dir="-1">' + ICONS.arrowUp + '</button>' : '') +
+              (i < items.length-1 ? '<button class="list-item-btn" data-action="move-item" data-list="activities" data-index="' + i + '" data-dir="1">' + ICONS.arrowDown + '</button>' : '') +
+              '<button class="list-item-btn danger" data-action="delete-item" data-list="activities" data-index="' + i + '">' + ICONS.trash + '</button>' +
+            '</div>' +
+          '</div>' +
+          '<input class="input-field" data-trip-field="activities.' + i + '" value="' + esc(a) + '">' +
+        '</div>';
+      }).join('') +
+      '<button class="list-add-btn" data-action="add-item" data-list="activities">' + ICONS.plus + '<span>أضف نشاط</span></button>' +
+    '</div>' +
+  '</div>';
+}
+
+function renderTripEditorFeelings(t) {
+  return '<div class="settings-group">' +
+    '<div class="settings-group-title">الملاحظات والمشاعر</div>' +
+    '<div class="field-hint" style="margin-bottom:0.75rem;">فقرة طويلة تصف شعورك من الرحلة. تظهر كاقتباس كبير.</div>' +
+    tripField('النص', 'feelings', true, 8) +
+  '</div>';
+}
+
+function renderTripEditorTips(t) {
+  const items = t.tips || [];
+  return '<div class="settings-group">' +
+    '<div class="settings-group-title">نصائح السفر</div>' +
+    '<div class="list-editor">' +
+      items.map(function(tip, i){
+        return '<div class="list-item-card">' +
+          '<div class="list-item-header">' +
+            '<span class="list-item-num">' + (i+1) + '</span>' +
+            '<div class="list-item-controls">' +
+              (i > 0 ? '<button class="list-item-btn" data-action="move-item" data-list="tips" data-index="' + i + '" data-dir="-1">' + ICONS.arrowUp + '</button>' : '') +
+              (i < items.length-1 ? '<button class="list-item-btn" data-action="move-item" data-list="tips" data-index="' + i + '" data-dir="1">' + ICONS.arrowDown + '</button>' : '') +
+              '<button class="list-item-btn danger" data-action="delete-item" data-list="tips" data-index="' + i + '">' + ICONS.trash + '</button>' +
+            '</div>' +
+          '</div>' +
+          '<textarea class="input-field" data-trip-field="tips.' + i + '" rows="2">' + esc(tip) + '</textarea>' +
+        '</div>';
+      }).join('') +
+      '<button class="list-add-btn" data-action="add-item" data-list="tips">' + ICONS.plus + '<span>أضف نصيحة</span></button>' +
+    '</div>' +
+  '</div>';
+}
+
+
+/* =========================================================
+   MAIN RENDER ORCHESTRATION
+   ========================================================= */
 function renderApp() {
+  // If not authenticated, show only login screen
+  if (!state.authed) return renderLoginScreen();
+
   let main = '';
   if (state.view === 'home') {
     main = renderHero() + renderDestinationsSection() + renderNotesSection();
@@ -2075,31 +2253,124 @@ function renderApp() {
     else main = '<div class="empty-state">الرحلة غير موجودة</div>';
   }
   return renderTopNav() + '<main>' + main + '</main>' + renderFooter() +
-    (state.showAddNote ? renderAddNoteModal() : '');
+    (state.showAddNote ? renderAddNoteModal() : '') +
+    (state.showSettings ? renderSettingsPanel() : '') +
+    (state.editingTripDraft ? renderTripEditor() : '');
 }
 
 function render() {
+  // Preserve focused element across re-renders so typing in inputs doesn't lose focus
+  const active = document.activeElement;
+  let focusKey = null, selStart = null, selEnd = null;
+  if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.tagName === 'SELECT')) {
+    focusKey = active.dataset.form && active.dataset.field
+      ? 'form:' + active.dataset.form + ':' + active.dataset.field
+      : active.dataset.settingsField
+      ? 'settings:' + active.dataset.settingsField
+      : active.dataset.settingsColor
+      ? 'color:' + active.dataset.settingsColor
+      : active.dataset.settingsFont
+      ? 'font:' + active.dataset.settingsFont
+      : active.dataset.tripField
+      ? 'trip:' + active.dataset.tripField
+      : active.id
+      ? 'id:' + active.id
+      : null;
+    try {
+      selStart = active.selectionStart;
+      selEnd = active.selectionEnd;
+    } catch (e) { /* some inputs don't support */ }
+  }
+
   document.getElementById('app').innerHTML = renderApp();
-  document.body.style.overflow = state.showAddNote ? 'hidden' : '';
+
+  // Apply edit-mode class to body
+  document.body.classList.toggle('edit-mode', state.editMode);
+  document.body.style.overflow = (state.showAddNote || state.showSettings || state.editingTripDraft) ? 'hidden' : '';
+
+  // Restore focus
+  if (focusKey) {
+    let restored = null;
+    if (focusKey.startsWith('form:')) {
+      const [_, form, field] = focusKey.split(':');
+      restored = document.querySelector('[data-form="' + form + '"][data-field="' + field + '"]');
+    } else if (focusKey.startsWith('settings:')) {
+      restored = document.querySelector('[data-settings-field="' + focusKey.slice(9) + '"]');
+    } else if (focusKey.startsWith('color:')) {
+      restored = document.querySelector('[data-settings-color="' + focusKey.slice(6) + '"]');
+    } else if (focusKey.startsWith('font:')) {
+      restored = document.querySelector('[data-settings-font="' + focusKey.slice(5) + '"]');
+    } else if (focusKey.startsWith('trip:')) {
+      restored = document.querySelector('[data-trip-field="' + focusKey.slice(5) + '"]');
+    } else if (focusKey.startsWith('id:')) {
+      restored = document.getElementById(focusKey.slice(3));
+    }
+    if (restored) {
+      restored.focus();
+      try { if (selStart != null) restored.setSelectionRange(selStart, selEnd); } catch (e) {}
+    }
+  }
 }
 
 /* =========================================================
    ACTIONS
    ========================================================= */
-function openTrip(id) {
-  state.currentTripId = id;
-  state.view = 'detail';
-  render();
-  window.scrollTo({ top: 0, behavior: 'auto' });
-}
 
-function goHome() {
+// --- AUTH ---
+async function submitLogin(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const f = state.loginForm;
+  if (!f.password) {
+    state.loginForm.error = 'من فضلك أدخل كلمة السر';
+    render(); return;
+  }
+  state.loginForm.loading = true;
+  state.loginForm.error = '';
+  render();
+  try {
+    const hash = await sha256(f.password);
+    if (hash === PASSWORD_HASH) {
+      state.authed = true;
+      state.loginForm = initialLoginForm();
+      try { sessionStorage.setItem(SESSION_KEY_AUTH, '1'); } catch (e) {}
+      render();
+    } else {
+      state.loginForm.loading = false;
+      state.loginForm.error = 'كلمة السر غير صحيحة';
+      state.loginForm.password = '';
+      render();
+    }
+  } catch (e) {
+    state.loginForm.loading = false;
+    state.loginForm.error = 'حدث خطأ، حاول مرة أخرى';
+    render();
+  }
+}
+function togglePassword() {
+  state.loginForm.showPassword = !state.loginForm.showPassword;
+  render();
+  // Restore focus to the password input
+  setTimeout(function(){
+    const el = document.getElementById('login-password');
+    if (el) {
+      el.focus();
+      try { el.setSelectionRange(el.value.length, el.value.length); } catch(e){}
+    }
+  }, 0);
+}
+function logout() {
+  if (!confirm('تسجيل الخروج؟')) return;
+  state.authed = false;
   state.view = 'home';
-  state.currentTripId = null;
+  state.editMode = false;
+  state.loginForm = initialLoginForm();
+  try { sessionStorage.removeItem(SESSION_KEY_AUTH); } catch (e) {}
   render();
-  window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
+// --- NAVIGATION ---
+function openTrip(id) { state.currentTripId = id; state.view = 'detail'; render(); window.scrollTo({ top: 0, behavior: 'auto' }); }
+function goHome() { state.view = 'home'; state.currentTripId = null; render(); window.scrollTo({ top: 0, behavior: 'auto' }); }
 function scrollToTarget(targetId) {
   setTimeout(function(){
     const el = document.getElementById(targetId);
@@ -2107,25 +2378,37 @@ function scrollToTarget(targetId) {
   }, 50);
 }
 
-function showAddNote() {
+// --- EDIT MODE ---
+function toggleEditMode() {
+  state.editMode = !state.editMode;
+  render();
+}
+
+// --- NOTES ---
+function showAddNote() { state.showAddNote = true; state.addNoteForm = initialAddNoteForm(); render(); }
+function editNote(id) {
+  const note = state.notes.find(function(n){ return n.id === id; });
+  if (!note) return;
   state.showAddNote = true;
-  state.addNoteForm = initialAddNoteForm();
+  state.addNoteForm = { id: note.id, text: note.text, color: note.color };
   render();
 }
 function closeModal() {
   state.showAddNote = false;
+  state.showSettings = false;
   render();
 }
 function saveNote() {
   const f = state.addNoteForm;
   if (!f.text.trim()) { alert('من فضلك اكتب نص الملاحظة'); return; }
-  const note = {
-    id: newId(),
-    text: f.text.trim(),
-    color: f.color || 'yellow',
-    createdAt: Date.now(),
-  };
-  state.notes = [note].concat(state.notes);
+  if (f.id) {
+    state.notes = state.notes.map(function(n){
+      return n.id === f.id ? Object.assign({}, n, { text: f.text.trim(), color: f.color }) : n;
+    });
+  } else {
+    const note = { id: newId('n'), text: f.text.trim(), color: f.color || 'yellow', createdAt: Date.now() };
+    state.notes = [note].concat(state.notes);
+  }
   state.showAddNote = false;
   saveToStorage(STORAGE_KEY_NOTES, state.notes);
   render();
@@ -2136,62 +2419,387 @@ function deleteNote(id) {
   saveToStorage(STORAGE_KEY_NOTES, state.notes);
   render();
 }
-function selectNoteColor(color) {
-  state.addNoteForm.color = color;
+function selectNoteColor(color) { state.addNoteForm.color = color; render(); }
+
+// --- SETTINGS ---
+function openSettings() { state.showSettings = true; state.settingsTab = 'text'; render(); }
+function setSettingsTab(tab) { state.settingsTab = tab; render(); }
+function updateSettingsField(field, value) {
+  state.settings[field] = value;
+  saveToStorage(STORAGE_KEY_SETTINGS, state.settings);
+}
+function updateSettingsColor(key, value) {
+  if (!state.settings.colors) state.settings.colors = {};
+  state.settings.colors[key] = value;
+  saveToStorage(STORAGE_KEY_SETTINGS, state.settings);
+  applySettings();
+  // Re-render so hex label updates, but try to keep the color picker focused
   render();
 }
+function updateSettingsFont(key, value) {
+  if (!state.settings.fonts) state.settings.fonts = {};
+  state.settings.fonts[key] = value;
+  saveToStorage(STORAGE_KEY_SETTINGS, state.settings);
+  applySettings();
+  render();
+}
+function resetSettings() {
+  if (!confirm('استعادة جميع الإعدادات الافتراضية (النصوص والألوان والخطوط)؟')) return;
+  state.settings = deepCopy(DEFAULT_SETTINGS);
+  saveToStorage(STORAGE_KEY_SETTINGS, state.settings);
+  applySettings();
+  render();
+}
+
+// --- DATA EXPORT/IMPORT ---
+function exportData() {
+  const data = {
+    version: 3,
+    exportedAt: new Date().toISOString(),
+    trips: state.trips,
+    notes: state.notes,
+    settings: state.settings,
+  };
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'travel-blog-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 100);
+}
+function importData() {
+  document.getElementById('import-file-input').click();
+}
+function handleImportFile(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data || !data.trips || !data.notes) {
+        alert('ملف غير صحيح');
+        return;
+      }
+      if (!confirm('استبدال البيانات الحالية بمحتوى الملف؟ هذا الإجراء لا يمكن التراجع عنه.')) return;
+      state.trips = data.trips || [];
+      state.notes = data.notes || [];
+      if (data.settings) state.settings = Object.assign({}, DEFAULT_SETTINGS, data.settings);
+      saveToStorage(STORAGE_KEY_TRIPS, state.trips);
+      saveToStorage(STORAGE_KEY_NOTES, state.notes);
+      saveToStorage(STORAGE_KEY_SETTINGS, state.settings);
+      applySettings();
+      render();
+      alert('تم الاستيراد بنجاح');
+    } catch (err) {
+      alert('خطأ في قراءة الملف: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  // Reset so the same file can be selected again later
+  e.target.value = '';
+}
+function resetAllData() {
+  if (!confirm('تحذير: سيتم حذف كل الرحلات والملاحظات والإعدادات نهائياً. متأكد؟')) return;
+  if (!confirm('تأكيد أخير — لا يمكن التراجع عن هذا.')) return;
+  try {
+    localStorage.removeItem(STORAGE_KEY_TRIPS);
+    localStorage.removeItem(STORAGE_KEY_NOTES);
+    localStorage.removeItem(STORAGE_KEY_SETTINGS);
+  } catch (e) {}
+  state.trips = deepCopy(SAMPLE_TRIPS);
+  state.notes = deepCopy(SAMPLE_NOTES);
+  state.settings = deepCopy(DEFAULT_SETTINGS);
+  saveToStorage(STORAGE_KEY_TRIPS, state.trips);
+  saveToStorage(STORAGE_KEY_NOTES, state.notes);
+  saveToStorage(STORAGE_KEY_SETTINGS, state.settings);
+  applySettings();
+  state.showSettings = false;
+  render();
+}
+
+// --- TRIP EDITOR ---
+function emptyTripDraft() {
+  return {
+    id: newId('trip'),
+    titleAr: '', titleEn: '', location: '',
+    dateStart: '', dateEnd: '', dateRange: '',
+    emoji: '✈️',
+    coverImage: '', thumbImage: '',
+    intro: '',
+    summary: { duration: '', cities: '', weather: '', bestFor: '' },
+    memories: [], places: [], stays: [], food: [], activities: [],
+    feelings: '', tips: [],
+  };
+}
+function addTrip() {
+  state.editingTripDraft = emptyTripDraft();
+  state.tripEditorTab = 'basics';
+  render();
+}
+function editTrip(id) {
+  const trip = state.trips.find(function(t){ return t.id === id; });
+  if (!trip) return;
+  state.editingTripDraft = deepCopy(trip);
+  state.tripEditorTab = 'basics';
+  render();
+}
+function closeTripEditor() {
+  if (confirm('إغلاق المحرر؟ التغييرات غير المحفوظة ستُفقد.')) {
+    state.editingTripDraft = null;
+    render();
+  }
+}
+function setTripEditorTab(tab) {
+  state.tripEditorTab = tab;
+  render();
+}
+function saveTrip() {
+  const t = state.editingTripDraft;
+  if (!t) return;
+  if (!t.titleAr || !t.titleAr.trim()) {
+    alert('من فضلك أدخل عنوان الرحلة بالعربي');
+    state.tripEditorTab = 'basics';
+    render();
+    return;
+  }
+  const exists = state.trips.find(function(x){ return x.id === t.id; });
+  if (exists) {
+    state.trips = state.trips.map(function(x){ return x.id === t.id ? t : x; });
+  } else {
+    state.trips = state.trips.concat([t]);
+  }
+  saveToStorage(STORAGE_KEY_TRIPS, state.trips);
+  state.editingTripDraft = null;
+  render();
+}
+function deleteTripFromEditor() {
+  const t = state.editingTripDraft;
+  if (!t) return;
+  if (!confirm('حذف هذه الوجهة نهائياً؟')) return;
+  state.trips = state.trips.filter(function(x){ return x.id !== t.id; });
+  saveToStorage(STORAGE_KEY_TRIPS, state.trips);
+  state.editingTripDraft = null;
+  if (state.currentTripId === t.id) { state.view = 'home'; state.currentTripId = null; }
+  render();
+}
+function deleteTrip(id) {
+  if (!confirm('حذف هذه الوجهة نهائياً؟')) return;
+  state.trips = state.trips.filter(function(t){ return t.id !== id; });
+  saveToStorage(STORAGE_KEY_TRIPS, state.trips);
+  if (state.currentTripId === id) { state.view = 'home'; state.currentTripId = null; }
+  render();
+}
+
+// Update a nested field in editingTripDraft by dot path
+function updateTripField(path, value) {
+  const parts = path.split('.');
+  let obj = state.editingTripDraft;
+  for (let i = 0; i < parts.length - 1; i++) {
+    const key = parts[i];
+    if (obj[key] == null) {
+      // Decide whether to create array or object based on next key
+      const nextKey = parts[i+1];
+      obj[key] = (/^\d+$/.test(nextKey)) ? [] : {};
+    }
+    obj = obj[key];
+  }
+  const lastKey = parts[parts.length - 1];
+  obj[lastKey] = value;
+  // Don't save to storage yet (only on Save button); but we DO want UI updates.
+  // We avoid a full render here because typing in the trip-editor inputs would lose focus.
+  // The image previews will update only when the user changes tabs / re-renders for other reasons.
+}
+
+function addListItem(listName) {
+  const t = state.editingTripDraft;
+  if (!t) return;
+  if (!t[listName]) t[listName] = [];
+  if (listName === 'memories') t[listName].push({ image: '', caption: '', story: '' });
+  else if (listName === 'stays' || listName === 'food') t[listName].push({ name: '', type: '', note: '' });
+  else t[listName].push('');
+  render();
+}
+function deleteListItem(listName, index) {
+  const t = state.editingTripDraft;
+  if (!t || !t[listName]) return;
+  if (!confirm('حذف هذا العنصر؟')) return;
+  t[listName].splice(index, 1);
+  render();
+}
+function moveListItem(listName, index, dir) {
+  const t = state.editingTripDraft;
+  if (!t || !t[listName]) return;
+  const newIdx = index + dir;
+  if (newIdx < 0 || newIdx >= t[listName].length) return;
+  const tmp = t[listName][index];
+  t[listName][index] = t[listName][newIdx];
+  t[listName][newIdx] = tmp;
+  render();
+}
+
 
 /* =========================================================
    EVENT DELEGATION
    ========================================================= */
 function handleClick(e) {
-  // Overlay click closes modal
+  // Overlay click closes modals (only on the overlay itself, not its children)
   if (e.target.dataset && e.target.dataset.modal === 'overlay') {
     closeModal(); return;
   }
+  // If clicking inside a destination card's edit overlay, stop the card from opening
+  const noOpen = e.target.closest('[data-no-open]');
+  if (noOpen) e.stopPropagation();
+
   const target = e.target.closest('[data-action]');
   if (!target) return;
+  // If the target is inside [data-no-open], we still want the action to fire
+  // but we want to prevent the outer "open-trip" action from firing too.
+  if (target.dataset.action !== 'open-trip' && noOpen) {
+    e.stopPropagation();
+  }
 
   const action = target.dataset.action;
   const id = target.dataset.id;
   const value = target.dataset.value;
-  const tgtTarget = target.dataset.target;
+  const tgt = target.dataset.target;
 
   switch (action) {
+    // auth
+    case 'submit-login': submitLogin(e); break;
+    case 'toggle-password': togglePassword(); break;
+    case 'logout': logout(); break;
+
+    // navigation
     case 'go-home': goHome(); break;
     case 'open-trip': openTrip(id); break;
-    case 'scroll-to': scrollToTarget(tgtTarget); break;
+    case 'scroll-to': scrollToTarget(tgt); break;
+
+    // edit mode
+    case 'toggle-edit-mode': toggleEditMode(); break;
+
+    // notes
     case 'show-add-note': showAddNote(); break;
-    case 'close-modal': closeModal(); break;
+    case 'edit-note': editNote(id); break;
     case 'save-note': saveNote(); break;
     case 'delete-note': deleteNote(id); break;
     case 'select-note-color': selectNoteColor(value); break;
+    case 'close-modal': closeModal(); break;
+
+    // settings
+    case 'open-settings': openSettings(); break;
+    case 'set-settings-tab': setSettingsTab(value); break;
+    case 'reset-settings': resetSettings(); break;
+    case 'export-data': exportData(); break;
+    case 'import-data': importData(); break;
+    case 'reset-all-data': resetAllData(); break;
+
+    // trip editor
+    case 'add-trip': addTrip(); break;
+    case 'edit-trip': editTrip(id); break;
+    case 'close-trip-editor': closeTripEditor(); break;
+    case 'set-trip-editor-tab': setTripEditorTab(value); break;
+    case 'save-trip': saveTrip(); break;
+    case 'delete-trip': deleteTrip(id); break;
+    case 'delete-trip-from-editor': deleteTripFromEditor(); break;
+    case 'add-item': addListItem(target.dataset.list); break;
+    case 'delete-item': deleteListItem(target.dataset.list, parseInt(target.dataset.index)); break;
+    case 'move-item': moveListItem(target.dataset.list, parseInt(target.dataset.index), parseInt(target.dataset.dir)); break;
+  }
+}
+
+function handleSubmit(e) {
+  if (e.target.id === 'login-form') {
+    submitLogin(e);
   }
 }
 
 function handleInput(e) {
-  const form = e.target.dataset.form;
-  const field = e.target.dataset.field;
-  if (form && field && state[form]) {
-    // Silent update — no re-render so input keeps focus
-    state[form][field] = e.target.value;
+  const t = e.target;
+
+  // Plain form fields (login form, note form, etc) — silent update
+  if (t.dataset.form && t.dataset.field && state[t.dataset.form]) {
+    state[t.dataset.form][t.dataset.field] = t.value;
+    return;
+  }
+
+  // Settings text fields — save to storage but don't re-render
+  if (t.dataset.settingsField) {
+    updateSettingsField(t.dataset.settingsField, t.value);
+    return;
+  }
+
+  // Trip editor fields — silent update
+  if (t.dataset.tripField) {
+    updateTripField(t.dataset.tripField, t.value);
+    return;
+  }
+}
+
+function handleChange(e) {
+  const t = e.target;
+
+  // Color picker — re-render to reflect new color
+  if (t.dataset.settingsColor) {
+    updateSettingsColor(t.dataset.settingsColor, t.value);
+    return;
+  }
+  // Font select — re-render
+  if (t.dataset.settingsFont) {
+    updateSettingsFont(t.dataset.settingsFont, t.value);
+    return;
+  }
+  // File input for import
+  if (t.id === 'import-file-input') {
+    handleImportFile(e);
+    return;
   }
 }
 
 function handleKeydown(e) {
-  if (e.key === 'Escape' && state.showAddNote) closeModal();
+  if (e.key === 'Escape') {
+    if (state.editingTripDraft) {
+      closeTripEditor();
+      return;
+    }
+    if (state.showAddNote || state.showSettings) {
+      closeModal();
+    }
+  }
 }
 
 /* =========================================================
    INIT
    ========================================================= */
 function init() {
-  state.trips = loadFromStorage(STORAGE_KEY_TRIPS, SAMPLE_TRIPS);
-  state.notes = loadFromStorage(STORAGE_KEY_NOTES, SAMPLE_NOTES);
-  const app = document.getElementById('app');
-  app.addEventListener('click', handleClick);
-  app.addEventListener('input', handleInput);
+  // Load persisted state
+  state.trips    = loadFromStorage(STORAGE_KEY_TRIPS, SAMPLE_TRIPS);
+  state.notes    = loadFromStorage(STORAGE_KEY_NOTES, SAMPLE_NOTES);
+  // Merge stored settings on top of defaults so new fields appear in old saves
+  const storedSettings = loadFromStorage(STORAGE_KEY_SETTINGS, DEFAULT_SETTINGS);
+  state.settings = Object.assign({}, deepCopy(DEFAULT_SETTINGS), storedSettings);
+  // Deep-merge nested colors and fonts
+  state.settings.colors = Object.assign({}, DEFAULT_SETTINGS.colors, storedSettings.colors || {});
+  state.settings.fonts  = Object.assign({}, DEFAULT_SETTINGS.fonts,  storedSettings.fonts  || {});
+
+  // Check session auth — staying logged in until tab close
+  try {
+    if (sessionStorage.getItem(SESSION_KEY_AUTH) === '1') state.authed = true;
+  } catch (e) {}
+
+  applySettings();
+
+  // Wire up listeners on document root so they survive re-renders of #app
+  document.addEventListener('click', handleClick);
+  document.addEventListener('submit', handleSubmit);
+  document.addEventListener('input', handleInput);
+  document.addEventListener('change', handleChange);
   document.addEventListener('keydown', handleKeydown);
+
   render();
 }
 
